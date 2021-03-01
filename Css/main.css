@@ -20,7 +20,11 @@
 	font-family: "Poppins", sans-serif;
 	font-weight: 500;
 	color: #fff7f8;
+	font-family: "Poppins", sans-serif;
 	text-shadow: #52525152 0 2.5px 2.5px;
+}
+body {
+	overflow-x: hidden;
 }
 :root,
 body,
@@ -28,9 +32,40 @@ body,
 	width: 100%;
 	height: 100%;
 }
+.viewport {
+	width: 100%;
+	height: 100vh;
+	overflow: hidden;
+	position: relative;
+}
 ul {
 	list-style-type: none;
 	display: flex;
+}
+button {
+	appearance: none;
+	background: none;
+	border: none;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+button img {
+	height: 100%;
+	width: auto;
+}
+button:focus {
+	outline: none;
+}
+button * {
+	filter: drop-shadow(#52525152 0 2.5px 2.5px);
+	transition: all .1s ease-out;
+}
+button:active * {
+	filter: drop-shadow(#52525152 0 2.5px 2.5px) brightness(.5);
+}
+button:active img {
+	transform: scale(.75);
 }
 
 /*Typography*/
@@ -38,8 +73,10 @@ h1 {
 	font-size: 7rem;
 	font-weight: 600;
 	line-height: 1em;
+	text-align: center;
 }
-p {
+p, label {
+	color: #dcd1d1;
 	font-size: 1rem;
 }
 a {
@@ -48,14 +85,14 @@ a {
 
 /*Nav bar*/
 nav {
-	position: absolute;
+	position: fixed;
 	left: 50%;
 	top: 1rem;
 	transform: translateX(-50%);
 	width: 90%;
 	border-radius: 10px;
 	z-index: 999;
-	box-shadow: rgba(0, 0, 0, 5%) 0 5px 10px;
+	box-shadow: #52525152 0 2.5px 2.5px;
 }
 nav ul {
 	padding: 1rem 0;
@@ -92,12 +129,20 @@ nav ul {
 /*Hero area*/
 #hero-area {
 	background: linear-gradient(to top, black, transparent);
+    position: absolute;
+    top: 0;
+    pointer-events: none;
+}
+#hero-area * {
+	pointer-events: all;
 }
 #hero-text {
-	position: absolute;
-	bottom: 0.25em;
-	left: 0.25em;
+	bottom: 1em;
 }
+#scroll-down {
+	bottom: 1rem;
+	height: 4rem;
+} 
 .scrolling-text {
 	display: flex;
 	flex-direction: column;
@@ -112,6 +157,11 @@ nav ul {
 /*Other Classes*/
 .container {
 	background: linear-gradient(to bottom right, #dcd1d150, #52525185);
+}
+.center-absolute {
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%);
 }
 .watermark {
 	opacity: 0.15;
@@ -130,9 +180,6 @@ nav ul {
 	opacity: 0.25;
 	transform: translateX(-1rem);
 }
-.no-scroll {
-	overflow: hidden;
-}
 
 /*Cursor*/
 #cursor {
@@ -149,6 +196,7 @@ nav ul {
 }
 #cursor img {
 	width: 100%;
+	user-select: none;
 }
 #cursor.select {
 	width: 60px;
@@ -162,14 +210,9 @@ nav ul {
 }
 
 /*Background effect for homepage*/
-#background {
-	position: absolute;
-    z-index: -1;
-}
-#background div  {
+.background div  {
 	background-size: cover;
 	background-position: center;
 	background-color: #525251;
-	transition: background 1s ease-out;
 	position: absolute;
 }

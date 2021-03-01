@@ -52,8 +52,9 @@ function setCursorMode(mode) {
 }
 
 const scrollingText = document.getElementsByClassName("scrolling-text")[0];
-const background = document.getElementById("background");
-if (scrollingText && background) {
+const oldBackground = document.getElementById("old");
+const newBackground = document.getElementById("new");
+if (scrollingText && oldBackground && newBackground) {
     const time = 25;
     const clonedScrollingText = scrollingText.cloneNode(true);
     scrollingText.parentNode.appendChild(clonedScrollingText);
@@ -85,13 +86,13 @@ if (scrollingText && background) {
     applyThemeEffects(scrollingText.children);
     applyThemeEffects(clonedScrollingText.children);
 
-    function setBackground(newBackground) {
+    function setBackground(newStyle) {
         //Move the old background one backwards
-        background.firstElementChild.style.backgroundImage = background.lastElementChild.style.backgroundImage;
-        background.lastElementChild.style.backgroundImage = newBackground;
+        oldBackground.style.backgroundImage = newBackground.style.backgroundImage;
+        newBackground.style.backgroundImage = newStyle;
         //Switch up the opacities
-        gsap.fromTo(background.firstElementChild, { autoAlpha: 1 }, { autoAlpha: 0, ease: "Power2.out", duration: 1 });
-        gsap.fromTo(background.lastElementChild, { autoAlpha: 0 }, { autoAlpha: 1, ease: "Power2.out", duration: 1 });
+        gsap.fromTo(oldBackground, { autoAlpha: 1 }, { autoAlpha: 0, ease: "Power2.out", duration: 1 });
+        gsap.fromTo(newBackground, { autoAlpha: 0 }, { autoAlpha: 1, ease: "Power2.out", duration: 1 });
     }
 
     //Allow the user to edit the direction and speed via scroll wheel
