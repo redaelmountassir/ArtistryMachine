@@ -52,11 +52,11 @@ function setCursorMode(mode) {
 }
 
 const scrollingText = document.getElementsByClassName("scrolling-text")[0];
+const clonedScrollingText = scrollingText ? scrollingText.cloneNode(true) : null;
 const oldBackground = document.getElementById("old");
 const newBackground = document.getElementById("new");
 if (scrollingText && oldBackground && newBackground) {
     const time = 25;
-    const clonedScrollingText = scrollingText.cloneNode(true);
     scrollingText.parentNode.appendChild(clonedScrollingText);
 
     //Animate the text to scroll infinitely
@@ -96,4 +96,19 @@ if (scrollingText && oldBackground && newBackground) {
     }
 
     //Allow the user to edit the direction and speed via scroll wheel
+}
+
+const scrollTo = document.getElementById("scroll-to");
+if (scrollTo) {
+    let destination = scrollTo.getAttribute("data-destination-id");
+    if (destination) destination = document.getElementById(destination);
+    if (destination) {
+        scrollTo.onclick = function () { gsap.to(window, { scrollTo: destination, duration: .5, ease: "Power2.out" }) };
+        if (scrollingText) {
+            new gsap.timeline({ scrollTrigger: { trigger: destination, scrub: 1 } })
+                .to([scrollingText, clonedScrollingText], { x: "+=100%", autoAlpha: 0, ease: "Power2.out" }, 0)
+                .to(scrollTo, { autoAlpha: 0 }, 0)
+                .to("#hero-text", { y: "-150%", autoAlpha: 0 }, 0);
+        }
+    }
 }
