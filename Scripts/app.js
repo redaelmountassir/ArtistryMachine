@@ -1,3 +1,5 @@
+gsap.registerPlugin(ScrollToPlugin);
+
 //Custom cursor behavior
 const cursor = document.getElementById("cursor");
 const cursorImg = cursor ? cursor.firstElementChild : null;

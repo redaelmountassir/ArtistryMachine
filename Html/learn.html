@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Through History - Learn</title>
+    <link rel="stylesheet" href="../Css/main.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap"
+        rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/ScrollToPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r126/three.min.js" integrity="sha512-n8IpKWzDnBOcBhRlHirMZOUvEq2bLRMuJGjuVqbzUJwtTsgwOgK5aS0c1JA647XWYfqvXve8k3PtZdzpipFjgg==" crossorigin="anonymous"></script>
+    <script src="../Scripts/display.js" defer></script>
+</head>
+<body>
+    <header>
+        <nav class="temporary container">
+            <ul>
+                <li class="nav-item">
+                    <a href="../index.html">
+                        <p>Home</p>
+                        <img src="../Icons/home.svg" alt="home" />
+                    </a>
+                </li>
+                <li class="nav-item" id="current">
+                    <a href="#">
+                        <p>Learn</p>
+                        <img src="../Icons/learn.svg" alt="learn" />
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#">
+                        <p>More</p>
+                        <img src="../Icons/more.svg" alt="more" />
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#">
+                        <p>Try Yourself</p>
+                        <img src="../Icons/draw.svg" alt="try yourself" />
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main id="display">
+        <section id="display-background">
+            <time class="full-size watermark center-content">
+                <h1 class="large-text"></h1>
+                <h1></h1>
+            </time>
+        </section>
+        <aside class="container" id="info-panel">
+            <h3 id="period"></h3>
+            <h4 id="times"></h4>
+            <p id="info"></p>
+        </section>
+    </main>
+</body>
+</html>
