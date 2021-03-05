@@ -4,7 +4,7 @@
         "timeStart": -1000,
         "time": "1000 BC-0000",
         "associatedColor": "#525251",
-        "paintingSrc": "",
+        "painting": "test",
         "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor ut enim natus quam cum, provident et? Dicta culpa maxime quia. Nostrum nobis expedita deleniti eveniet nihil nulla blanditiis, iure exercitationem?"
     },
     {
@@ -12,7 +12,7 @@
         "timeStart": 0,
         "time": "0000-1875",
         "associatedColor": "#E2EF70",
-        "paintingSrc": "",
+        "painting": "test2",
         "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor ut enim natus quam cum, provident et? Dicta culpa maxime quia. Nostrum nobis expedita deleniti eveniet nihil nulla blanditiis, iure exercitationem?"
     },
     {
@@ -20,7 +20,7 @@
         "timeStart": 1875,
         "time": "1875-1900",
         "associatedColor": "#FB3640",
-        "paintingSrc": "",
+        "painting": "test",
         "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor ut enim natus quam cum, provident et? Dicta culpa maxime quia. Nostrum nobis expedita deleniti eveniet nihil nulla blanditiis, iure exercitationem?"
     },
     {
@@ -28,7 +28,7 @@
         "timeStart": 1900,
         "time": "1900-1966",
         "associatedColor": "#E2C2FF",
-        "paintingSrc": "",
+        "painting": "test2",
         "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor ut enim natus quam cum, provident et? Dicta culpa maxime quia. Nostrum nobis expedita deleniti eveniet nihil nulla blanditiis, iure exercitationem?"
     },
     {
@@ -36,7 +36,7 @@
         "timeStart": "Current",
         "time": "1966-Current",
         "associatedColor": "#70E4EF",
-        "paintingSrc": "",
+        "painting": "test",
         "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor ut enim natus quam cum, provident et? Dicta culpa maxime quia. Nostrum nobis expedita deleniti eveniet nihil nulla blanditiis, iure exercitationem?"
     }
 ]
