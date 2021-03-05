@@ -159,7 +159,7 @@ readJsonFile("../info.json", function (timePeriods) {
                 stand.add(frame);
                 backgroundScene.add(stand);
 
-                let currentIndex = null, periodObj, panelVisible;
+                let currentIndex = null, panelVisible;
                 const startingPeriod = timePeriods[0],
                     display = document.getElementById("display"),
                     timeElement = document.getElementsByTagName("time")[0],
@@ -174,11 +174,11 @@ readJsonFile("../info.json", function (timePeriods) {
                     if (currentIndex === index) return;
                     currentIndex = index;
                     painting.material.map = textures[currentIndex];
-                    periodObj = timePeriods[currentIndex];
                 }
                 function showPanel() {
                     if (panelVisible) return;
                     panelVisible = true;
+                    const periodObj = timePeriods[currentIndex];
                     //It should not go here but its easier here
                     timeElement.lastElementChild.textContent = periodObj.title;
                     //Set textContents
