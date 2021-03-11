@@ -11,41 +11,41 @@
 			href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap"
 			rel="stylesheet"
 		/>
+		<!--Dependencies-->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/ScrollToPlugin.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/ScrollTrigger.min.js"></script>
+		<!--Custom Scripts-->
 		<script src="Scripts/home.js" defer></script>
 		<script src="Scripts/mouse.js" defer></script>
+		<script src="../Scripts/advancedNav.js" defer></script>
 	</head>
 	<body>
-		<div id="cursor"><img src="Icons/cursor.svg" alt="cursor"></div>
+		<div id="cursor" class="fixed-element"><img src="Icons/cursor.svg" alt="cursor"></div>
 		<header>
-			<nav class="container">
+			<nav class="dark-container">
+				<button id="nav-burger">
+					<div class="line"></div>
+					<div class="line"></div>
+					<div class="line"></div>
+				</button>
 				<ul>
-					<li class="nav-item" id="current">
-						<a href="#">
+					<li><a href="#" class="nav-link">
 							<p>Home</p>
-							<img src="Icons/home.svg" alt="home" />
-						</a>
-					</li>
-					<li class="nav-item">
-						<a href="Html/learn.html">
+							<img src="Icons/home.svg" alt="Home" />
+					 </a></li>
+					<li><a href="Html/learn.html" class="nav-link">
 							<p>Learn</p>
-							<img src="Icons/learn.svg" alt="learn" />
-						</a>
-					</li>
-					<li class="nav-item">
-						<a href="#">
+							<img src="Icons/learn.svg" alt="Learn" />
+					</a></li>
+					<li><a href="#" class="nav-link">
 							<p>More</p>
-							<img src="Icons/more.svg" alt="more" />
-						</a>
-					</li>
-					<li class="nav-item">
-						<a href="#">
+							<img src="Icons/more.svg" alt="More" />
+					</a></li>
+					<li><a href="#" class="nav-link">
 							<p>Try Yourself</p>
-							<img src="Icons/draw.svg" alt="try yourself" />
-						</a>
-					</li>
+							<img src="Icons/draw.svg" alt="Try Yourself" />
+					</a></li>
 				</ul>
 			</nav>
 		</header>
@@ -71,7 +71,7 @@
 					<img src="Icons/arrow-down.svg" alt="scroll down">
 				</button>
 			</section>
-			<section id="why">
+			<section id="why" class="black-container">
 				<h2>Hello</h2>
 				<p>Theres some text here that wants to say hello</p>
 			</section>

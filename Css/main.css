@@ -1,30 +1,34 @@
-/*
-    Main Colors:
-        White: #FFF7F8
-        Mid: #DCD1D1
-        Dark: #525251
-		Black: #111111
-
-    Accents:
-        Yellow: #E2EF70
-        Red: #FB3640
-        Purple: #E2C2FF
-        Blue: #70E4EF
-        Green: #78C091
-*/
-
 /*Elements Styling*/
+:root {
+	/*Main colors*/
+	--white: #FFF7F8;
+	--mid: #DCD1D1;
+	--dark: #525251;
+	--black: #111111;
+	/*Accents*/
+	--yellow: #E2EF70;
+	--red: #FB3640;
+	--purple: #E2C2FF;
+	--blue: #70E4EF;
+	--green: #78C091;
+	/*Other vars*/
+	--light-grad: linear-gradient(to bottom right, #DCD1D150, #52525185);
+	--dark-grad: linear-gradient(to bottom right, #525251c9, #11111152);
+	/*Shadows*/
+	--shadow: #11111152 0 2.5px 2.5px;
+	--text-shadow: #11111152 0 2.5px 2.5px;
+}
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 	font-family: "Poppins", sans-serif;
 	font-weight: 500;
-	color: #fff7f8;
+	color: var(--white);
 }
 body {
 	overflow-x: hidden;
-	background: #111111;
+	background: var(--black);
 }
 :root,
 body,
@@ -41,6 +45,11 @@ section {
 ul {
 	list-style-type: none;
 	display: flex;
+	flex: 1;
+	justify-content: space-around;
+}
+.vertical, .vertical ul {
+	flex-direction: column;
 }
 button {
 	appearance: none;
@@ -58,64 +67,65 @@ button:focus {
 	outline: none;
 }
 button * {
-	filter: drop-shadow(#52525152 0 2.5px 2.5px);
+	filter: drop-shadow(var(--text-shadow));
 	transition: all .1s ease-out;
 }
 button:active * {
-	filter: drop-shadow(#52525152 0 2.5px 2.5px) brightness(.5);
-}
-button:active img {
+	filter: drop-shadow(var(--text-shadow)) brightness(.5);
 	transform: scale(.75);
+}
+img {
+	filter: drop-shadow(var(--text-shadow));
 }
 aside {
 	position: absolute;
-    right: 1em;
+	/*So it lines up with the nav*/
+    right: 2.5%;
     top: 50%;
-    width: 26rem;
+    width: 25rem;
     height: 95%;
     transform: translateY(-50%);
+	overflow: auto;
 }
 canvas {
 	position: absolute;
 	top: 0;
+	padding: 0;
+}
+main { transition: filter 1s ease-out }
+main.darken { 
+	filter: blur(20px) brightness(50%);
+	pointer-events: none;
 }
 
 /*Custom scrollbar*/
 ::-webkit-scrollbar {
 	width: 10px;
 }
-
 ::-webkit-scrollbar-track {
 	background: #b9b4b4;
 }
-
 ::-webkit-scrollbar-thumb {
-	background: #525251;
+	background: var(--dark);
 	border-radius: 5px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
 	background: #313131;
 }
 
 /*Typography*/
-h1, h2, h3 { 
-	text-shadow: #52525152 0 2.5px 2.5px;
+h1, h2, h3, h4 { 
+	text-shadow: var(--text-shadow);
 	font-weight: 600;
 	line-height: 1em;
+	margin-bottom: .5em;
 }
-h1 {
-	font-size: 7rem;
-	text-align: center;
-}
-h2 {
-	font-size: 5rem;
-}
-h3 {
-	font-size: 2.5rem;
-}
+h1 { font-size: 7rem; text-align: center; }
+h2 { font-size: 5rem }
+h3 { font-size: 2.5rem }
+h4 { font-size: 1rem }
 p, label, a, time {
-	color: #DCD1D1;
+	color: var(--mid);
 	font-size: 1rem;
 }
 blockquote {
@@ -132,56 +142,108 @@ blockquote cite {
     bottom: 0;
     right: 2em;
     font-style: normal;
-    color: #DCD1D1;
+    color: var(--mid);
 }
 a {
 	text-decoration: none;
-	text-shadow: #52525152 0 2.5px 2.5px;
+	text-shadow: var(--text-shadow);
+}
+a[href="#"] {
+	pointer-events: none;
+    opacity: .5;
 }
 
 /*Nav bar*/
 nav {
-	padding: 1rem !important;
 	position: fixed;
-	left: 50%;
-	top: 1rem;
-	transform: translateX(-50%);
-	width: 90%;
 	z-index: 999;
-	box-shadow: #52525152 0 2.5px 2.5px;
+	box-shadow: var(--shadow);
+	display: flex;
 }
-.nav-item {
-	border-right: 2.5px solid #fff7f8;
-	flex: 1;
-	overflow: hidden;
-}
-.nav-item:last-child {
-	border: none;
-}
-.nav-item a {
+.nav-link {
 	display: flex;
 	justify-content: center;
 	position: relative;
 	user-select: none;
 }
-.nav-item * {
+.nav-link, .nav-link * {
 	transition: transform 0.25s ease-out;
 }
-.nav-item img {
-	position: absolute;
-	filter: drop-shadow(#52525152 0 2.5px 2.5px);
-	transform: translateY(2em);
+/*Nav bar - Horizontal*/
+nav.horizontal {
+	transform: translateX(-50%);
+	left: 50%;
+	top: 1rem;
+	width: 95%;
 }
-.nav-item:hover p {
+nav.horizontal li {
+	border-right: 2.5px solid var(--white);
+	flex: 1;
+	overflow: hidden;
+}
+nav.horizontal li:last-child { border: none }
+nav.horizontal img {
+	transform: translateY(2em);
+	position: absolute;
+}
+nav.horizontal .nav-link:hover p,
+nav.horizontal .nav-link:focus p {
 	transform: translateY(-2em);
 }
-.nav-item:hover img {
+nav.horizontal .nav-link:hover img,
+nav.horizontal .nav-link:focus img {
 	transform: translateY(0em);
 }
+/*Nav bar - Vertical*/
+nav.vertical {
+	transform: translate(-25%, -50%);
+	left: 2.5%;
+	top: 50%;
+	height: 95%;
+	clip-path: circle(2.5rem at 50% 2.5rem);
+	transition: clip-path .5s ease-out, transform .25s ease-out;
+}
+/*I chose to animate the clip-path in css rather than js because it is 100x easier*/
+nav.open {
+	transform: translateY(-50%);
+	clip-path: circle(100% at 50% 50%);
+}
+nav.vertical img {
+    margin-right: 1em;
+    order: -1;
+}
+nav.vertical .nav-link:hover {
+	transform: scale(1.25);
+}
+#nav-burger {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	width: 3rem;
+	height: 3rem;
+	margin: 0 auto;
+}
+.line {
+	width: 100%;
+	height: 10%;
+	border-radius: 1rem;
+	background-color: var(--white);
+	transition: all .5s ease-out;
+}
+.open .line:first-child {
+	transform: translateY(325%) rotate(45deg);
+}
+.open .line:nth-child(2) {
+	opacity: 0;
+}
+.open .line:last-child {
+	transform: translateY(-325%) rotate(-45deg);
+}
+
 
 /*Hero area*/
 #hero-area {
-	background: linear-gradient(to top, #111111, transparent);
+	background: linear-gradient(to top, var(--black), transparent);
     position: absolute;
     top: 0;
     pointer-events: none;
@@ -207,17 +269,75 @@ nav {
 	transform: translateX(1rem) skewY(15deg);
 }
 
+/*Loading Section*/
+.progress-bar {
+	background-color: #313131;
+    border: 1px solid var(--mid);
+    border-radius: 1rem;
+    width: 15rem;
+    height: .5rem;
+}
+.progress-completed {
+	animation: multi-color-background 5s linear infinite alternate;
+	height: 100%;
+	border-radius: inherit;
+	transition: width 1s ease-out;
+}
+.cube-container {
+	perspective: 400px;
+}
+.cube {
+	transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+	/*Used as a custom property of some sort with the em*/
+	font-size: 5vmin;
+    height: 1em;
+    width: 1em;
+    margin: 1em;
+	padding: 1em;
+    box-sizing: content-box;
+}
+.face {
+	transform: rotate3d(var(--i, 0), var(--j, 1), 0, var(--a, 0deg)) translateZ(.5em);
+    width: 1em;
+    height: 1em;
+    position: absolute;
+	border: 3px solid var(--mid);
+}
+.face:nth-child(n + 5) { --i: 1; --j: 0 }
+.face:nth-child(2) { --a: 90deg }
+.face:nth-child(3) { --a: 180deg }
+.face:nth-child(4) { --a: 270deg }
+.face:nth-child(5) { --a: 90deg }
+.face:nth-child(6) { --a: -90deg }
+
 /*Other Classes*/
-.container {
-    padding: 2.5rem;
+[class*="container"] {
 	border-radius: 10px;
-	background: linear-gradient(to bottom right, #dcd1d150, #52525185);
+	padding: 1rem;
+	background: var(--light-grad);
+}
+section[class*="container"] {
+	border-radius: 0;
+}
+.glass-container {
+	backdrop-filter: blur(20px) brightness(.8);
+}
+.dark-container {
+	background: var(--dark-grad);
+}
+.black-container {
+	background: var(--black);
 }
 .center-content {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
+}
+/*Extra padding for elements with text*/
+.text-container {
+	padding: 2.5rem;
 }
 .center-x {
 	position: absolute;
@@ -230,9 +350,9 @@ nav {
 }
 .watermark {
 	opacity: 0.15;
-	color: #fff7f8;
+	color: var(--white);
 	-webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
-	-webkit-text-stroke: 2.5px #fff7f8;
+	-webkit-text-stroke: 2.5px var(--white);
 	user-select: none;
 	transition: all 0.3s ease-out;
 	white-space: nowrap;
@@ -245,31 +365,69 @@ nav {
 	text-shadow: none;
 }
 .watermark.solid {
-	-webkit-text-fill-color: #fff7f8;
+	-webkit-text-fill-color: var(--white);
 	opacity: 0.25;
 	transform: translateX(-1rem);
 }
+
+/*Animate Classes*/
 .multi-color {
-	color: #fff7f8;
+	color: var(--white);
 	animation: multi-color 10s linear infinite alternate;
 }
+.cube.animate {
+	animation: spin-anim 10s ease-in-out infinite;
+}
+.cube.animate .face {
+	animation: multi-color-border 5s linear infinite alternate;
+}
 @keyframes multi-color {
-	0% { color: #E2EF70; }
-	25% { color: #E2C2FF; }
-	50% { color: #70E4EF; }
-	75% { color: #78C091; }
-	100% { color: #FB3640; }
+	0% { color: var(--yellow) }
+	25% { color: var(--purple) }
+	50% { color: var(--blue) }
+	75% { color: var(--green) }
+	100% { color: var(--red) }
+}
+@keyframes multi-color-background {
+	0% { background-color: var(--yellow) }
+	25% { background-color: var(--purple) }
+	50% { background-color: var(--blue) }
+	75% { background-color: var(--green) }
+	100% { background-color: var(--red) }
+}
+@keyframes multi-color-border {
+	0% { border-color: var(--yellow) }
+	25% { border-color: var(--purple) }
+	50% { border-color: var(--blue) }
+	75% { border-color: var(--green) }
+	100% { border-color: var(--red) }
+}
+@keyframes spin-anim {
+	0% { transform: rotateX(0turn) rotateY(0turn) rotateZ(0turn) }
+	14.28% { transform: rotateX(1turn) rotateY(0turn) rotateZ(0turn) }
+	28.57% { transform: rotateX(1turn) rotateY(1turn) rotateZ(0turn) }
+	42.85% { transform: rotateX(1turn) rotateY(1turn) rotateZ(1turn) }
+	57.14% { transform: rotateX(0turn) rotateY(0turn) rotateZ(0turn) }
+	71.42% { transform: rotateX(-1turn) rotateY(0turn) rotateZ(0turn) }
+	85.71% { transform: rotateX(-1turn) rotateY(-1turn) rotateZ(0turn) }
+	100% { transform: rotateX(-1turn) rotateY(-1turn) rotateZ(-1turn) }
 }
 
 /*Cursor*/
-#cursor {
+.fixed-element {
 	position: fixed;
+	z-index: 99;
 	left: 0;
 	top: 0;
+	pointer-events: none;
+	opacity: .8;
+}
+section.fixed-element {
+	opacity: 1;
+}
+#cursor {
 	width: 50px;
 	height: 50px;
-	z-index: 9999;
-	pointer-events: none;
 	transform-origin: center center;
 	transition: all 0.1s ease-out;
 	transition-property: width, height, border-radius;
@@ -289,11 +447,32 @@ nav {
 	cursor: none !important;
 }
 
+@media (prefers-reduced-motion: reduce) {
+	*,
+	::before,
+	::after {
+		animation-delay: -1ms !important;
+		animation-duration: 1ms !important;
+		animation-iteration-count: 1 !important;
+		background-attachment: initial !important;
+		transition-duration: 0s !important;
+		transition-delay: 0s !important;
+	}
+}
+.no-anim, .no-anim * {
+	animation-delay: -1ms !important;
+	animation-duration: 1ms !important;
+	animation-iteration-count: 1 !important;
+	background-attachment: initial !important;
+	transition-duration: 0s !important;
+	transition-delay: 0s !important;
+}
+
 /*Background effect for homepage*/
 .background div  {
 	background-size: cover;
 	background-position: center;
 	background-attachment: fixed;
-	background-color: #525251;
+	background-color: var(--dark);
 	position: absolute;
 }

@@ -26,27 +26,39 @@ if (cursor) {
 }
 let lastCursorMode = null;
 function setCursorMode(mode) {
+    //If no cursor to begin with, quit
     if (!cursor) return;
-    if (cursorMode === "select" && mode !== "unselect") return lastCursorMode = mode;
-    if (cursorMode === "focus") gsap.to(cursor, { rotate: 0, duration: .1, ease: "Power2.out" });
+    //Do events based off of current cursor mode
+    switch (cursorMode) {
+        case "select":
+            if (mode !== "unselect") return lastCursorMode = mode;
+            cursor.classList.remove("select");
+            break;
+        case "unselect":
+            cursor.classList.remove("unselect");
+            break;
+        case "focus":
+            gsap.to(cursor, { rotate: 0, duration: .1, ease: "Power2.out" })
+            cursor.classList.remove("focus");
+            break;
+    }
+    //Do events based off of new cursor mode
     switch (mode) {
         case "select":
             lastCursorMode = cursorMode;
             cursorMode = "select";
-            cursor.className = "select";
+            cursor.classList.add("select");
             break;
         case "unselect":
             cursorMode = "unselect";
-            cursor.className = "";
             setCursorMode(lastCursorMode === "select" ? "none" : lastCursorMode);
             break;
         case "focus":
             cursorMode = "focus";
-            cursor.className = "focus";
+            cursor.classList.add("focus");
             gsap.to(cursor, { rotate: 45, duration: .1, ease: "Power2.out" });
             break;
         default:
             cursorMode = "none";
-            cursor.className = "";
     }
 }

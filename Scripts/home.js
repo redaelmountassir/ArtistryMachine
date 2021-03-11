@@ -1,4 +1,5 @@
 gsap.registerPlugin(ScrollToPlugin);
+
 const scrollingText = document.getElementsByClassName("scrolling-text")[0];
 const clonedScrollingText = scrollingText ? scrollingText.cloneNode(true) : null;
 const oldBackground = document.getElementById("old");
