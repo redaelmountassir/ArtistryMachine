@@ -22,11 +22,11 @@ if (scrollingText && oldBackground && newBackground) {
             const artText = elements[i];
             const src = "../Images/" + artText.getAttribute("data-art") + ".jpg";
             const color = artText.getAttribute("data-base-color");
-            artText.onmouseover = function () {
+            artText.onpointerover = function () {
                 artText.classList.add("solid");
                 setBackground("linear-gradient(" + color + "a9," + color + "a9), url(" + src + ")");
             }
-            artText.onmouseout = function () {
+            artText.onpointerout = function () {
                 artText.classList.remove("solid");
                 setBackground(null);
             }
@@ -54,10 +54,21 @@ if (scrollTo) {
     if (destination) {
         scrollTo.onclick = function () { gsap.to(window, { scrollTo: destination, duration: .5, ease: "Power2.out" }) };
         if (scrollingText) {
-            new gsap.timeline({ scrollTrigger: { trigger: destination, scrub: 1 } })
-                .to([scrollingText, clonedScrollingText], { x: "+=100%", autoAlpha: 0, ease: "Power2.out" }, 0)
-                .to(scrollTo, { autoAlpha: 0 }, 0)
-                .to("#hero-text", { y: "-150%", autoAlpha: 0 }, 0);
+            const heroText = document.getElementById("hero-text");
+
+            //Makes sure inline styles don't contaminate other inline styles when media query updates
+            ScrollTrigger.saveStyles(heroText);
+            ScrollTrigger.matchMedia({
+                //Using match media not because the animations change, but rather for save styles to run on refresh
+                "(max-width: 50rem)": createAnim,
+                "(min-width: 50rem)": createAnim,
+            });
+            function createAnim() {
+                new gsap.timeline({ scrollTrigger: { trigger: destination, scrub: 1 } })
+                    .to([scrollingText, clonedScrollingText], { x: "+=100%", autoAlpha: 0, ease: "Power2.out" }, 0)
+                    .to(scrollTo, { autoAlpha: 0 }, 0)
+                    .to(heroText, { y: "-150%", autoAlpha: 0 }, 0);
+            }
         }
     }
 }

@@ -27,8 +27,8 @@
 	color: var(--white);
 }
 body {
-	overflow-x: hidden;
 	background: var(--black);
+	overflow-x: hidden;
 }
 :root,
 body,
@@ -62,6 +62,7 @@ button {
 button img {
 	height: 100%;
 	width: auto;
+	user-select: none;
 }
 button:focus {
 	outline: none;
@@ -79,13 +80,10 @@ img {
 }
 aside {
 	position: absolute;
-	/*So it lines up with the nav*/
-    right: 2.5%;
-    top: 50%;
-    width: 25rem;
-    height: 95%;
-    transform: translateY(-50%);
-	overflow: auto;
+    bottom: -.5rem;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
 }
 canvas {
 	position: absolute;
@@ -101,6 +99,7 @@ main.darken {
 /*Custom scrollbar*/
 ::-webkit-scrollbar {
 	width: 10px;
+	height: 10px;
 }
 ::-webkit-scrollbar-track {
 	background: #b9b4b4;
@@ -114,13 +113,12 @@ main.darken {
 }
 
 /*Typography*/
-h1, h2, h3, h4 { 
+h1, h2, h3, h4 {
 	text-shadow: var(--text-shadow);
 	font-weight: 600;
 	line-height: 1em;
-	margin-bottom: .5em;
 }
-h1 { font-size: 7rem; text-align: center; }
+h1 { font-size: 5rem; text-align: center; }
 h2 { font-size: 5rem }
 h3 { font-size: 2.5rem }
 h4 { font-size: 1rem }
@@ -196,11 +194,11 @@ nav.horizontal .nav-link:focus img {
 }
 /*Nav bar - Vertical*/
 nav.vertical {
-	transform: translate(-25%, -50%);
+	transform: translate(-38%, -53%);
 	left: 2.5%;
 	top: 50%;
 	height: 95%;
-	clip-path: circle(2.5rem at 50% 2.5rem);
+	clip-path: circle(1.5rem at 50% 2rem);
 	transition: clip-path .5s ease-out, transform .25s ease-out;
 }
 /*I chose to animate the clip-path in css rather than js because it is 100x easier*/
@@ -219,9 +217,6 @@ nav.vertical .nav-link:hover {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
-	width: 3rem;
-	height: 3rem;
-	margin: 0 auto;
 }
 .line {
 	width: 100%;
@@ -252,11 +247,11 @@ nav.vertical .nav-link:hover {
 	pointer-events: all;
 }
 #hero-text {
-	bottom: 1em;
+	bottom: 50%;
+	transform: translate(-50%, 50%);
 }
 #scroll-to {
 	bottom: 1rem;
-	height: 4rem;
 } 
 .scrolling-text {
 	display: flex;
@@ -283,9 +278,6 @@ nav.vertical .nav-link:hover {
 	border-radius: inherit;
 	transition: width 1s ease-out;
 }
-.cube-container {
-	perspective: 400px;
-}
 .cube {
 	transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;
@@ -296,6 +288,7 @@ nav.vertical .nav-link:hover {
     margin: 1em;
 	padding: 1em;
     box-sizing: content-box;
+	transform: perspective(400px);
 }
 .face {
 	transform: rotate3d(var(--i, 0), var(--j, 1), 0, var(--a, 0deg)) translateZ(.5em);
@@ -313,7 +306,7 @@ nav.vertical .nav-link:hover {
 
 /*Other Classes*/
 [class*="container"] {
-	border-radius: 10px;
+	border-radius: 1rem;
 	padding: 1rem;
 	background: var(--light-grad);
 }
@@ -321,7 +314,7 @@ section[class*="container"] {
 	border-radius: 0;
 }
 .glass-container {
-	backdrop-filter: blur(20px) brightness(.8);
+	backdrop-filter: blur(20px) brightness(.6);
 }
 .dark-container {
 	background: var(--dark-grad);
@@ -337,7 +330,10 @@ section[class*="container"] {
 }
 /*Extra padding for elements with text*/
 .text-container {
-	padding: 2.5rem;
+	padding: 1.5rem 2.5rem;
+}
+.text-container * {
+	margin-bottom: .5em;
 }
 .center-x {
 	position: absolute;
@@ -403,14 +399,14 @@ section[class*="container"] {
 	100% { border-color: var(--red) }
 }
 @keyframes spin-anim {
-	0% { transform: rotateX(0turn) rotateY(0turn) rotateZ(0turn) }
-	14.28% { transform: rotateX(1turn) rotateY(0turn) rotateZ(0turn) }
-	28.57% { transform: rotateX(1turn) rotateY(1turn) rotateZ(0turn) }
-	42.85% { transform: rotateX(1turn) rotateY(1turn) rotateZ(1turn) }
-	57.14% { transform: rotateX(0turn) rotateY(0turn) rotateZ(0turn) }
-	71.42% { transform: rotateX(-1turn) rotateY(0turn) rotateZ(0turn) }
-	85.71% { transform: rotateX(-1turn) rotateY(-1turn) rotateZ(0turn) }
-	100% { transform: rotateX(-1turn) rotateY(-1turn) rotateZ(-1turn) }
+	0% { transform: perspective(400px) rotateX(0turn) rotateY(0turn) rotateZ(0turn) }
+	14.28% { transform: perspective(400px) rotateX(1turn) rotateY(0turn) rotateZ(0turn) }
+	28.57% { transform: perspective(400px) rotateX(1turn) rotateY(1turn) rotateZ(0turn) }
+	42.85% { transform: perspective(400px) rotateX(1turn) rotateY(1turn) rotateZ(1turn) }
+	57.14% { transform: perspective(400px) rotateX(0turn) rotateY(0turn) rotateZ(0turn) }
+	71.42% { transform: perspective(400px) rotateX(-1turn) rotateY(0turn) rotateZ(0turn) }
+	85.71% { transform: perspective(400px) rotateX(-1turn) rotateY(-1turn) rotateZ(0turn) }
+	100% { transform: perspective(400px) rotateX(-1turn) rotateY(-1turn) rotateZ(-1turn) }
 }
 
 /*Cursor*/
@@ -419,11 +415,16 @@ section[class*="container"] {
 	z-index: 99;
 	left: 0;
 	top: 0;
+}
+:not(section).fixed-element {
 	pointer-events: none;
+	user-select: none;
 	opacity: .8;
 }
-section.fixed-element {
-	opacity: 1;
+.square {
+	height: 2rem;
+	width: 2rem;
+	margin: 0 auto;
 }
 #cursor {
 	width: 50px;
@@ -475,4 +476,38 @@ section.fixed-element {
 	background-attachment: fixed;
 	background-color: var(--dark);
 	position: absolute;
+}
+
+/*-----------------Responsitivity (Mobile First Design)-----------------*/
+@media screen and (min-width: 50rem) {
+	aside {
+		position: absolute;
+		/*So it lines up with the nav*/
+		right: 2.5%;
+		top: 50%;
+		width: 25rem;
+		height: 95%;
+		transform: translateY(-50%);
+		overflow: auto;
+	}
+	nav.vertical {
+		transform: translate(-25%, -50%);
+		clip-path: circle(2.5rem at 50% 2.5rem);
+	}
+	nav.open {
+		transform: translateY(-50%);
+		clip-path: circle(100% at 50% 50%);
+	}
+	.square {
+		height: 3rem;
+		width: 3rem;
+	}
+	h1 { font-size: 7rem; }
+	#hero-text {
+		bottom: 1em;
+		transform: translateX(-50%);
+	}
+	.text-container {
+		padding: 2.5rem;
+	}
 }

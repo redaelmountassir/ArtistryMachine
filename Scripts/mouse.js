@@ -7,21 +7,21 @@ if (cursor) {
     const cursorYSet = gsap.quickSetter(cursor, "y", "px");
     gsap.set(cursor, { xPercent: -50, yPercent: -50 });
     document.body.classList.add("no-cursor");
-    document.addEventListener("mousemove", function (e) {
+    document.addEventListener("pointermove", function (e) {
         cursorXSet(e.clientX);
         cursorYSet(e.clientY);
     });
 
     //Click effect
-    document.addEventListener("mousedown", function () { setCursorMode("select") });
-    document.addEventListener("mouseup", function () { setCursorMode("unselect") });
+    document.addEventListener("pointerdown", function () { setCursorMode("select") });
+    document.addEventListener("pointerup", function () { setCursorMode("unselect") });
 
     //Focus when over links
     const links = document.getElementsByTagName("a");
     for (let i = 0; i < links.length; i++) {
         link = links[i];
-        link.addEventListener("mouseover", function () { setCursorMode("focus") });
-        link.addEventListener("mouseout", function () { setCursorMode("none") });
+        link.addEventListener("pointerover", function () { setCursorMode("focus") });
+        link.addEventListener("pointerout", function () { setCursorMode("none") });
     }
 }
 let lastCursorMode = null;
@@ -60,5 +60,16 @@ function setCursorMode(mode) {
             break;
         default:
             cursorMode = "none";
+    }
+}
+
+//No cursor if screen to small :(
+window.matchMedia("(max-width: 50rem)").onchange = function () {
+    if (this.matches) {
+        cursor.style.display = "none";
+        document.body.classList.remove("no-cursor");
+    } else {
+        cursor.style.display = null;
+        document.body.classList.add("no-cursor");
     }
 }
