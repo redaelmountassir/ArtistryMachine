@@ -1,4 +1,7 @@
 window.onload = function () {
+    //Media Query for small screen
+    const mediaQuery = window.matchMedia("(max-width: 50rem)");
+
     //Get loading variables
     //Loading System (Unique and more complex because it uses a tasks system)
     const loadingSection = document.getElementById("loading-section"),
@@ -89,7 +92,7 @@ window.onload = function () {
         }
     };
     viewport.update(true);
-    window.addEventListener("resize", viewport.update);
+    window.addEventListener("resize", viewport.update, false);
     background.appendChild(renderer.domElement);
 
     //Make main scene
@@ -141,13 +144,14 @@ window.onload = function () {
     const frameBasePos = new THREE.Vector3(0, 2.25, 0);
     //Painting data tooltip
     const paintingTooltip = {
-        domElement: document.getElementById("painting-tooltip"),
+        domElement: document.getElementsByTagName("figcaption")[0],
         visible: true,
-        set: function (pos, paintingObj) {
+        set: function (pos) {
             //Set pos
             this.xSet(pos.x);
             this.ySet(pos.y);
-
+        },
+        show: function (paintingObj) {
             //Set visibility
             if (!this.visible) {
                 this.visible = true;
@@ -222,16 +226,17 @@ window.onload = function () {
     focusLight.lookAt(frameBasePos);
     backgroundScene.add(focusLight);
 
-    //Do not show tooltip if the canvas is even being hovered over
+    //Do not show tooltip if the canvas is even being hovered over (applies only to non-mobile devices)
     background.onmouseenter = function () { cancelRaycasts = false };
     background.onmouseleave = function () { cancelRaycasts = true };
 
     //Render loop
     function render() {
         //Raycast to the painting every render loop for the tooltip
-        if (currentPeriod && !cancelRaycasts) {
+        paintingTooltip.set(mouse.pos);
+        if (currentPeriod && gyro.use ? paintingSelected : !cancelRaycasts) {
             raycaster.setFromCamera(mouse.normalizedPos, camera);
-            raycaster.intersectObject(frame, true).length ? paintingTooltip.set(mouse.pos, currentPeriod.painting) : paintingTooltip.hide();
+            raycaster.intersectObject(frame, true).length ? paintingTooltip.show(currentPeriod.painting) : paintingTooltip.hide();
         }
         else
             paintingTooltip.hide();
@@ -240,25 +245,51 @@ window.onload = function () {
         requestAnimationFrame(render);
     };
 
-    //Move cam with mouse
+    //Move cam with mouse on anything not mobile
     const mouse = {
         sensitivity: new THREE.Vector2(.25, .5),
         normalizedPos: new THREE.Vector2(0, 0),
-        pos: new THREE.Vector2(0, 0)
+        pos: new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2),
+        moveEvent: function (e) {
+            //Update mouse pos and make sure its normalized (-1 to 1 range)
+            mouse.pos.x = e.clientX;
+            mouse.pos.y = e.clientY;
+            mouse.normalizedPos.x = mouse.pos.x / viewport.vw * 2 - 1;
+            mouse.normalizedPos.y = mouse.pos.y / viewport.vh * -2 + 1;
+            //Do NOT use the mouse if the gyro should be used
+            if (gyro.use) return;
+            setCamPos(mouse.normalizedPos.x * mouse.sensitivity.x, mouse.normalizedPos.y * mouse.sensitivity.y);
+        }
     }
-    document.addEventListener("pointermove", function (e) {
-        //Update mouse pos and make sure its normalized (-1 to 1 range)
-        mouse.pos.x = e.clientX;
-        mouse.pos.y = e.clientY;
-        mouse.normalizedPos.x = mouse.pos.x / viewport.vw * 2 - 1;
-        mouse.normalizedPos.y = mouse.pos.y / viewport.vh * -2 + 1;
+    document.addEventListener("mousemove", mouse.moveEvent, false);
+
+    //Add orientation support to look around on mobile
+    const gyro = {
+        supported: window.DeviceOrientationEvent !== undefined,
+        _use: false,
+        sensitivity: new THREE.Vector2(1, 1),
+        get use() { return this._use },
+        set use(value) { this._use = value && this.supported },
+        changeEvent: function (e) {
+            const x = e.gamma / 90;
+            const y = e.beta / 180;
+            setCamPos(x * gyro.sensitivity.x, y * gyro.sensitivity.y);
+        }
+    }
+    //This variable tracks whether you selected the painting (applies only on devices that use gyro)
+    let paintingSelected = false;
+    gyro.use = mediaQuery.matches;
+    mediaQuery.addEventListener("change", function () { gyro.use = mediaQuery.matches });
+    window.addEventListener("deviceorientation", gyro.changeEvent, false);
+    window.addEventListener("click", function (e) { paintingSelected = background.contains(e.target) }, false);
+
+    function setCamPos(x, y) {
+        y += camBaseY;
         gsap.to(camera.position, {
-            x: mouse.normalizedPos.x * mouse.sensitivity.x,
-            y: mouse.normalizedPos.y * mouse.sensitivity.y + camBaseY,
-            duration: .75, ease: "power2.out", overwrite: "auto",
+            x, y, duration: .75, ease: "power2.out", overwrite: "auto",
             onUpdate: function () { camera.lookAt(frameBasePos) }
         });
-    });
+    }
 
     //Request the gltf and json files
     //Create loading json files task
@@ -380,7 +411,8 @@ window.onload = function () {
                 }
 
             //Set up the panel that will display the information about a given period
-            const panelElement = document.getElementById("info-panel"),
+            const eraList = document.getElementById("era-list"),
+                panelElement = document.getElementById("info-panel"),
                 infoButton = panelElement.children[0],
                 period = panelElement.children[1],
                 times = panelElement.children[2],
@@ -391,28 +423,12 @@ window.onload = function () {
                     set mobileMode(value) {
                         if (this._mobileMode === value) return;
                         this._mobileMode = value;
-                        if (this.panelAnim) {
-                            this.visible = false;
-                            this.panelAnim.kill();
-                            gsap.set(panelElement, { clearProps: "all" });
-                            this.mobileMode ? gsap.set(panelElement.children, { clearProps: "all" }) : gsap.set(infoButton, { clearProps: "all" });
-                        }
-                        if (this.mobileMode) {
-                            this.panelAnim = new gsap.timeline({ paused: true, defaults: { ease: "power2.out", duration: .5 } })
-                                .from(panelElement, { yPercent: 100, y: "-4rem" })
-                                .from(infoButton, { rotation: 180, yPercent: -45 }, "<");
-                            infoButton.style.display = null;
-                        } else {
-                            this.panelAnim = new gsap.timeline({ paused: true, defaults: { ease: "power2.out", duration: .5 } })
-                                .from(panelElement, { autoAlpha: 0, xPercent: 100 })
-                                .from(panelElement.children, { stagger: .1, autoAlpha: 0, y: -100 });
-                            infoButton.style.display = "none";
-                        }
-                        this.show();
+                        this.mobileMode ? this.hide(true) : this.show(true);
+                        preventTransition(panelElement);
+                        preventTransition(eraList);
                     },
                     visible: false,
                     currentIndex: -1,
-                    panelAnim: null,
                     set: function (index) {
                         if (this.currentIndex === index) return;
                         this.currentIndex = index;
@@ -425,90 +441,96 @@ window.onload = function () {
                     show: function (override) {
                         //Will not show if already visible or in mobile mode and the cancel isnt overidden
                         //If the panel is open in mobile mode, and there is scrolling, just update
-                        if ((this.visible || this.mobileMode) && !override) return;
+                        if (!override && (this.visible || this.mobileMode)) return eraList.classList.remove("expand");
                         this.visible = true;
-                        //Show with anim
-                        this.panelAnim.play();
+                        panelElement.classList.add("expand");
+                        if (!this.mobileMode) eraList.classList.remove("expand");
                     },
                     hide: function (override) {
                         //Will not hide if already hidden or in mobile mode and the cancel isnt overidden
-                        if ((!this.visible || this.mobileMode) && !override) return;
+                        if (!override && (!this.visible || this.mobileMode)) return eraList.classList.add("expand");
                         this.visible = false;
                         //Hide with anim
-                        this.panelAnim.reverse();
+                        panelElement.classList.remove("expand");
+                        if (!this.mobileMode) eraList.classList.add("expand");
                     },
                     init: function () {
                         this.set(0);
-                        //Mobile-first methodology
-                        this.mobileMode = true;
+                        this.mobileMode = mediaQuery.matches;
                         //Open panel on click
-                        infoButton.onclick = function (e) { this.visible ? this.hide(true) : this.show(true) }.bind(this);
+                        infoButton.onclick = function () { this.visible ? this.hide(true) : this.show(true) }.bind(this);
                         //Prevents dragPanel from reacting
-                        infoButton.onmousedown = function (e) {
-                            e.stopPropagation();
-                            e.preventDefault();
-                        }
-                        infoButton.ontouchstart = function (e) {
-                            e.stopPropagation();
-                            e.preventDefault();
-                        }
+                        infoButton.ontouchstart = infoButton.onmousedown = function (e) { e.stopPropagation() }
                         function dragPanel(e) {
+                            //The click event will not reach the window so I manually tell paintingSelected its false
+                            paintingSelected = false;
+                            e.preventDefault();
+
                             //Only drag in mobile mode
                             if (!this.mobileMode) return;
-                            //Pause the animation no matter the point (prevents fighting)
-                            this.panelAnim.pause();
                             //Define important vars
                             const touchEvents = e.touches != undefined,
-                                startY = touchEvents ? e.touches[0].clientY : e.clientY,
-                                threshold = window.innerHeight * .75,
-                                animTime = this.panelAnim.duration();
-                            //Is the panel already at the top (1) or bottom (0)
-                            let normalizedDelta = this.visible ? 1 : 0;
+                                panelBounds = panelElement.getBoundingClientRect(),
+                                threshold = window.innerHeight * .5,
+                                maxY = panelBounds.height - convertRemToPixels(4),
+                                startTransform = getComputedStyle(panelElement).transform,
+                                startY = touchEvents ? e.touches[0].clientY : e.clientY;
+                            let deltaY = 0;
+                            //This prevents panel element from transitioning during forced transformations
+                            blockTransition(panelElement);
                             //Drag events
                             function drag(e) {
+                                e.preventDefault();
+
                                 //Gives the amount the mouse moved by in a 0-1 range
-                                const y = touchEvents ? e.touches[0].clientY : e.clientY;
-                                normalizedDelta = this.visible ? 1 - ((y - startY) / threshold) : (startY - y) / threshold;
-                                normalizedDelta = gsap.utils.clamp(0, 1, normalizedDelta);
-                                //Scrub through the animation using that value
-                                this.panelAnim.seek(normalizedDelta * animTime);
+                                deltaY = startY - (touchEvents ? e.touches[0].clientY : e.clientY);
+                                deltaY = this.visible ? gsap.utils.clamp(-maxY, 0, deltaY) : gsap.utils.clamp(0, maxY, deltaY);
+                                //Sets the new transform (without interfering with the original transform if there was one)
+                                panelElement.style.transform = startTransform != "none" ? startTransform + ` translateY(${-deltaY}px)` : `translateY(${-deltaY}px)`;
                             }
                             function stopDrag(e) {
-                                //Snap to the closer end
-                                normalizedDelta > .5 ? this.show(true) : this.hide(true);
+                                e.preventDefault();
+
+                                //Remove inline styles
+                                panelElement.style.transform = null;
+                                //Snap to the swipe end
+                                this.visible ?
+                                    -deltaY > threshold ? this.hide(true) : this.show(true) :
+                                    deltaY > threshold ? this.show(true) : this.hide(true);
                                 //Remove events
                                 if (touchEvents) {
-                                    document.removeEventListener("touchmove", drag);
-                                    document.removeEventListener("touchend", stopDrag);
+                                    document.removeEventListener("touchmove", drag, false);
+                                    document.removeEventListener("touchend", stopDrag, false);
+                                    document.addEventListener("touchcancel", stopDrag, false);
                                 } else {
-                                    document.removeEventListener("mousemove", drag);
-                                    document.removeEventListener("mouseup", stopDrag);
+                                    document.removeEventListener("mousemove", drag, false);
+                                    document.removeEventListener("mouseup", stopDrag, false);
                                 }
+                                allowTransition(panelElement);
                             }
                             //Assign events to correct actions
                             drag = drag.bind(this);
                             stopDrag = stopDrag.bind(this);
                             if (touchEvents) {
-                                document.addEventListener("touchmove", drag);
-                                document.addEventListener("touchend", stopDrag);
+                                document.addEventListener("touchmove", drag, { passive: false });
+                                document.addEventListener("touchend", stopDrag, { passive: false });
+                                document.addEventListener("touchcancel", stopDrag, { passive: false });
                             } else {
-                                document.addEventListener("mousemove", drag);
-                                document.addEventListener("mouseup", stopDrag);
+                                document.addEventListener("mousemove", drag, false);
+                                document.addEventListener("mouseup", stopDrag, false);
                             }
                         };
                         dragPanel = dragPanel.bind(this);
                         //Open panel on drag
-                        panelElement.ontouchstart = dragPanel;
-                        panelElement.onmousedown = dragPanel;
+                        panelElement.addEventListener("mousedown", dragPanel, false);
+                        panelElement.addEventListener("touchstart", dragPanel, { passive: false });
                     }
                 };
             //Initialize panel
             infoPanel.init();
 
             //Change mode on media query
-            const mediaQuery = window.matchMedia("(max-width: 50rem)");
-            mediaQuery.onchange = function () { infoPanel.mobileMode = mediaQuery.matches };
-            mediaQuery.onchange();
+            mediaQuery.addEventListener("change", function () { infoPanel.mobileMode = mediaQuery.matches }, false);
 
             //The scroll drives the animation
             let scrollingCheck;
@@ -535,13 +557,32 @@ window.onload = function () {
                     infoPanel.set(Math.round(this.totalProgress() * (artEras.length - 1)));
                 }
             });
+
+            //Create a list fragment to append the many era label 
+            const listFragment = new DocumentFragment(),
+                eraLabelTemplate = document.createElement("li"),
+                labelText = document.createElement("h4");
+            //Set up the first era label that will be used as a template for the rest
+            labelText.className = "right-align";
+            labelText.textContent = startingPeriod.title;
+            eraLabelTemplate.appendChild(labelText);
+            listFragment.appendChild(eraLabelTemplate);
+
             //Add the initial state (Must be done seperately)
             tl.addLabel("0")
                 .set(timeData, { current: startingPeriod.timeStart })
-                .set(background, { backgroundColor: startingPeriod.associatedColor });
-            //For each art era, add the nescessary animations (and there are plenty)
+                .set(background, { backgroundColor: startingPeriod.associatedColor })
+                .set(eraLabelTemplate, { scale: 2, transformOrigin: "right", color: "white" });
+
+
             for (let i = 1; i < artEras.length; i++) {
                 const timePeriod = artEras[i];
+
+                //Duplicate the era label and add it to the fragment list
+                const eraLabel = eraLabelTemplate.cloneNode(true);
+                eraLabel.firstElementChild.textContent = timePeriod.title;
+                listFragment.appendChild(eraLabel);
+
                 //It is important for labels to be the index so that the correct period is accessed when snapping
                 const associatedColorRGB = gsap.utils.splitColor(timePeriod.associatedColor);
                 for (let i = 0; i < 3; i++) associatedColorRGB[i] /= 255;
@@ -551,8 +592,12 @@ window.onload = function () {
                     .to(ambientLight.color, { r: associatedColorRGB[0], g: associatedColorRGB[1], b: associatedColorRGB[2] }, "<")
                     .to(mat.color, { r: associatedColorRGB[0], g: associatedColorRGB[1], b: associatedColorRGB[2] }, "<")
                     .fromTo(stand.rotation, { y: 0 }, { y: Math.PI * 2, ease: "none" }, "<")
+                    .fromTo(eraLabel, { opacity: .5 }, { scale: 2, transformOrigin: "right", opacity: 1 }, "<")
+                    .to(eraLabel.previousSibling, { scale: 1, transformOrigin: "right", opacity: .25 }, "<")
                     .addLabel(i);
             }
+            //Add fragment to the actual DOM
+            eraList.firstElementChild.appendChild(listFragment);
         }
     },
         function (e) { loadJsonTask.progress = progressFromEvent(e) });
@@ -574,4 +619,7 @@ function arrayFromProperty(array, property) {
     const newArray = [];
     for (let i = 0; i < array.length; i++) newArray.push(array[i][property]);
     return newArray;
+}
+function convertRemToPixels(rem) {
+    return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
 }

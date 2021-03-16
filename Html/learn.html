@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../Css/main.css" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Lobster&family=Poppins:wght@300;500;600&display=swap"
         rel="stylesheet"
     />
     <!--Dependencies-->
@@ -18,8 +18,8 @@
     <script src="../3D/three.min.js"></script>
     <script src="../3D/GLTFLoader.js"></script>
     <!--Custom Scripts-->
-    <script src="../Scripts/display.js"></script>
     <script src="../Scripts/advancedNav.js" defer></script>
+    <script src="../Scripts/display.js"></script>
 </head>
 <body>
     <section id="loading-section" class="center-content black-container fixed-element">
@@ -61,25 +61,35 @@
             </ul>
         </nav>
     </header>
-    <main id="display">
-        <div id="painting-tooltip" class="fixed-element black-container">
-            <h4>[Painting Name]</h4>
-            <p>By [Artist Name]</p>
-            <p>[Time Painted]</p>
-            <p>[Location Painted]</p>
-        </div>
+    <main id="display"> 
         <section id="display-background">
             <time class="full-size watermark center-content">
                 <h1 class="large-text"></h1>
                 <h1></h1>
             </time>
+            <figcaption class="fixed-element black-container">
+                <h4>[Painting Name]</h4>
+                <p>By [Artist Name]</p>
+                <p>[Time Painted]</p>
+                <p>[Location Painted]</p>
+            </figcaption>
         </section>
-        <aside class="glass-container text-container" id="info-panel">
-            <button class="square"><img src="../Icons/arrow-down.svg" alt="Expand or Collapse"></button>
+        <aside class="expandable with-expand-button text-container glass-container" id="info-panel">
+            <button class="square expand-button"><img src="../Icons/arrow-down.svg" alt="Expand or Collapse"></button>
             <h3></h3>
             <h4></h4>
             <p></p>
-        </section>
+        </aside>
+        <aside class="expandable" id="era-list">
+            <ul class="vertical full-size">
+            </ul>
+        </aside>
     </main>
+    <noscript>
+        <section class="center-content black-container fixed-element">
+            <h1>Why No Scripts 😢</h1>
+            <h3>Please Enable Scripts in your browser settings 👍</h3>
+        </section>
+    </noscript>
 </body>
 </html>

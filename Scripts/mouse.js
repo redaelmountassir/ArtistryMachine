@@ -1,3 +1,4 @@
+//IMPORTANT! - I used to have pointer events here instead of mouse events but it ends up looking bad so only mouse events will be supported
 //Custom cursor behavior
 const cursor = document.getElementById("cursor");
 const cursorImg = cursor ? cursor.firstElementChild : null;
@@ -7,21 +8,21 @@ if (cursor) {
     const cursorYSet = gsap.quickSetter(cursor, "y", "px");
     gsap.set(cursor, { xPercent: -50, yPercent: -50 });
     document.body.classList.add("no-cursor");
-    document.addEventListener("pointermove", function (e) {
+    document.addEventListener("mousemove", function (e) {
         cursorXSet(e.clientX);
         cursorYSet(e.clientY);
-    });
+    }, false);
 
     //Click effect
-    document.addEventListener("pointerdown", function () { setCursorMode("select") });
-    document.addEventListener("pointerup", function () { setCursorMode("unselect") });
+    document.addEventListener("mousedown", function () { setCursorMode("select") }, false);
+    document.addEventListener("mouseup", function () { setCursorMode("unselect") }, false);
 
     //Focus when over links
-    const links = document.getElementsByTagName("a");
+    const links = document.querySelectorAll("a, button");
     for (let i = 0; i < links.length; i++) {
         link = links[i];
-        link.addEventListener("pointerover", function () { setCursorMode("focus") });
-        link.addEventListener("pointerout", function () { setCursorMode("none") });
+        link.addEventListener("mouseover", function () { setCursorMode("focus") }, false);
+        link.addEventListener("mouseout", function () { setCursorMode("none") }, false);
     }
 }
 let lastCursorMode = null;

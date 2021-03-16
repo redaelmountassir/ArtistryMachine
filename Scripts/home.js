@@ -5,16 +5,13 @@ const clonedScrollingText = scrollingText ? scrollingText.cloneNode(true) : null
 const oldBackground = document.getElementById("old");
 const newBackground = document.getElementById("new");
 if (scrollingText && oldBackground && newBackground) {
-    const time = 25;
     scrollingText.parentNode.appendChild(clonedScrollingText);
 
     //Animate the text to scroll infinitely
-    new gsap.timeline({ repeat: -1, defaults: { ease: "none", duration: time } })
-        .fromTo(scrollingText, { y: 0 }, { y: "-100%" }, 0)
-        .fromTo(clonedScrollingText, { y: "100%" }, { y: 0 }, 0)
-        .set(scrollingText, { y: "100%" })
-        .to(clonedScrollingText, { y: "-100%" }, time)
-        .to(scrollingText, { y: 0 }, time);
+    const time = 25, scrollAmount = 100;
+    gsap.fromTo(scrollingText, { yPercent: -scrollAmount }, { yPercent: scrollAmount, repeat: -1, ease: "none", duration: time });
+    gsap.fromTo(clonedScrollingText, { yPercent: -scrollAmount }, { yPercent: scrollAmount, repeat: -1, ease: "none", duration: time })
+        .seek(time / 2);
 
     //Make the list items change the page theme
     function applyThemeEffects(elements) {
@@ -65,9 +62,10 @@ if (scrollTo) {
             });
             function createAnim() {
                 new gsap.timeline({ scrollTrigger: { trigger: destination, scrub: 1 } })
-                    .to([scrollingText, clonedScrollingText], { x: "+=100%", autoAlpha: 0, ease: "Power2.out" }, 0)
-                    .to(scrollTo, { autoAlpha: 0 }, 0)
-                    .to(heroText, { y: "-150%", autoAlpha: 0 }, 0);
+                    .to([scrollingText, clonedScrollingText], { x: "+=100%", autoAlpha: 0, ease: "Power2.out" })
+                    .to(scrollTo, { autoAlpha: 0 }, "<")
+                    .to(heroText, { yPercent: -150, autoAlpha: 0 }, "<")
+                    .to(heroText.firstElementChild, { yPercent: -150, autoAlpha: 0 }, "<");;
             }
         }
     }

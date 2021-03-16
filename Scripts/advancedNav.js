@@ -10,6 +10,7 @@ const navbar = document.getElementsByTagName("nav")[0],
 
 //Only applies to vertical nav
 let navOpen = false;
+const mediaQuery = window.matchMedia("(min-width: 50rem)");
 
 //Do things based on a specified type
 switch (navbarType) {
@@ -18,14 +19,16 @@ switch (navbarType) {
         break;
     case "vertical":
         setNavVertical();
+        mediaQuery.onchange = function () { preventTransition(navbar) };
         break;
     //By default toggles between horizontal and vertical based on media query
     default:
-        const mediaQuery = window.matchMedia("(min-width: 50rem)");
         mediaQuery.onchange = function () { mediaQuery.matches ? setNavHorizontal() : setNavVertical() }
         mediaQuery.onchange();
         break;
 }
+
+navbar.style.visibility = "visible";
 
 function setNavVertical() {
     //Switch the class
@@ -34,7 +37,7 @@ function setNavVertical() {
     //Show nav burger in vertical mode
     navBurger.style.display = null;
     //An transition will play when adding vertical - this prevents that
-    preventTransition(navbar)
+    preventTransition(navbar);
 
     //Toggle open on click of burger
     if (!navBurger) return;
@@ -61,8 +64,14 @@ function closeNav() {
 }
 
 function preventTransition(element) {
+    blockTransition(element);
+    allowTransition(element);
+}
+function blockTransition(element) {
     element.classList.add("no-anim");
     //Forces the window to redraw
-    element.clientLeft;
+    element.offsetHeight;
+}
+function allowTransition(element) {
     element.classList.remove("no-anim");
 }
