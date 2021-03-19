@@ -41,9 +41,8 @@ window.onload = function () {
             complete: function () {
                 progressCompleted.style.width = 100 + "%";
                 gsap.to(loadingSection, {
-                    autoAlpha: 0, delay: 1, ease: "power2.out", duration: 2, onComplete: function () {
-                        loadingSection.classList.add("no-anim");
-                    }
+                    autoAlpha: 0, pointerEvents: "none",
+                    delay: 1, ease: "power2.out", duration: 2, onComplete: blockTransition, onCompleteParams: [loadingSection]
                 });
                 this.tasks = null;
             }
@@ -435,7 +434,10 @@ window.onload = function () {
                         if (!override && (this.visible || this.mobileMode)) return eraList.classList.remove("expand");
                         this.visible = true;
                         panelElement.classList.add("expand");
-                        if (!this.mobileMode) eraList.classList.remove("expand");
+                        if (!this.mobileMode) {
+                            gsap.from(panelElement.children, { opacity: 0, y: -100, stagger: .25, ease: "power2.out", clearProps: true });
+                            eraList.classList.remove("expand");
+                        }
                     },
                     hide: function (override) {
                         //Will not hide if already hidden or in mobile mode and the cancel isnt overidden
@@ -453,6 +455,9 @@ window.onload = function () {
                         //Prevents dragPanel from reacting
                         infoButton.ontouchstart = infoButton.onmousedown = function (e) { e.stopPropagation() }
                         function dragPanel(e) {
+                            //User must click on the container. Not the paragraphs, the buttons, etc.
+                            if (panelElement !== e.target) return;
+
                             //The click event will not reach the window so I manually tell paintingSelected its false
                             paintingSelected = false;
                             e.preventDefault();

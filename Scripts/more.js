@@ -3,7 +3,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 //Image List
 const paintingList = document.getElementById("additional-paintings"),
-    moveAmount = 50, scrollDuration = "+=5000";
+    moveAmount = 100, scrollDuration = "+=5000";
 gsap.fromTo(paintingList, { xPercent: moveAmount }, {
     xPercent: -moveAmount,
     ease: "none",
