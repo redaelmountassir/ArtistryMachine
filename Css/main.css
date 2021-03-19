@@ -17,6 +17,7 @@
 	/*Shadows*/
 	--shadow: #11111152 0 2.5px 2.5px;
 	--text-shadow: #11111152 0 2.5px 2.5px;
+	--glow-shadow: #fff7f852 0px 0px 10px;
 	/*Fonts*/
 	--main-font: "Poppins", sans-serif;
 	--secondary-font: "Lobster", cursive;
@@ -42,13 +43,11 @@ body,
 section {
 	width: 100%;
 	height: 100vh;
-	overflow: hidden;
 	position: relative;
 }
 ul {
 	list-style-type: none;
 	display: flex;
-	flex: 1;
 	justify-content: space-around;
 }
 .vertical, .vertical ul {
@@ -73,12 +72,15 @@ button:focus {
 button * {
 	filter: drop-shadow(var(--text-shadow));
 	transition: all .1s ease-out;
+	text-align: center;
 }
 button:active * {
 	filter: drop-shadow(var(--text-shadow)) brightness(.5);
 	transform: scale(.75);
 }
 img {
+	object-fit: cover;
+	display: block;
 	filter: drop-shadow(var(--text-shadow));
 }
 canvas {
@@ -92,22 +94,6 @@ main.darken {
 	pointer-events: none;
 }
 
-/*Custom scrollbar*/
-::-webkit-scrollbar {
-	width: 10px;
-	height: 10px;
-}
-::-webkit-scrollbar-track {
-	background: #b9b4b4;
-}
-::-webkit-scrollbar-thumb {
-	background: var(--dark);
-	border-radius: 5px;
-}
-::-webkit-scrollbar-thumb:hover {
-	background: #313131;
-}
-
 /*Typography*/
 h1, h2, h3, h4 {
 	text-shadow: var(--text-shadow);
@@ -115,17 +101,18 @@ h1, h2, h3, h4 {
 	line-height: 1em;
 }
 h1 { font-size: 5rem; text-align: center; }
-h2 { font-size: 5rem }
+h2 { font-size: 3rem; text-align: center; }
 h3 { font-size: 2.5rem }
 h4 { font-size: 1rem }
-p, label, a, time {
+p, label, time {
 	color: var(--mid);
-	font-size: 1rem;
 	line-height: 1.5em;
+	font-size: 1rem;
 }
-strong, .secondary-font {
+strong {
 	font-family: var(--secondary-font);
 	display: inline-block;
+	text-transform: capitalize;
 }
 blockquote {
 	font-style: italic;
@@ -151,8 +138,27 @@ a[href="#"] {
 	pointer-events: none;
     opacity: .5;
 }
+::selection {
+	background-color: var(--red);
+}
 .right-align {
 	text-align: right;
+}
+
+/*Custom scrollbar*/
+::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+::-webkit-scrollbar-track {
+	background: var(--mid);
+}
+::-webkit-scrollbar-thumb {
+	background: var(--dark);
+	border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: var(--black);
 }
 
 /*Nav bar*/
@@ -169,6 +175,10 @@ nav {
 	justify-content: center;
 	position: relative;
 	user-select: none;
+	font-size: 1rem;
+}
+nav ul {
+	flex: 1;
 }
 .nav-link, .nav-link * {
 	transition: transform 0.25s ease-out;
@@ -190,8 +200,8 @@ nav.horizontal img {
 	transform: translateY(2em);
 	position: absolute;
 }
-nav.horizontal .nav-link:hover p,
-nav.horizontal .nav-link:focus p {
+nav.horizontal .nav-link:hover span,
+nav.horizontal .nav-link:focus span {
 	transform: translateY(-2em);
 }
 nav.horizontal .nav-link:hover img,
@@ -293,6 +303,8 @@ aside {
 .expand-button {
 	transition: transform .5s ease-out;
 	transform: rotate(180deg) translateY(45%);
+}
+.expand.expand-button {
 	transform: none;
 }
 
@@ -336,37 +348,68 @@ aside {
 .face:nth-child(5) { --a: 90deg }
 .face:nth-child(6) { --a: -90deg }
 
-/*Other Classes*/
+/*Containers*/
 [class*="container"] {
 	border-radius: 1rem;
 	padding: 1rem;
 	background: var(--light-grad);
 }
-section[class*="container"] {
-	border-radius: 0;
-}
-.glass-container {
+[class*="container"][class*="glass-"] {
 	backdrop-filter: blur(20px) brightness(.6);
 }
-.dark-container {
+[class*="container"][class*="dark-"] {
 	background: var(--dark-grad);
 }
-.black-container {
+[class*="container"][class*="black-"] {
 	background: var(--black);
+}
+/*Extra padding for elements with text*/
+[class*="container"][class*="text-"] {
+	padding: 2.5rem;
+}
+[class*="container"][class*="text-"] * {
+	margin-bottom: .5em;
+}
+section[class*="container"] {
+	border-radius: 0;
+	overflow: hidden;
 }
 .center-content {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
-	text-align: center;
 }
-/*Extra padding for elements with text*/
-.text-container {
-	padding: 1.5rem 2.5rem;
+
+/*Extra Classes*/
+.tall-box {
+	width: 30vw;
+	height: 40vw;
+	margin: 1rem;
+	transition: box-shadow 1s ease-out;
 }
-.text-container * {
-	margin-bottom: .5em;
+.tall-box:hover {
+	box-shadow: var(--glow-shadow);
+}
+.before-after {
+    position: relative;
+    height: auto;
+    width: auto;
+}
+.before-after * {
+	margin: 0;
+    top: 0;
+}
+.after {
+    position: absolute;
+    overflow: hidden;
+}
+.slider {
+    width: .5rem;
+    height: 100%;
+    position: absolute;
+    background: var(--white);
+	transform: translateX(-50%);
 }
 .center-x {
 	position: absolute;
@@ -398,16 +441,22 @@ section[class*="container"] {
 	opacity: 0.25;
 	transform: translateX(-1rem);
 }
+.no-overflow {
+	overflow: hidden;
+}
 
 /*Animate Classes*/
-.multi-color {
+strong, .multi-color {
 	color: var(--white);
 	animation: multi-color 10s linear infinite alternate;
 }
-.cube.animate {
+.multi-color {
+	animation: multi-color-background 5s linear infinite alternate;
+}
+.cube.multi-color {
 	animation: spin-anim 10s ease-in-out infinite;
 }
-.cube.animate .face {
+.cube.multi-color .face {
 	animation: multi-color-border 5s linear infinite alternate;
 }
 @keyframes multi-color {
@@ -518,7 +567,6 @@ section[class*="container"] {
 		width: 25rem;
 		height: 95%;
 		transform: translateY(-50%);
-		overflow: auto;
 	}
 	aside.expandable {
 		transform: translate(100%,-50%);
@@ -545,7 +593,9 @@ section[class*="container"] {
 		width: 3rem;
 	}
 
-	h1 { font-size: 7rem; }
+	h1 { font-size: 7rem }
+	h2 { font-size: 5rem }
+	p { font-size: 1.2rem }
 
 	#hero-text {
 		bottom: 1em;

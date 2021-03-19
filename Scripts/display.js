@@ -47,7 +47,9 @@ window.onload = function () {
                 });
                 this.tasks = null;
             }
-        }
+        },
+        textureLoader = new THREE.TextureLoader(),
+        gltfLoader = new THREE.GLTFLoader();
 
     //Tell loading system that the dom has loaded
     loadingSystem.createTask("Loading Website...", .25).progress = 100;
@@ -101,7 +103,7 @@ window.onload = function () {
     //Create background shapes with staggered anims
     const shapesGroup = new THREE.Group();
 
-    const sphere = new THREE.SphereGeometry(5, 25, 25);
+    const sphere = new THREE.SphereGeometry(5, 30, 30);
     const mat = new THREE.MeshLambertMaterial({ color: 0x525251 });
 
     const sphere1 = new THREE.Mesh(sphere, mat);
@@ -189,13 +191,6 @@ window.onload = function () {
     paintingTooltip.init();
 
     //Add lighting
-    //Initiate loader
-    const textureLoader = new THREE.TextureLoader();
-    textureLoader.load("../3D/Textures/backgroundHDRI.hdr", function (loaded) {
-        scene.background = loaded;
-        scene.environment = loaded;
-    });
-
     //Overall colored light
     const ambientLight = new THREE.AmbientLight(0x404040, .25);
     backgroundScene.add(ambientLight);
@@ -333,8 +328,7 @@ window.onload = function () {
         //Step 2
         function loadModels() {
             //Initiate loader and loading task
-            const gltfLoader = new THREE.GLTFLoader(),
-                loadModelsTask = loadingSystem.createTask("Loading Models...", .25);
+            const loadModelsTask = loadingSystem.createTask("Loading Models...", .25);
 
             //The update function when loading a model
             function updateModelLoad(e) { loadModelsTask.progress = progressFromEvent(e) / 2 };
@@ -378,9 +372,6 @@ window.onload = function () {
 
         //Step 3
         function startDisplay() {
-            //You MUST force complete or else progress will never actually hit 100 because of how progress events work
-            loadingSystem.complete();
-
             //The time data object properly watches the users scrolled "time" and sets it accordingly
             const timeElement = document.getElementsByTagName("time")[0],
                 timeData = {
@@ -423,7 +414,7 @@ window.onload = function () {
                     set mobileMode(value) {
                         if (this._mobileMode === value) return;
                         this._mobileMode = value;
-                        this.mobileMode ? this.hide(true) : this.show(true);
+                        this.show(true);
                         preventTransition(panelElement);
                         preventTransition(eraList);
                     },
@@ -538,11 +529,11 @@ window.onload = function () {
 
             //Go through each time period and add it to the animation (Yes, the first one must be written out seperately)
             //Build the base timeline object driven by scrolling
-            let scrollDuration = 5;
+            let scrollDuration = 3000;
             const tl = new gsap.timeline({
                 scrollTrigger: {
                     trigger: display,
-                    end: function () { return window.innerHeight * scrollDuration },
+                    end: scrollDuration,
                     pin: true,
                     scrub: 1,
                     snap: {
@@ -563,7 +554,6 @@ window.onload = function () {
                 eraLabelTemplate = document.createElement("li"),
                 labelText = document.createElement("h4");
             //Set up the first era label that will be used as a template for the rest
-            labelText.className = "right-align";
             labelText.textContent = startingPeriod.title;
             eraLabelTemplate.appendChild(labelText);
             listFragment.appendChild(eraLabelTemplate);
@@ -598,6 +588,9 @@ window.onload = function () {
             }
             //Add fragment to the actual DOM
             eraList.firstElementChild.appendChild(listFragment);
+
+            //You MUST force complete or else progress will never actually hit 100 because of how progress events work
+            loadingSystem.complete();
         }
     },
         function (e) { loadJsonTask.progress = progressFromEvent(e) });

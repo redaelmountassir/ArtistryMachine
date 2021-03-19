@@ -1,5 +1,6 @@
 gsap.registerPlugin(ScrollToPlugin);
 
+//Scrolling text effect
 const scrollingText = document.getElementsByClassName("scrolling-text")[0];
 const clonedScrollingText = scrollingText ? scrollingText.cloneNode(true) : null;
 const oldBackground = document.getElementById("old");
@@ -40,10 +41,9 @@ if (scrollingText && oldBackground && newBackground) {
         gsap.fromTo(oldBackground, { autoAlpha: 1 }, { autoAlpha: 0, ease: "Power2.out", duration: 1 });
         gsap.fromTo(newBackground, { autoAlpha: 0 }, { autoAlpha: 1, ease: "Power2.out", duration: 1 });
     }
-
-    //Allow the user to edit the direction and speed via scroll wheel
 }
 
+//Scroll to button and basic scroll effect
 const scrollTo = document.getElementById("scroll-to");
 if (scrollTo) {
     let destination = scrollTo.getAttribute("data-destination-id");
@@ -69,4 +69,19 @@ if (scrollTo) {
             }
         }
     }
+}
+
+//Other scroll effect
+const headings = document.getElementsByTagName("h2");
+for (let i = 0; i < headings.length; i++) {
+    const heading = headings[i];
+    gsap.from(heading, {
+        xPercent: i % 2 === 0 ? 200 : -200,
+        ease: "Power2.out",
+        scrollTrigger: {
+            trigger: heading.parentElement,
+            scrub: 1,
+            end: "top top"
+        }
+    });
 }
