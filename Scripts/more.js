@@ -4,7 +4,8 @@ gsap.registerPlugin(ScrollTrigger);
 //Image List
 const paintingList = document.getElementById("additional-paintings"),
     moveAmount = 100, scrollDuration = "+=5000";
-gsap.fromTo(paintingList, { xPercent: moveAmount }, {
+gsap.fromTo(paintingList, { skewY: -5, xPercent: moveAmount }, {
+    skewY: 0,
     xPercent: -moveAmount,
     ease: "none",
     scrollTrigger: {
@@ -90,6 +91,7 @@ const headings = document.getElementsByTagName("h2");
 for (let i = 0; i < headings.length; i++) {
     const heading = headings[i];
     gsap.from(heading, {
+        opacity: 0,
         xPercent: i % 2 === 0 ? 200 : -200,
         ease: "Power2.out",
         scrollTrigger: {

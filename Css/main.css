@@ -119,12 +119,11 @@ strong {
 }
 blockquote {
 	font-style: italic;
-    font-size: 1rem;
     margin-left: 0;
-    text-indent: 1em;
     position: relative;
     text-align: center;
     padding-bottom: 2em;
+	max-width: 35em;
 }
 blockquote cite {
 	position: absolute;
@@ -132,6 +131,8 @@ blockquote cite {
     right: 2em;
     font-style: normal;
     color: var(--mid);
+	animation: float-anim 5s ease-in-out infinite alternate, multi-color 10s linear infinite alternate;
+	white-space: nowrap;
 }
 a {
 	text-decoration: none;
@@ -168,7 +169,7 @@ a[href="#"] {
 /*Nav bar*/
 nav {
 	position: fixed;
-	z-index: 999;
+	z-index: 99;
 	box-shadow: var(--shadow);
 	display: flex;
 	/*It is hidden so that the script only shows the nav when it is ready (Important for noscript)*/
@@ -237,13 +238,6 @@ nav.vertical .nav-link:hover {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
-}
-.line {
-	width: 100%;
-	height: 10%;
-	border-radius: 1rem;
-	background-color: var(--white);
-	transition: all .5s ease-out;
 }
 .open .line:first-child {
 	transform: translateY(325%) rotate(45deg);
@@ -330,16 +324,25 @@ aside {
 	transition: width 1s ease-out;
 }
 .cube {
+	/*Used as a custom property of some sort with the em that represents width*/
+	font-size: 5vmin;
 	transform-style: preserve-3d;
     -webkit-transform-style: preserve-3d;
-	/*Used as a custom property of some sort with the em*/
-	font-size: 5vmin;
     height: 1em;
     width: 1em;
     margin: 1em;
 	padding: 1em;
     box-sizing: content-box;
 	transform: perspective(400px);
+}
+.cube.watermark {
+	font-size: 25vmin;
+	position: absolute;
+    animation-duration: 100s !important;
+}
+.watermark .face {
+	opacity: .1;
+	animation: none !important;
 }
 .face {
 	transform: rotate3d(var(--i, 0), var(--j, 1), 0, var(--a, 0deg)) translateZ(.5em);
@@ -387,7 +390,8 @@ aside {
 [class*="container"][class*="text-"] {
 	padding: 4rem;
 }
-[class*="container"][class*="text-"] * {
+/*This selector is uncomfortably long :(*/
+[class*="container"][class*="text-"] *:not(:only-child) {
 	margin-bottom: .5em;
 }
 section[class*="container"] {
@@ -440,9 +444,9 @@ section[class*="container"] {
 	font-size: 20rem;
 	margin: .25em;
 }
-.watermark {
-	opacity: 0.15;
+li.watermark {
 	color: var(--white);
+	opacity: 0.15;
 	-webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
 	-webkit-text-stroke: 2.5px var(--white);
 	user-select: none;
@@ -453,16 +457,40 @@ section[class*="container"] {
 	line-height: 1.5em;
 	text-shadow: none;
 }
-.watermark * {
+li.watermark * {
 	text-shadow: none;
 }
-.watermark.solid {
+li.watermark.solid {
 	-webkit-text-fill-color: var(--white);
 	opacity: 0.25;
 	transform: translateX(-1rem);
 }
 .no-overflow {
 	overflow: hidden;
+}
+.link-button {
+	text-transform: uppercase;
+    border: 0.25rem solid var(--white);
+    border-radius: 1rem;
+	box-shadow: 0 .5rem 0 0 var(--white);
+	margin: 1em;
+    padding: 1em;
+	transition: all .1s ease-out;
+}
+.link-button:hover, .link-button:focus {
+	box-shadow: 0 0 0 0 var(--white);
+	transform: translateY(.5rem);
+	animation: multi-color-border 5s linear infinite alternate;
+}
+.link-button.dark {
+	border-color: var(--black);
+	box-shadow: 0 .5rem 0 0 var(--black);
+	color: var(--black);
+	animation: none;
+}
+.link-button.dark:hover,
+.link-button.dark:focus {
+	box-shadow: 0 0 0 0 var(--black);
 }
 
 /*Animate Classes*/
@@ -473,11 +501,18 @@ strong, .multi-color {
 .multi-color {
 	animation: multi-color-background 5s linear infinite alternate;
 }
-.cube.multi-color {
+.cube.animated {
 	animation: spin-anim 10s ease-in-out infinite;
 }
-.cube.multi-color .face {
+.cube.animated .face {
 	animation: multi-color-border 5s linear infinite alternate;
+}
+.line {
+	width: 100%;
+	height: 10%;
+	border-radius: 1rem;
+	background-color: var(--white);
+	transition: all .5s ease-out;
 }
 @keyframes multi-color {
 	0% { color: var(--yellow) }
@@ -514,11 +549,15 @@ strong, .multi-color {
 	85.71% { transform: perspective(400px) rotateX(-1turn) rotateY(-1turn) rotateZ(0turn) }
 	100% { transform: perspective(400px) rotateX(-1turn) rotateY(-1turn) rotateZ(-1turn) }
 }
+@keyframes float-anim {
+	0% { transform: translateY(0%) }
+	100% { transform: translateY(50%) }
+}
 
-/*Cursor*/
+/*Cursor and other fixed elements*/
 .fixed-element {
 	position: fixed;
-	z-index: 99;
+	z-index: 999;
 	left: 0;
 	top: 0;
 }
@@ -620,13 +659,13 @@ strong, .multi-color {
 		height: 3rem;
 		width: 3rem;
 	}
-	.watermark {
+	li.watermark {
 		font-size: 7rem;
 	}
 
 	h1 { font-size: 7rem }
 	h2 { font-size: 5rem }
-	p { font-size: 1.2rem }
+	.link-button, p { font-size: 1.2rem }
 
 	#hero-text {
 		bottom: 1em;

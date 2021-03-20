@@ -65,7 +65,7 @@ if (scrollTo) {
                     .to([scrollingText, clonedScrollingText], { x: "+=100%", autoAlpha: 0, ease: "Power2.out" })
                     .to(scrollTo, { autoAlpha: 0 }, "<")
                     .to(heroText, { yPercent: -150, autoAlpha: 0 }, "<")
-                    .to(heroText.firstElementChild, { yPercent: -150, autoAlpha: 0 }, "<");;
+                    .to(heroText.firstElementChild, { yPercent: -150, autoAlpha: 0 }, "<");
             }
         }
     }
@@ -76,6 +76,7 @@ const headings = document.getElementsByTagName("h2");
 for (let i = 0; i < headings.length; i++) {
     const heading = headings[i];
     gsap.from(heading, {
+        opacity: 0,
         xPercent: i % 2 === 0 ? 200 : -200,
         ease: "Power2.out",
         scrollTrigger: {

@@ -3,18 +3,16 @@
 const customCursor = {
     cursor: document.getElementById("cursor"),
     cursorImg: cursor ? cursor.firstElementChild : null,
-    cursorMode: "none"
+    cursorMode: "none",
+    damping: .25
 }
 
 //Built-in behaviours
 if (customCursor.cursor) {
-    customCursor.cursorXSet = gsap.quickSetter(customCursor.cursor, "x", "px");
-    customCursor.cursorYSet = gsap.quickSetter(customCursor.cursor, "y", "px");
     gsap.set(customCursor.cursor, { xPercent: -50, yPercent: -50 });
     document.body.classList.add("no-cursor");
     document.addEventListener("mousemove", function (e) {
-        customCursor.cursorXSet(e.clientX);
-        customCursor.cursorYSet(e.clientY);
+        gsap.to(customCursor.cursor, { x: e.clientX, y: e.clientY, duration: customCursor.damping, ease: "power2.out" })
     }, false);
 
     //Click effect
