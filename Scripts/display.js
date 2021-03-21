@@ -84,7 +84,7 @@ window.onload = function () {
 
             //Update renderer
             renderer.setSize(viewport.vw, viewport.vh);
-            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             //Update Cam
             if (preventCamUpdate) {
                 camera.aspect = viewport.vw / viewport.vh;

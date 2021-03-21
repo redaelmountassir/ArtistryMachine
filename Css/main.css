@@ -126,6 +126,8 @@ blockquote {
 	max-width: 35em;
 }
 blockquote cite {
+	font-family: var(--secondary-font);
+	font-size: 1.5rem;
 	position: absolute;
     bottom: 0;
     right: 2em;
@@ -443,6 +445,18 @@ section[class*="container"] {
 .large-text {
 	font-size: 20rem;
 	margin: .25em;
+}
+.no-pointer {
+	pointer-events: none;
+	user-select: none;
+}
+.transition-to-black {
+	background: linear-gradient(to top, var(--black), transparent 50%);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+	pointer-events: none;
 }
 /*Must be not a cube because it has a very unique water mark mode*/
 .watermark:not(.cube) {

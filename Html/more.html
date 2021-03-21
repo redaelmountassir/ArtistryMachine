@@ -14,6 +14,8 @@
     <!--Dependencies-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/ScrollTrigger.min.js"></script>
+    <script src="../3D/three.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.min.js" integrity="sha512-LF8ZB1iTwi4Qvkm4pekHG4a437Y9Af5ZuwbnW4GTbAWQeR2E4KW8WF+xH8b9psevV7wIlDMx1MH9YfPqgKhA/Q==" crossorigin="anonymous"></script>
+    <script src="../3D/GLTFLoader.js"></script>
     <!--Custom Scripts-->
     <script src="../Scripts/advancedNav.js" defer></script>
     <script src="../Scripts/more.js" defer></script>
@@ -34,7 +36,7 @@
             <cite>- René Magritte</cite>
         </blockquote>
     </section>
-    <script src="Scripts/basicLoader.js" defer></script>
+    <script src="../Scripts/basicLoader.js"></script>
     
     <div id="cursor" class="fixed-element"><img src="../Icons/cursor.svg" alt="cursor"></div>
     <header>
@@ -53,7 +55,7 @@
                         <span>Learn</span>
                         <img src="../Icons/learn.svg" alt="Learn" />
                 </a></li>
-                <li><a href="#" class="nav-link">
+                <li><a href="#" class="nav-link" tabindex="-1">
                         <span>More</span>
                         <img src="../Icons/more.svg" alt="More" />
                 </a></li>
@@ -65,8 +67,10 @@
         </nav>
     </header>
     <main>
-        <section class="text-container center-content">
+        <section class="dark-text-container center-content">
             <h1>Learn <strong>More</strong></h1>
+            <canvas class="no-pointer"></canvas>
+            <div class="transition-to-black"></div>
         </section>
         <section class="black-text-container center-content">
             <h2><strong>Other</strong> Paintings</h2>

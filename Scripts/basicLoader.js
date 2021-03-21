@@ -70,6 +70,19 @@ const quotesList = [
 //This loader should be right after the loading section
 const loadingSection = document.getElementById("loading-section"),
     quote = loadingSection.querySelector("blockquote p");
+
+//Load Events - these are optional events that extend the period of time it takes to load until these are completed
+const loadEvents = [],
+    complete = loadEvent => {
+        loadEvent.completed = true;
+        finish();
+    }
+function LoadEvent() {
+    loadEvents.push(this);
+}
+
+//Function to call when a load event is completed or the window loads
+let finish;
 if (quote) {
     const cite = loadingSection.querySelector("blockquote cite"),
         randomQuote = gsap.utils.random(quotesList);
@@ -77,8 +90,14 @@ if (quote) {
     quote.textContent = `"${randomQuote.quote}"`;
     cite.textContent = `- ${randomQuote.cite}`;
     //On the dom load animate away
-    window.onload = () => {
+    finish = () => {
+        //You can only finish if all loadEvents are completed
+        if (!loadEvents.every(function (loadEvent) { return loadEvent.completed })) return;
+
+
         function animate() {
+            window.removeEventListener("keydown", skip);
+            window.removeEventListener("click", skip);
             delayObj = null;
             splitText(quote);
             new gsap.timeline({ defaults: { ease: "power2.out", duration: .5 }, onComplete: blockTransition, onCompleteParams: [loadingSection] })
@@ -96,12 +115,27 @@ if (quote) {
         let delayObj = gsap.delayedCall(readDelay, animate);
 
         //Adds ability to skip reading delay
-        window.addEventListener("keydown", () => { if (delayObj) { delayObj.kill(); animate() } });
-    };
+        function skip(e) {
+            e.preventDefault();
+            delayObj.kill();
+            animate();
+        }
+        window.addEventListener("keydown", skip);
+        window.addEventListener("click", skip);
+    }
 } else {
-    window.onload = () => { gsap.to(loadingSection, { yPercent: -100, display: "none" }) }
-}
+    finish = () => {
+        //You can only finish if all loadEvents are completed or there are no loadEvents
+        if (!loadEvents.length || !loadEvents.every(function (loadEvent) { return loadEvent.completed })) return;
 
+        //Fade awwwwwwwwwway
+        gsap.to(loadingSection, { yPercent: -100, display: "none" })
+    }
+}
+const windowLoadEvent = new LoadEvent();
+window.onload = () => {
+    complete(windowLoadEvent);
+};
 
 //Splits lastText into lines based off of the built-in css wrapping
 function splitText(textElement) {
