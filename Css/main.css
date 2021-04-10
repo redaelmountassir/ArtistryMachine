@@ -1,4 +1,8 @@
-/*Elements Styling*/
+/*-----------------Basic Elements Styling-----------------*/
+@font-face {
+	font-family: "Stanley";
+	src: url("../Fonts/Stanley.otf");
+}
 :root {
 	/*Main colors*/
 	--white: #FFF7F8;
@@ -11,30 +15,38 @@
 	--purple: #E2C2FF;
 	--blue: #70E4EF;
 	--green: #78C091;
-	/*Other vars*/
+	--dark-transparent: #525251bd;
+	/*Grads*/
 	--light-grad: linear-gradient(to bottom right, #DCD1D150, #52525185);
-	--dark-grad: linear-gradient(to bottom right, #525251c9, #11111152);
-	--color-grad: linear-gradient(to top right, var(--yellow), var(--purple), var(--blue));
-	--secondary-color-grad: linear-gradient(to top right, var(--red), var(--yellow), var(--green));
+	--dark-grad: linear-gradient(to bottom right, #525251eb, #111111cf);
+	--color-grad: linear-gradient(to top right,
+		var(--yellow), var(--purple), var(--blue), var(--red), var(--green)
+	);
+	/*A random delay to offset the gradient animations*/
+	--rand-delay: 0s;
 	/*Shadows*/
 	--shadow: #11111152 0 2.5px 2.5px;
 	--text-shadow: #11111152 0 2.5px 2.5px;
-	--glow-shadow: #fff7f852 0px 0px 10px;
 	/*Fonts*/
 	--main-font: "Poppins", sans-serif;
-	--secondary-font: "Lobster", cursive;
+	--secondary-font: "Stanley", serif;
+	/*Sizes*/
+	--border-width: 1.5px;
+	--border-radius: 10px;
 }
-* {
+*, *::before, *::after {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 	font-family: var(--main-font);
-	font-weight: 500;
+	font-weight: 300;
 	color: var(--white);
+	-webkit-tap-highlight-color: transparent;
 }
 body {
 	background: var(--black);
 	overflow-x: hidden;
+	font-family: var(--main-font);
 }
 :root,
 body,
@@ -44,17 +56,18 @@ body,
 }
 section {
 	width: 100%;
-	height: 100vh;
+	min-height: 100vh;
 	position: relative;
+	overflow: hidden;
 }
+
 ul {
 	list-style-type: none;
 	display: flex;
 	justify-content: space-around;
 }
-.vertical, .vertical ul {
-	flex-direction: column;
-}
+.vertical, .vertical ul { flex-direction: column }
+
 button {
 	appearance: none;
 	background: none;
@@ -63,6 +76,9 @@ button {
 	align-items: center;
 	flex-direction: column;
 	cursor: pointer;
+}
+button.no-flex {
+	display: initial;
 }
 button img {
 	height: 100%;
@@ -81,44 +97,114 @@ button:active * {
 	filter: drop-shadow(var(--text-shadow)) brightness(.5);
 	transform: scale(.75);
 }
+
 img {
 	object-fit: cover;
 	display: block;
 	filter: drop-shadow(var(--text-shadow));
 }
+
 canvas {
 	position: absolute;
 	top: 0;
 	padding: 0;
-}
-main { transition: filter 1s ease-out }
-main.darken { 
-	filter: blur(20px) brightness(50%);
-	pointer-events: none;
+	width: 100vw;
+	height: 100vh;
 }
 
-/*Typography*/
+figure { position: relative }
+figure > * {
+	width: 100%;
+	height: 100%;
+}
+figure figcaption {
+	display: flex;
+	flex-direction: column;
+	padding: 2em;
+	clip-path: inset(0 0 0 100%);
+	background: var(--dark-transparent);
+	backdrop-filter: blur(20px);
+	transition: all .5s ease-in-out;
+	position: absolute;
+	top: 0;
+}
+figure figcaption a { margin-top: auto }
+figure:hover figcaption,
+figure:focus figcaption { clip-path: inset(0 0 0 0) }
+
+/*-----------------Typography-----------------*/
 h1, h2, h3, h4 {
 	text-shadow: var(--text-shadow);
 	font-weight: 600;
 	line-height: 1em;
 }
-h1 { font-size: 5rem; text-align: center; }
-h2 { font-size: 3rem; text-align: center; }
+h1 {
+	/*Fallback*/
+	font-size: 5rem;
+	font-size: 20vmin;
+	text-align: center;
+}
+h2 { font-size: 2.5rem }
 h3 { font-size: 2.5rem }
 h4 { font-size: 1rem }
-p, label, time {
-	color: var(--mid);
+p, a, label, time {
+	color: var(--white);
 	line-height: 1.5em;
 	font-size: 1rem;
 }
-strong {
+strong, em, b {
 	font-family: var(--secondary-font);
+	/*The font will need to be scaled because it starts sort of small*/
+	font-size: 1.25em;
+}
+/*Whatever is the current font size, scale by 3*/
+strong { font-size: 3em }
+em, nav.vertical .nav-link {
 	display: inline-block;
 	text-transform: capitalize;
+	font-style: normal;
+	margin: 0 !important;
+	animation: multi-color 50s linear infinite alternate;
+	animation-delay: var(--rand-delay);
+}
+@supports (-webkit-text-fill-color: transparent) and ((-webkit-background-clip: text) or (background-clip: text)) {
+	em, nav.vertical .nav-link {
+		background: var(--color-grad);
+		background-size: 1000% 1000%;
+		-webkit-text-fill-color: transparent;
+		-webkit-background-clip: text;
+		background-clip: text;
+		animation: move-background 50s linear infinite alternate;
+	}
+}
+a {
+	text-decoration: none;
+	text-shadow: var(--text-shadow);
+}
+a::after {
+	content: "";
+	width: 100%;
+	height: var(--border-width);
+	left: 0;
+	bottom: 0;
+	background-color: var(--mid);
+	position: absolute;
+	transform: scaleX(0);
+	transform-origin: left;
+	transition: transform .25s ease-in-out;
+}
+a:focus { outline: none }
+a:hover::after,
+a:focus::after { transform: scaleX(1) }
+a[href="#"] {
+	pointer-events: none;
+    opacity: .5;
+}
+a[href="#"]::after {
+	top: 50%;
+	transform: translateY(-50%);
 }
 blockquote {
-	font-style: italic;
     margin-left: 0;
     position: relative;
     text-align: center;
@@ -126,33 +212,26 @@ blockquote {
 	max-width: 35em;
 }
 blockquote cite {
-	font-family: var(--secondary-font);
-	font-size: 1.5rem;
+	font-weight: 500;
 	position: absolute;
     bottom: 0;
     right: 2em;
     font-style: normal;
-    color: var(--mid);
-	animation: float-anim 5s ease-in-out infinite alternate, multi-color 10s linear infinite alternate;
+    color: var(--dark) !important;
+	animation: float-anim 5s ease-in-out infinite alternate;
 	white-space: nowrap;
-}
-a {
-	text-decoration: none;
-	text-shadow: var(--text-shadow);
-}
-a[href="#"] {
-	pointer-events: none;
-    opacity: .5;
+	font-size: 1rem;
 }
 ::selection {
-	background-color: var(--dark);
+	background-color: var(--dark-transparent);
 	color: var(--white);
 }
-.right-align {
+.right-align, .right-align * {
 	text-align: right;
+	transform-origin: right;
 }
 
-/*Custom scrollbar*/
+/*-----------------Custom scrollbar-----------------*/
 ::-webkit-scrollbar {
 	width: 10px;
 	height: 10px;
@@ -162,106 +241,77 @@ a[href="#"] {
 }
 ::-webkit-scrollbar-thumb {
 	background: var(--dark);
-	border-radius: 5px;
+	border-radius: var(--border-radius);
 }
-::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:active {
 	background: var(--black);
 }
 
-/*Nav bar*/
+/*-----------------Nav bar-----------------*/
 nav {
 	position: fixed;
 	z-index: 99;
-	box-shadow: var(--shadow);
 	display: flex;
+	padding: 1em;
 	/*It is hidden so that the script only shows the nav when it is ready (Important for noscript)*/
 	visibility: hidden;
 }
 .nav-link {
-	display: flex;
-	justify-content: center;
 	position: relative;
 	user-select: none;
 	font-size: 1rem;
 }
 nav ul {
 	flex: 1;
+	align-items: center;
 }
-.nav-link, .nav-link * {
-	transition: transform 0.25s ease-out;
-}
-/*Nav bar - Horizontal*/
-nav.horizontal {
-	transform: translateX(-50%);
-	left: 50%;
-	top: 1rem;
-	width: 95%;
-}
-nav.horizontal li {
-	border-right: 2.5px solid var(--white);
-	flex: 1;
+nav li {
+	display: flex;
+	justify-content: center;
 	overflow: hidden;
 }
-nav.horizontal li:last-child { border: none }
-nav.horizontal img {
-	transform: translateY(2em);
-	position: absolute;
+
+/*Nav bar - Horizontal*/
+nav.horizontal {
+	width: 100%;
+    background: linear-gradient(to bottom, #11111152, transparent);
 }
-nav.horizontal .nav-link:hover span,
-nav.horizontal .nav-link:focus span {
-	transform: translateY(-2em);
-}
-nav.horizontal .nav-link:hover img,
-nav.horizontal .nav-link:focus img {
-	transform: translateY(0em);
-}
+nav.horizontal li { flex: 1 }
+
 /*Nav bar - Vertical*/
 nav.vertical {
-	transform: translate(-38%, -53%);
-	left: 2.5%;
-	top: 50%;
-	height: 95%;
-	clip-path: circle(1.5rem at 50% 2rem);
-	transition: clip-path .5s ease-out, transform .25s ease-out;
+	width: 100%;
+	height: 100%;
+	border-radius: 0;
+	clip-path: circle(1.5rem at 2rem 2rem);
+	transition: clip-path .5s ease-out .5s;
+	background: var(--black);
 }
-/*I chose to animate the clip-path in css rather than js because it is 100x easier*/
+nav.vertical #nav-logo { display: none }
 nav.open {
-	transform: translateY(-50%);
-	clip-path: circle(100% at 50% 50%);
+	clip-path: circle(100% at 50% 50%); 
+	transition: clip-path .5s ease-out; 
 }
-nav.vertical img {
-    margin-right: 1em;
-    order: -1;
-}
-nav.vertical .nav-link:hover {
-	transform: scale(1.25);
-}
+nav.vertical .nav-link { font-size: 5vmin }
 #nav-burger {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
+	margin-left: 0;
 }
-.open .line:first-child {
-	transform: translateY(325%) rotate(45deg);
+.line {
+	width: 100%;
+	height: var(--border-width);
+	border-radius: var(--border-radius);
+	background-color: var(--white);
+	transition: all .5s ease-out;
 }
-.open .line:nth-child(2) {
-	opacity: 0;
-}
-.open .line:last-child {
-	transform: translateY(-325%) rotate(-45deg);
-}
+.open .line:first-child { transform: translateY(.65rem) rotate(45deg) }
+.open .line:nth-child(2) { opacity: 0 }
+.open .line:last-child { transform: translateY(-.65rem) rotate(-45deg) }
 
 
-/*Hero area*/
-#hero-area {
-	background: linear-gradient(to top, var(--black), transparent);
-    position: absolute;
-    top: 0;
-    pointer-events: none;
-}
-#hero-area * {
-	pointer-events: all;
-}
+/*-----------------Hero area-----------------*/
 #hero-text {
 	bottom: 50%;
 	transform: translate(-50%, 50%);
@@ -270,17 +320,23 @@ nav.vertical .nav-link:hover {
 	bottom: 1rem;
 } 
 .scrolling-text {
-	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
 	width: auto;
+	right: -1rem;
+	min-height: 100%;
+	transform: skewY(15deg);
+}
+/*Background effect for homepage*/
+.background div  {
+	background-size: cover;
+	background-position: center;
+	background-attachment: fixed;
+	background-color: var(--dark);
 	position: absolute;
-	right: 0;
-	top: 0;
-	transform: translateX(1rem) skewY(15deg);
 }
 
-/*Aside areas*/
+/*-----------------Aside areas-----------------*/
 aside {
 	position: absolute;
     bottom: -.5rem;
@@ -291,132 +347,78 @@ aside {
 	transition: all .5s ease-out;
 	transition-property: transform, opacity;
 }
-.expandable {
-	transform: translateY(100%);
-}
-.expandable.expand {
-	transform: none;
-}
+.expandable { transform: translateY(100%) }
+.expandable.expand { transform: none }
 /*If it has an expand button, it needs to be offsetted slightly to compensate*/
-.with-expand-button {
-	transform: translateY(100%) translateY(-4rem);
-}
+.with-expand-button { transform: translateY(100%) translateY(-4rem); }
 .expand-button {
 	/*Its important that this is !important so that gsap will not animate this transform*/
 	transform: rotate(180deg) translateY(90%);
 	transition: transform .5s ease-out;
 }
-.expand .expand-button {
-	/*Its important that this is !important so that gsap will not animate this transform*/
-	transform: none;
+.expand .expand-button { transform: none }
+
+/*-----------------Loading Section-----------------*/
+.progress-value {
+	font-size: 5em;
+	font-family: var(--secondary-font);
+	color: var(--white);
+}
+.progress-value::after {
+	content: "%";
+	color: inherit;
+	font-family: inherit;
+	font-weight: inherit;
+    font-size: .5em;
+    margin-left: .2em;
 }
 
-/*Loading Section*/
-.progress-bar {
-	background-color: #313131;
-    border: 1px solid var(--mid);
-    border-radius: 1rem;
-    width: 15rem;
-    height: .5rem;
-}
-.progress-completed {
-	animation: multi-color-background 5s linear infinite alternate;
-	height: 100%;
-	border-radius: inherit;
-	transition: width 1s ease-out;
-}
-.cube {
-	/*Used as a custom property of some sort with the em that represents width*/
-	font-size: 5vmin;
-	transform-style: preserve-3d;
-    -webkit-transform-style: preserve-3d;
-    height: 1em;
-    width: 1em;
-    margin: 1em;
-	padding: 1em;
-    box-sizing: content-box;
-	transform: perspective(400px);
-}
-.cube.watermark {
-	font-size: 25vmin;
-	position: absolute;
-    animation-duration: 100s !important;
-}
-.watermark .face {
-	opacity: .1;
-	animation: none !important;
-}
-.face {
-	transform: rotate3d(var(--i, 0), var(--j, 1), 0, var(--a, 0deg)) translateZ(.5em);
-    width: 1em;
-    height: 1em;
-    position: absolute;
-	border: 3px solid var(--mid);
-}
-.face:nth-child(n + 5) { --i: 1; --j: 0 }
-.face:nth-child(2) { --a: 90deg }
-.face:nth-child(3) { --a: 180deg }
-.face:nth-child(4) { --a: 270deg }
-.face:nth-child(5) { --a: 90deg }
-.face:nth-child(6) { --a: -90deg }
-
-/*Containers*/
+/*-----------------Containers-----------------*/
 [class*="container"] {
-	border-radius: 1rem;
+	border-radius: var(--border-radius);
 	padding: 1rem;
 	background: var(--light-grad);
 }
+
 /*Container colors*/
-[class*="container"][class*="glass-"] {
-	backdrop-filter: blur(20px) brightness(.6);
-}
+@supports not (backdrop-filter: blur(20px) brightness(.6)) { [class*="container"][class*="glass-"] { background: var(--dark-grad) } }
+[class*="container"][class*="glass-"] { backdrop-filter: blur(20px) brightness(.6) }
+[class*="container"][class*="dark-"] { background: var(--dark-grad) }
+[class*="container"][class*="black-"] { background: var(--black) }
 [class*="container"][class*="multi-"] {
 	background: var(--color-grad);
-	background-size: 200vw 200vh;
-	animation: move-background 10s linear infinite alternate;
+	background-size: 1000% 1000%;
+	animation: move-background 50s linear infinite alternate;
+	animation-delay: var(--rand-delay);
 }
-[class*="container"][class*="multi-"] p {
-	color: var(--black);
-}
-[class*="container"][class*="secondary-multi-"] {
-	background: var(--secondary-color-grad);
-	background-size: 200vw 200vh;
-}
-[class*="container"][class*="dark-"] {
-	background: var(--dark-grad);
-}
-[class*="container"][class*="black-"] {
-	background: var(--black);
-}
-/*Container types*/
-[class*="container"][class*="text-"] {
-	padding: 4rem;
-}
-/*This selector is uncomfortably long :(*/
-[class*="container"][class*="text-"] *:not(:only-child) {
-	margin-bottom: .5em;
-}
+[class*="container"][class*="multi-"] *:not(h1, h2, h3) { color: var(--black) }
+[class*="container"][class*="multi-"] a::after { background: var(--black) }
+[class*="container"][class*="clear-"] { background: none !important }
+
+/*Types of containers*/
+[class*="container"][class*="text-"] { padding: 3rem }
+[class*="container"][class*="text-"] *:not(div) { margin-bottom: .5em }
 section[class*="container"] {
 	border-radius: 0;
 	overflow: hidden;
 }
-.center-content {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
-}
 
-/*Extra Classes*/
+/*-----------------Extra Classes-----------------*/
+/*Useful shapes*/
 .tall-box {
 	width: 30vw;
 	height: 40vw;
+    min-width: 15rem;
+    min-height: 20rem;
 	margin: 1rem;
-	transition: box-shadow 1s ease-out;
 }
-.tall-box:hover {
-	box-shadow: var(--glow-shadow);
+.square {
+	height: 2rem;
+	width: 2rem;
+	margin: 0 auto;
 }
+
+/*Before-and-after image slider*/
 .before-after {
     position: relative;
     height: auto;
@@ -431,183 +433,259 @@ section[class*="container"] {
     overflow: hidden;
 }
 .slider {
-    width: .5rem;
+    width: var(--border-width);
     height: 100%;
     position: absolute;
     background: var(--white);
-	transform: translateX(-50%);
 }
+
+/*Centering classes*/
 .center-x {
 	position: absolute;
 	left: 50%;
-	transform: translate(-50%);
+	transform: translateX(-50%);
 }
-.large-text {
-	font-size: 20rem;
-	margin: .25em;
+.center-y {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
 }
+.center-content {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+
+/*Pointer classes*/
 .no-pointer {
 	pointer-events: none;
 	user-select: none;
 }
-.transition-to-black {
-	background: linear-gradient(to top, var(--black), transparent 50%);
-    width: 100%;
-    height: 100%;
+.no-pointer * {
+	pointer-events: all;
+	user-select: all;
+}
+.to-black {
+	background: linear-gradient(to bottom, transparent, var(--black));
     position: absolute;
     top: 0;
-	pointer-events: none;
 }
-/*Must be not a cube because it has a very unique water mark mode*/
-.watermark:not(.cube) {
-	color: var(--white);
-	opacity: 0.15;
-	-webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
-	-webkit-text-stroke: 2.5px var(--white);
-	user-select: none;
-	transition: all 0.3s ease-out;
+
+/*Parallax effect*/
+.parallax-child { position: absolute }
+
+/*Sources section*/
+#sources {
+	flex-direction: column;
+	align-items: center;
+}
+#sources li {
+	position: relative;
+	margin: 0;
+	padding: 1em 0;
+}
+#sources li:before, #sources li:last-child:after {
+	content: "";
+	position: absolute;
+	width: 90vw;
+	height: var(--border-width);
+	background: var(--black);
+	left: 50%;
+	top: 0;
+	transform: translateX(-50%);
+}
+#sources li:last-child:after {
+	bottom: 0;
+	top: auto;
+}
+#sources a {
+	display: inline-block;
 	white-space: nowrap;
+    font-size: 1.5rem;
+	font-weight: 600;
+	position: relative;
+	padding: 0 .25em;
+	margin: 0;
+}
+#sources a:after { display: none }
+#sources a:last-child {
+	position: absolute;
+	left: 0;
+}
+
+/*Background watermark effects*/
+.watermark:not(img), .watermark:not(img) * {
+	user-select: none;
+	white-space: nowrap;
+	text-shadow: none;
+	touch-action: none;
+}
+.watermark:not(img) {
+	position: absolute;
+	color: var(--white);
+	-webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+	-webkit-text-stroke: var(--border-width) var(--white);
 	font-size: 5rem;
-	font-weight: 500;
-	line-height: 1.5em;
-	text-shadow: none;
 }
-.watermark:not(.cube) * {
-	text-shadow: none;
+.watermark:not(img) * {
+	transition: all 0.3s ease-out;
+	opacity: 0.15;
 }
-.watermark:not(.cube).solid {
+.watermark:not(img) .solid {
 	-webkit-text-fill-color: var(--white);
 	opacity: 0.25;
 	transform: translateX(-1rem);
 }
-.no-overflow {
-	overflow: hidden;
+img.watermark {
+	opacity: .1;
+	transform: scale(5);
+	position: absolute;
+	pointer-events: none;
 }
+
+/*Creates button-like elements out of links*/
 .link-button {
 	text-transform: uppercase;
-    border: 0.25rem solid var(--white);
-    border-radius: 1rem;
-	box-shadow: 0 .5rem 0 0 var(--white);
-	margin: 1em;
-    padding: 1em;
+    border: var(--border-width) solid var(--white);
+    border-radius: var(--border-radius);
+	box-shadow: 0 .5em 0 0 var(--white);
+	margin: 1em 0;
+	margin-right: auto;
+    padding: .75em;
 	transition: all .1s ease-out;
 }
-.link-button:hover, .link-button:focus {
+.link-button:hover,
+.link-button:focus {
 	box-shadow: 0 0 0 0 var(--white);
 	transform: translateY(.5rem);
-	animation: multi-color-border 5s linear infinite alternate;
 }
 .link-button.dark {
 	border-color: var(--black);
-	box-shadow: 0 .5rem 0 0 var(--black);
+	box-shadow: 0 10px 0 0 var(--black);
 	color: var(--black);
-	animation: none;
 }
-.link-button.dark:hover,
-.link-button.dark:focus {
-	box-shadow: 0 0 0 0 var(--black);
-}
+.link-button.dark:hover, .link-button.dark:focus { box-shadow: 0 0 0 0 var(--black) }
+.link-button::after { display: none }
 
-/*Animate Classes*/
-strong, .multi-color {
-	color: var(--white);
-	animation: multi-color 10s linear infinite alternate;
-}
-.multi-color {
-	animation: multi-color-background 5s linear infinite alternate;
-}
-.cube.animated {
-	animation: spin-anim 10s ease-in-out infinite;
-}
-.cube.animated .face {
-	animation: multi-color-border 5s linear infinite alternate;
-}
-.line {
-	width: 100%;
-	height: 10%;
-	border-radius: 1rem;
-	background-color: var(--white);
-	transition: all .5s ease-out;
-}
-@keyframes multi-color {
-	0% { color: var(--yellow) }
-	25% { color: var(--purple) }
-	50% { color: var(--blue) }
-	75% { color: var(--green) }
-	100% { color: var(--red) }
-}
-@keyframes multi-color-background {
-	0% { background-color: var(--yellow) }
-	25% { background-color: var(--purple) }
-	50% { background-color: var(--blue) }
-	75% { background-color: var(--green) }
-	100% { background-color: var(--red) }
-}
-@keyframes multi-color-border {
-	0% { border-color: var(--yellow) }
-	25% { border-color: var(--purple) }
-	50% { border-color: var(--blue) }
-	75% { border-color: var(--green) }
-	100% { border-color: var(--red) }
-}
-@keyframes move-background {
-	0% { background-position: bottom left }
-	100% { background-position: top right }
-}
-@keyframes spin-anim {
-	0% { transform: perspective(400px) rotateX(0turn) rotateY(0turn) rotateZ(0turn) }
-	14.28% { transform: perspective(400px) rotateX(1turn) rotateY(0turn) rotateZ(0turn) }
-	28.57% { transform: perspective(400px) rotateX(1turn) rotateY(1turn) rotateZ(0turn) }
-	42.85% { transform: perspective(400px) rotateX(1turn) rotateY(1turn) rotateZ(1turn) }
-	57.14% { transform: perspective(400px) rotateX(0turn) rotateY(0turn) rotateZ(0turn) }
-	71.42% { transform: perspective(400px) rotateX(-1turn) rotateY(0turn) rotateZ(0turn) }
-	85.71% { transform: perspective(400px) rotateX(-1turn) rotateY(-1turn) rotateZ(0turn) }
-	100% { transform: perspective(400px) rotateX(-1turn) rotateY(-1turn) rotateZ(-1turn) }
-}
-@keyframes float-anim {
-	0% { transform: translateY(0%) }
-	100% { transform: translateY(50%) }
-}
-
-/*Cursor and other fixed elements*/
+/*-----------------Cursor + Fixed Elements-----------------*/
+/*Fixed elements in general*/
 .fixed-element {
 	position: fixed;
 	z-index: 999;
 	left: 0;
 	top: 0;
 }
-:not(section).fixed-element {
+.fixed-element:not(section) {
 	pointer-events: none;
 	user-select: none;
 	opacity: .8;
 }
-.square {
-	height: 2rem;
-	width: 2rem;
-	margin: 0 auto;
-}
+
+/*Cursor*/
 #cursor {
-	width: 50px;
-	height: 50px;
 	transform-origin: center center;
-	transition: all 0.1s ease-out;
-	transition-property: width, height, border-radius;
+	mix-blend-mode: difference;
 }
 #cursor img {
-	width: 100%;
+	width: 50px;
+	height: 50px;
+	margin: 1em auto;
+}
+img.cursor-mode { margin: 0 !important }
+.cursor-mode {
+	--shrink-speed: .1s;
+	--grow-speed: .25s;
 	user-select: none;
+	position: absolute;
+	transform: translate(-50%, -50%) scale(0);
+	transition: transform var(--shrink-speed) ease-out;
+	white-space: nowrap;
 }
-#cursor.select {
-	width: 60px;
-	height: 60px;
-}
-#cursor.focus, #cursor.select {
-	opacity: .25;
-}
-.no-cursor * {
-	cursor: none !important;
+.cursor-mode.current {
+	transform: translate(-50%, -50%) scale(1);
+	transition: transform var(--grow-speed) cubic-bezier(0.6, 0, 0.4, 2) var(--shrink-speed);
 }
 
+/*Tooltips*/
+#tooltip h3 { font-size: 1.25rem }
+#tooltip p { font-size: 1rem }
+
+/*-----------------Responsitivity (Mobile First Design)-----------------*/
+@media screen and (min-width: 25rem) {
+	:root { --border-width: 2.5px }
+
+	/*Typography*/
+	h1 { font-size: 5rem }
+	h2 {
+		font-size: 3rem;
+		text-align: center;
+	}
+	.link-button { margin: 1em }
+	a, p { font-size: 1.25rem }
+}
+@media screen and (min-width: 50rem) {
+	/*Typography*/
+	h1 { font-size: 7rem }
+	h2 { font-size: 5rem }
+	a, p { font-size: 1.5rem }
+
+	/*Aside*/
+	aside {
+		--margin: 1rem;
+		position: absolute;
+		right: 2.5%;
+		/*The calcs compensate for the space taken by the nav*/
+		top: calc(5rem + var(--margin));
+		width: 25rem;
+		height: calc(100% - 5rem - var(--margin) * 2);
+		min-height: 2rem;
+		transform: translateY(-50%);
+	}
+	aside.expandable {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+	aside.expandable.expand {
+		transform: none;
+		opacity: 1;
+	}
+	.expand-button {
+		display: none;
+	}
+
+	/*Misc.*/
+	#hero-text { bottom: 2em }
+	.square {
+		height: 3rem;
+		width: 3rem;
+	}
+	.watermark:not(img) { font-size: 7rem }
+	[class*="container"][class*="text-"] { padding: 5rem 7rem }
+	.parallax-child { position: initial }
+	#sources a { font-size: 3rem }
+}
+@media screen and (min-width: 75rem) {
+	[class*="container"][class*="text-"] { padding: 5rem 15rem }
+}
+
+/*-----------------Animations-----------------*/
+@keyframes multi-color {
+	0% { color: var(--yellow) }
+	25% { color: var(--purple) }
+	50% { color: var(--blue) }
+	75% { color: var(--red) }
+	100% { color: var(--green) }
+}
+@keyframes move-background {
+	from { background-position: bottom left }
+	to { background-position: top right }
+}
+@keyframes float-anim {
+	from { transform: translateY(0%) }
+	to { transform: translateY(50%) }
+}
 @media (prefers-reduced-motion: reduce) {
 	*,
 	::before,
@@ -628,74 +706,4 @@ strong, .multi-color {
 	-moz-animation: none !important;
 	-o-animation: none !important;
 	animation: none !important;
-}
-
-/*Background effect for homepage*/
-.background div  {
-	background-size: cover;
-	background-position: center;
-	background-attachment: fixed;
-	background-color: var(--dark);
-	position: absolute;
-}
-
-/*-----------------Responsitivity (Mobile First Design)-----------------*/
-@media screen and (min-width: 50rem) {
-	/*Typography*/
-	h1 { font-size: 7rem }
-	h2 { font-size: 5rem }
-	.link-button, p { font-size: 1.2rem }
-
-	/*Aside*/
-	aside {
-		position: absolute;
-		/*So it lines up with the nav*/
-		right: 2.5%;
-		top: 50%;
-		width: 25rem;
-		height: 95%;
-		transform: translateY(-50%);
-	}
-	aside.expandable {
-		transform: translate(100%,-50%);
-		opacity: 0;
-	}
-	aside.expandable.expand {
-		transform: translateY(-50%);
-		opacity: 1;
-	}
-	.expand-button {
-		display: none;
-	}
-
-	/*Navbar*/
-	nav.vertical {
-		transform: translate(-25%, -50%);
-		clip-path: circle(2.5rem at 50% 2.5rem);
-	}
-	nav.open {
-		transform: translateY(-50%);
-		clip-path: circle(100% at 50% 50%);
-	}
-
-	/*Misc.*/
-	#hero-text {
-		bottom: 1em;
-		transform: translateX(-50%);
-	}
-	.square {
-		height: 3rem;
-		width: 3rem;
-	}
-	.watermark:not(.cube) {
-		font-size: 7rem;
-	}
-	[class*="container"][class*="text-"] {
-		padding: 2.5rem 7rem;
-	}
-}
-@media screen and (min-width: 75rem) {
-	[class*="container"][class*="text-"] {
-		padding: 2.5rem 15rem;
-	}
 }

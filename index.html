@@ -5,10 +5,11 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Artistry Machine</title>
+		<link rel="icon" href="Icons/logo.svg" type="image/icon svg">
 		<link rel="stylesheet" href="Css/main.css" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" />
 		<link
-			href="https://fonts.googleapis.com/css2?family=Lobster&family=Poppins:wght@300;500;600&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Poppins:wght@300;500;600&display=swap"
 			rel="stylesheet"
 		/>
 		<!--Dependencies-->
@@ -17,51 +18,34 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/ScrollTrigger.min.js"></script>
 		<!--Custom Scripts-->
 		<script src="Scripts/home.js" defer></script>
-		<script src="Scripts/mouse.js" defer></script>
-		<script src="../Scripts/advancedNav.js" defer></script>
+		<script src="Scripts/utils.js"></script>
+		<script src="Scripts/nav.js" defer></script>
 	</head>
 	<body>
-		<section id="loading-section" class="center-content black-container fixed-element">
-			<div class="cube animated watermark">
-				<div class="face"></div>
-				<div class="face"></div>
-				<div class="face"></div>
-				<div class="face"></div>
-				<div class="face"></div>
-				<div class="face"></div>
-			</div>
+		<section id="loading-section" class="center-content multi-container fixed-element">
 			<blockquote>
 				<p>"Art evokes the mystery without which the world would not exist."</p>
 				<cite>- René Magritte</cite>
 			</blockquote>
 		</section>
-		<script src="Scripts/basicLoader.js"></script>
+		<script src="Scripts/loader.js"></script>
 
-		<div id="cursor" class="fixed-element"><img src="Icons/cursor.svg" alt="cursor"></div>
+		<div id="cursor" class="fixed-element"></div>
+		<script src="Scripts/cursor.js"></script>
+
 		<header>
-			<nav class="dark-container">
+			<nav>
 				<button id="nav-burger" class="square">
 					<div class="line"></div>
 					<div class="line"></div>
 					<div class="line"></div>
 				</button>
 				<ul>
-					<li><a href="#" class="nav-link" tabindex="-1">
-							<span>Home</span>
-							<img src="Icons/home.svg" alt="Home" />
-					 </a></li>
-					<li><a href="Html/learn.html" class="nav-link">
-							<span>Learn</span>
-							<img src="Icons/learn.svg" alt="Learn" />
-					</a></li>
-					<li><a href="Html/more.html" class="nav-link">
-							<span>More</span>
-							<img src="Icons/more.svg" alt="More" />
-					</a></li>
-					<li><a href="Html/draw.html" class="nav-link">
-							<span>Try Yourself</span>
-							<img src="Icons/draw.svg" alt="Try Yourself" />
-					</a></li>
+					<li><a href="#" class="nav-link" tabindex="-1">Home</a></li>
+					<li><a href="Html/learn.html" class="nav-link">Learn</a></li>
+					<li id="nav-logo" class="square"><img src="Icons/animated-logo.svg"></li>
+					<li><a href="Html/more.html" class="nav-link">More</a></li>
+					<li><a href="Html/draw.html" class="nav-link">Try Yourself</a></li>
 				</ul>
 			</nav>
 		</header>
@@ -69,48 +53,44 @@
 			<section class="background">
 				<div id="old" class="full-size"></div>
 				<div id="new" class="full-size"></div>
-				<ul class="scrolling-text">
-					<li class="watermark" data-art="test" data-base-color="#E2EF70">Ancient Art</li>
-					<li class="watermark" data-art="test2" data-base-color="#FB3640">Medieval Art</li>
-					<li class="watermark" data-art="test" data-base-color="#E2C2FF">Renaissance Art</span>
-					<li class="watermark" data-art="test2" data-base-color="#70E4EF">Mannerism</li>
-					<li class="watermark" data-art="test" data-base-color="#78C091">Neoclassicism</span>
-					<li class="watermark" data-art="test2" data-base-color="#E2EF70">Romanticism</span>
-					<li class="watermark" data-art="test" data-base-color="#FB3640">Rococo</span>
-					<li class="watermark" data-art="test2" data-base-color="#70E4EF">Prehistoric Art</li>
-				</ul>
+				<ul class="watermark scrolling-text">
+					<li data-art="test" data-base-color="#E2EF70">Ancient Art</li>
+					<li data-art="test2" data-base-color="#FB3640">Medieval Art</li>
+					<li data-art="test" data-base-color="#E2C2FF">Renaissance Art</span>
+					<li data-art="test2" data-base-color="#70E4EF">Mannerism</li>
+					<li data-art="test" data-base-color="#78C091">Neoclassicism</span>
+					<li data-art="test2" data-base-color="#E2EF70">Romanticism</span>
+					<li data-art="test" data-base-color="#FB3640">Rococo</span>
+					<li data-art="test2" data-base-color="#70E4EF">Prehistoric Art</li>
+				<ul/>
 			</section>
-			<section id="hero-area">
-				<h1 id="hero-text" class="center-x"><strong>Artistry</strong> Machine</h1>
+			<section id="hero-area" class="full-size no-pointer to-black">
+				<h1 id="hero-text" class="center-x"><em>Artistry</em> Machine</h1>
 				<button id="scroll-to" class="center-x" data-destination-id="what" class="center-absolute">
 					<label>Learn More</label>
 					<img class="square" src="Icons/arrow-down.svg" alt="scroll down">
 				</button>
 			</section>
 			<section class="black-text-container center-content" id="what">
-				<h2><strong>What</strong> is this?</h2>
+				<h2><em>What</em> is this?</h2>
 				<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Enim accusantium quos, iste earum ab natus hic tempora. Et tempore cupiditate sapiente quibusdam cumque sunt culpa molestias neque! Dolore, eum error!</p>
 				<a href="Html/learn.html" class="link-button">Start Learning</a>
 			</section>
 			<section class="multi-text-container center-content">
-				<h2>Still want to learn more?</h2>
+				<h2>Want more inspiration?</h2>
 				<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Enim accusantium quos, iste earum ab natus hic tempora. Et tempore cupiditate sapiente quibusdam cumque sunt culpa molestias neque! Dolore, eum error!</p>
 				<a href="Html/more.html" class="dark link-button">Learn More</a>
 			</section>
 			<section class="black-text-container center-content">
-				<h2>Test your <strong>own</strong> skills!</h2>
+				<h2>Test your <em>own</em> skills!</h2>
 				<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Enim accusantium quos, iste earum ab natus hic tempora. Et tempore cupiditate sapiente quibusdam cumque sunt culpa molestias neque! Dolore, eum error!</p>
 				<a href="Html/draw.html" class="link-button">Begin Drawing</a>
 			</section>
 		</main>
-		<footer>
-
-		</footer>
 		<noscript>
 			<section class="center-content black-container fixed-element">
 				<h1>Why No Scripts 😢</h1>
 				<h3>Please Enable Scripts in your browser settings 👍</h3>
-				<a href="Html/draw.html" class="link-button">Start Learning</a>
 			</section>
 		</noscript>
 	</body>

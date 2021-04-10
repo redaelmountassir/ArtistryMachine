@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+  <style>
+    g * {
+      --time: 2s;
+      --stagger-time: 400ms;
+      --index: 4;
+      animation: grow-anim var(--time) ease-out infinite;
+      animation-delay: calc(-1 * var(--stagger-time) * var(--index));
+    }
+    g :nth-child(2) { --index: 3 }
+    g :nth-child(3) { --index: 2 }
+    g :nth-child(4) { --index: 1 }
+    g :nth-child(5) { --index: 0 }
+    
+    @keyframes grow-anim {
+      25%, 75% { r: 15 }
+      50% {
+        r: 16;
+        fill: white;
+      }
+    }
+  </style>
+  <defs>
+    <filter id="goo">
+      <feGaussianBlur color-interpolation-filters="sRGB" in="SourceGraphic" result="blur" stdDeviation="10"/>
+      <feColorMatrix class="blurValues" in="blur" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 18 -7"/>
+    </filter>
+  </defs>
+  <g filter="url(#goo)">
+    <circle cx="25" cy="80" r="15" fill="#78c091"/>
+    <circle cx="20" cy="42.5" r="15" fill="#70e4ef"/>
+    <circle cx="50" cy="20" r="15" fill="#e2ef70"/>
+    <circle cx="80" cy="42.5" r="15" fill="#fb3640"/>
+    <circle cx="75" cy="80" r="15" fill="#e2c2ff"/>
+  </g>
+</svg>

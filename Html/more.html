@@ -5,97 +5,201 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artistry Machine - More</title>
+    <link rel="icon" href="../Icons/logo.svg" type="image/icon svg">
     <link rel="stylesheet" href="../Css/main.css" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
-        href="https://fonts.googleapis.com/css2?family=Lobster&family=Poppins:wght@300;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Poppins:wght@300;500;600&display=swap"
         rel="stylesheet"
     />
     <!--Dependencies-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/ScrollTrigger.min.js"></script>
-    <script src="../3D/three.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.min.js" integrity="sha512-LF8ZB1iTwi4Qvkm4pekHG4a437Y9Af5ZuwbnW4GTbAWQeR2E4KW8WF+xH8b9psevV7wIlDMx1MH9YfPqgKhA/Q==" crossorigin="anonymous"></script>
+    <script src="../3D/three.min.js"></script>
     <script src="../3D/GLTFLoader.js"></script>
     <!--Custom Scripts-->
-    <script src="../Scripts/advancedNav.js" defer></script>
+    <script src="../Scripts/utils.js"></script>
+    <script src="../Scripts/nav.js" defer></script>
     <script src="../Scripts/more.js" defer></script>
-    <script src="../Scripts/mouse.js" defer></script>
 </head>
 <body>
-    <section id="loading-section" class="center-content black-container fixed-element">
-        <div class="cube animated watermark">
-            <div class="face"></div>
-            <div class="face"></div>
-            <div class="face"></div>
-            <div class="face"></div>
-            <div class="face"></div>
-            <div class="face"></div>
-        </div>
+    <section id="loading-section" class="center-content multi-container fixed-element">
         <blockquote>
             <p>"Art evokes the mystery without which the world would not exist."</p>
             <cite>- René Magritte</cite>
         </blockquote>
     </section>
-    <script src="../Scripts/basicLoader.js"></script>
+    <script src="../Scripts/loader.js"></script>
     
-    <div id="cursor" class="fixed-element"><img src="../Icons/cursor.svg" alt="cursor"></div>
+    <div id="cursor" class="fixed-element"></div>
+    <script src="../Scripts/cursor.js"></script>
+    
     <header>
-        <nav class="dark-container">
+        <nav>
             <button id="nav-burger" class="square">
                 <div class="line"></div>
                 <div class="line"></div>
                 <div class="line"></div>
             </button>
             <ul>
-                <li><a href="../index.html" class="nav-link">
-                        <span>Home</span>
-                        <img src="../Icons/home.svg" alt="Home" />
-                 </a></li>
-                <li><a href="learn.html" class="nav-link">
-                        <span>Learn</span>
-                        <img src="../Icons/learn.svg" alt="Learn" />
-                </a></li>
-                <li><a href="#" class="nav-link" tabindex="-1">
-                        <span>More</span>
-                        <img src="../Icons/more.svg" alt="More" />
-                </a></li>
-                <li><a href="draw.html" class="nav-link">
-                        <span>Try Yourself</span>
-                        <img src="../Icons/draw.svg" alt="Try Yourself" />
-                </a></li>
+                <li><a href="../index.html" class="nav-link" tabindex="-1">Home</a></li>
+                <li><a href="../Html/learn.html" class="nav-link">Learn</a></li>
+                <li id="nav-logo" class="square"><img src="../Icons/animated-logo.svg"></li>
+                <li><a href="#" class="nav-link">More</a></li>
+                <li><a href="../Html/draw.html" class="nav-link">Try Yourself</a></li>
             </ul>
         </nav>
     </header>
     <main>
-        <section class="dark-text-container center-content">
-            <h1>Learn <strong>More</strong></h1>
-            <canvas class="no-pointer"></canvas>
-            <div class="transition-to-black"></div>
+        <section class="text-container center-content">
+            <div class="full-size to-black"></div>
+            <h1>Learn<br><em>More</em></h1>
         </section>
-        <section class="black-text-container center-content">
-            <h2><strong>Other</strong> Paintings</h2>
-            <ul id="additional-paintings" class="center-x">
-                <li><img src="../Images/test.jpg" alt="1" class="tall-box"></li>
-                <li><img src="../Images/test2.jpg" alt="2" class="tall-box"></li>
-                <li><img src="../Images/test.jpg" alt="3" class="tall-box"></li>
-                <li><img src="../Images/test2.jpg" alt="4" class="tall-box"></li>
-                <li><img src="../Images/test.jpg" alt="5" class="tall-box"></li>
-                <li><img src="../Images/test2.jpg" alt="6" class="tall-box"></li>
-                <li><img src="../Images/test.jpg" alt="7" class="tall-box"></li>
-                <li><img src="../Images/test2.jpg" alt="8" class="tall-box"></li>
-                <li><img src="../Images/test.jpg" alt="9" class="tall-box"></li>
-                <li><img src="../Images/test2.jpg" alt="10" class="tall-box"></li>
-                <li><img src="../Images/test.jpg" alt="11" class="tall-box"></li>
-                <li><img src="../Images/test2.jpg" alt="12" class="tall-box"></li>
-                <li><img src="../Images/test.jpg" alt="13" class="tall-box"></li>
-                <li><img src="../Images/test2.jpg" alt="14" class="tall-box"></li>
-                <li><img src="../Images/test.jpg" alt="15" class="tall-box"></li>
+        <canvas class="no-pointer"></canvas>
+        <section class="clear-text-container center-content">
+            <h2 data-no-anim="true"><em>Other</em> Paintings</h2>
+            <ul id="additional-paintings" class="center-y no-pointer">
+                <li><figure class="tall-box">
+                    <img src="../Images/test.jpg" alt="test1">
+                    <figcaption>
+                        <h3><b>Image X</b></h3>
+                        <p>Location painted and date</p>
+                        <p>Painted By: ?</p>
+                        <a href="#/#"><p>Learn More</p></a>
+                    </figcaption>
+                </figure></li>
+                <li><figure class="tall-box">
+                    <img src="../Images/test.jpg" alt="test1">
+                    <figcaption>
+                        <h3><b>Image X</b></h3>
+                        <p>Location painted and date</p>
+                        <p>Painted By: ?</p>
+                        <a href="#/#"><p>Learn More</p></a>
+                    </figcaption>
+                </figure></li>
+                <li><figure class="tall-box">
+                    <img src="../Images/test.jpg" alt="test1">
+                    <figcaption>
+                        <h3><b>Image X</b></h3>
+                        <p>Location painted and date</p>
+                        <p>Painted By: ?</p>
+                        <a href="#/#"><p>Learn More</p></a>
+                    </figcaption>
+                </figure></li>
+                <li><figure class="tall-box">
+                    <img src="../Images/test.jpg" alt="test1">
+                    <figcaption>
+                        <h3><b>Image X</b></h3>
+                        <p>Location painted and date</p>
+                        <p>Painted By: ?</p>
+                        <a href="#/#"><p>Learn More</p></a>
+                    </figcaption>
+                </figure></li>
+                <li><figure class="tall-box">
+                    <img src="../Images/test.jpg" alt="test1">
+                    <figcaption>
+                        <h3><b>Image X</b></h3>
+                        <p>Location painted and date</p>
+                        <p>Painted By: ?</p>
+                        <a href="#/#"><p>Learn More</p></a>
+                    </figcaption>
+                </figure></li>
+                <li><figure class="tall-box">
+                    <img src="../Images/test.jpg" alt="test1">
+                    <figcaption>
+                        <h3><b>Image X</b></h3>
+                        <p>Location painted and date</p>
+                        <p>Painted By: ?</p>
+                        <a href="#/#"><p>Learn More</p></a>
+                    </figcaption>
+                </figure></li>
+                <li><figure class="tall-box">
+                    <img src="../Images/test.jpg" alt="test1">
+                    <figcaption>
+                        <h3><b>Image X</b></h3>
+                        <p>Location painted and date</p>
+                        <p>Painted By: ?</p>
+                        <a href="#/#"><p>Learn More</p></a>
+                    </figcaption>
+                </figure></li>
+                <li><figure class="tall-box">
+                    <img src="../Images/test.jpg" alt="test1">
+                    <figcaption>
+                        <h3><b>Image X</b></h3>
+                        <p>Location painted and date</p>
+                        <p>Painted By: ?</p>
+                        <a href="#/#"><p>Learn More</p></a>
+                    </figcaption>
+                </figure></li>
+                <li><figure class="tall-box">
+                    <img src="../Images/test.jpg" alt="test1">
+                    <figcaption>
+                        <h3><b>Image X</b></h3>
+                        <p>Location painted and date</p>
+                        <p>Painted By: ?</p>
+                        <a href="#/#"><p>Learn More</p></a>
+                    </figcaption>
+                </figure></li>
+                <li><figure class="tall-box">
+                    <img src="../Images/test.jpg" alt="test1">
+                    <figcaption>
+                        <h3><b>Image X</b></h3>
+                        <p>Location painted and date</p>
+                        <p>Painted By: ?</p>
+                        <a href="#/#"><p>Learn More</p></a>
+                    </figcaption>
+                </figure></li>
+                <li><figure class="tall-box">
+                    <img src="../Images/test.jpg" alt="test1">
+                    <figcaption>
+                        <h3><b>Image X</b></h3>
+                        <p>Location painted and date</p>
+                        <p>Painted By: ?</p>
+                        <a href="#/#"><p>Learn More</p></a>
+                    </figcaption>
+                </figure></li>
+                <li><figure class="tall-box">
+                    <img src="../Images/test.jpg" alt="test1">
+                    <figcaption>
+                        <h3><b>Image X</b></h3>
+                        <p>Location painted and date</p>
+                        <p>Painted By: ?</p>
+                        <a href="#/#"><p>Learn More</p></a>
+                    </figcaption>
+                </figure></li>
+                <li><figure class="tall-box">
+                    <img src="../Images/test.jpg" alt="test1">
+                    <figcaption>
+                        <h3><b>Image X</b></h3>
+                        <p>Location painted and date</p>
+                        <p>Painted By: ?</p>
+                        <a href="#/#"><p>Learn More</p></a>
+                    </figcaption>
+                </figure></li>
+                <li><figure class="tall-box">
+                    <img src="../Images/test.jpg" alt="test1">
+                    <figcaption>
+                        <h3><b>Image X</b></h3>
+                        <p>Location painted and date</p>
+                        <p>Painted By: ?</p>
+                        <a href="#/#"><p>Learn More</p></a>
+                    </figcaption>
+                </figure></li>
+                <li><figure class="tall-box">
+                    <img src="../Images/test.jpg" alt="test1">
+                    <figcaption>
+                        <h3><b>Image X</b></h3>
+                        <p>Location painted and date</p>
+                        <p>Painted By: ?</p>
+                        <a href="#/#"><p>Learn More</p></a>
+                    </figcaption>
+                </figure></li>
             </ul>
         </section>
         <section class="black-text-container center-content parallax-parent">
-            <h2>My <strong>Attempts</strong></h2>
+            <h2>My <em>Attempts</em></h2>
             <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed cupiditate maxime eveniet laborum ad hic minus sunt eos voluptas provident tenetur, deleniti iste soluta, quisquam voluptatibus ratione, nesciunt iusto velit?</p>
-            <ul class="center-x">
+            <ul class="center-x no-pointer">
                 <li class="parallax-child" data-parallax-index="0">
                     <div class="before-after">
                         <div><img src="../Images/test.jpg" alt="15" class="tall-box"></div>
@@ -119,13 +223,20 @@
                 </li>
             </ul>
         </section>
-        <section class="secondary-multi-container center-content">
+        <section class="multi-text-container center-content">
             <h2>Sources</h2>
+            <ul id="sources">
+                <li><a href="http://#">https://www.thisIsAReallyLongLink.com/for/testing?purposes="only"</a></li>
+                <li><a href="http://#">https://www.thisIsAReallyLongLink.com/for/testing?purposes="only"&index="0"</a></li>
+                <li><a href="http://#">https://www.thisIsAReallyLongLink.com/for/testing?purposes="only"&index="1"</a></li>
+                <li><a href="http://#">https://www.thisIsAReallyLongLink.com/for/testing?purposes="only"&index="2"</a></li>
+                <li><a href="http://#">https://www.thisIsAReallyLongLink.com/for/testing?purposes="only"&index="3"</a></li>
+                <li><a href="http://#">https://www.thisIsAReallyLongLink.com/for/testing?purposes="only"&index="4"</a></li>
+                <li><a href="http://#">https://www.thisIsAReallyLongLink.com/for/testing?purposes="only"&index="5"</a></li>
+                <li><a href="http://#">https://www.thisIsAReallyLongLink.com/for/testing?purposes="only"&index="6"</a></li>
+            </ul>
         </section>
     </main>
-    <footer>
-        
-    </footer>
     <noscript>
         <section class="center-content black-text-container fixed-element">
             <h1>Why No Scripts 😢</h1>

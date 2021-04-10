@@ -5,86 +5,73 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artistry Machine - Learn</title>
+    <link rel="icon" href="../Icons/logo.svg" type="image/icon svg">
     <link rel="stylesheet" href="../Css/main.css" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
-        href="https://fonts.googleapis.com/css2?family=Lobster&family=Poppins:wght@300;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Poppins:wght@300;500;600&display=swap"
         rel="stylesheet"
     />
     <!--Dependencies-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/ScrollToPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/EasePack.min.js"></script>
     <script src="../3D/three.min.js"></script>
     <script src="../3D/GLTFLoader.js"></script>
     <!--Custom Scripts-->
-    <script src="../Scripts/advancedNav.js" defer></script>
+    <script src="../Scripts/utils.js"></script>
+    <script src="../Scripts/nav.js" defer></script>
     <script src="../Scripts/display.js"></script>
 </head>
 <body>
-    <section id="loading-section" class="center-content black-container fixed-element">
-        <p id="loading-context">Loading 3D Display...</p>
-        <div class="cube animated">
-            <div class="face"></div>
-            <div class="face"></div>
-            <div class="face"></div>
-            <div class="face"></div>
-            <div class="face"></div>
-            <div class="face"></div>
-        </div>
-        <div class="progress-bar"><div class="progress-completed"></div></div>
+    <section id="loading-section" class="center-content multi-container fixed-element">
+        <p class="progress-value">0</p>
     </section>
+    
+    <div id="cursor" class="fixed-element">
+        <div id="tooltip" class="black-container">
+            <h3><b>[Painting Name]</b></h3>
+            <p>By [Artist Name]</p>
+            <p>[Time Painted]</p>
+            <p>[Location Painted]</p>
+        </div>
+    </div>
+    <script src="../Scripts/cursor.js"></script>
+
     <header>
-        <nav class="dark-container" data-nav-type="vertical">
+        <nav>
             <button id="nav-burger" class="square">
                 <div class="line"></div>
                 <div class="line"></div>
                 <div class="line"></div>
             </button>
             <ul>
-                <li><a href="../index.html" class="nav-link">
-                        <span>Home</span>
-                        <img src="../Icons/home.svg" alt="Home" />
-                 </a></li>
-                <li><a href="#" class="nav-link" tabindex="-1">
-                        <span>Learn</span>
-                        <img src="../Icons/learn.svg" alt="Learn" />
-                </a></li>
-                <li><a href="more.html" class="nav-link">
-                        <span>More</span>
-                        <img src="../Icons/more.svg" alt="More" />
-                </a></li>
-                <li><a href="draw.html" class="nav-link">
-                        <span>Try Yourself</span>
-                        <img src="../Icons/draw.svg" alt="Try Yourself" />
-                </a></li>
+                <li><a href="../index.html" class="nav-link" tabindex="-1">Home</a></li>
+                <li><a href="#" class="nav-link">Learn</a></li>
+                <li id="nav-logo" class="square"><img src="../Icons/animated-logo.svg"></li>
+                <li><a href="../Html/more.html" class="nav-link">More</a></li>
+                <li><a href="../Html/draw.html" class="nav-link">Try Yourself</a></li>
             </ul>
         </nav>
     </header>
     <main id="display">
-        <section class="no-overflow">
-            <section id="display-background">
-                <time class="full-size watermark center-content">
-                    <h1 class="large-text">[Current Year]</h1>
-                    <h1>[Current Era]</h1>
-                </time>
-                <figcaption class="fixed-element black-container">
-                    <h4>[Painting Name]</h4>
-                    <p>By [Artist Name]</p>
-                    <p>[Time Painted]</p>
-                    <p>[Location Painted]</p>
-                </figcaption>
-            </section>
-            <aside class="expandable" id="era-list">
-                <ul class="vertical full-size right-align">
-                </ul>
-            </aside>
-            <aside class="expandable with-expand-button glass-text-container" id="info-panel">
-                <button class="square expand-button"><img src="../Icons/arrow-down.svg" alt="Expand or Collapse"></button>
-                <h3>[Era]</h3>
-                <h4>[Time period]</h4>
-                <p>[Info]</p>
-            </aside>
+        <section id="display-background">
+            <time class="full-size watermark center-content">
+                <strong>[Current Year]</strong>
+                <span>[Current Era]</span>
+            </time>
         </section>
+        <aside class="expandable" id="era-list">
+            <ul class="vertical full-size right-align">
+            </ul>
+        </aside>
+        <aside class="expandable with-expand-button glass-text-container" id="info-panel">
+            <button class="square expand-button"><img src="../Icons/arrow-down.svg" alt="Expand or Collapse"></button>
+            <h3><b>[Era]</b></h3>
+            <h4>[Time period]</h4>
+            <p>[Info]</p>
+        </aside>
     </main>
     <noscript>
         <section class="center-content black-container fixed-element">

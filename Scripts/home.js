@@ -9,10 +9,10 @@ if (scrollingText && oldBackground && newBackground) {
     scrollingText.parentNode.appendChild(clonedScrollingText);
 
     //Animate the text to scroll infinitely
-    const time = 25, scrollAmount = 100;
-    gsap.fromTo(scrollingText, { yPercent: -scrollAmount }, { yPercent: scrollAmount, repeat: -1, ease: "none", duration: time });
-    gsap.fromTo(clonedScrollingText, { yPercent: -scrollAmount }, { yPercent: scrollAmount, repeat: -1, ease: "none", duration: time })
-        .seek(time / 2);
+    const time = 25;
+    new gsap.timeline({ defaults: { repeat: -1, ease: "none", duration: time } })
+        .fromTo(scrollingText, { yPercent: 0 }, { yPercent: 100 }, "<")
+        .fromTo(clonedScrollingText, { yPercent: -100 }, { yPercent: 0 }, "<");
 
     //Make the list items change the page theme
     function applyThemeEffects(elements) {
@@ -53,36 +53,54 @@ if (scrollTo) {
         if (scrollingText) {
             const heroText = document.getElementById("hero-text");
 
-            //Makes sure inline styles don't contaminate other inline styles when media query updates
-            ScrollTrigger.saveStyles(heroText);
-            ScrollTrigger.matchMedia({
-                //Using match media not because the animations change, but rather for save styles to run on refresh
-                "(max-width: 50rem)": createAnim,
-                "(min-width: 50rem)": createAnim,
-            });
-            function createAnim() {
-                new gsap.timeline({ scrollTrigger: { trigger: destination, scrub: 1 } })
-                    .to([scrollingText, clonedScrollingText], { x: "+=100%", autoAlpha: 0, ease: "Power2.out" })
-                    .to(scrollTo, { autoAlpha: 0 }, "<")
-                    .to(heroText, { yPercent: -150, autoAlpha: 0 }, "<")
-                    .to(heroText.firstElementChild, { yPercent: -150, autoAlpha: 0 }, "<");
+            //Home intro animation
+            extendIntro = tl => {
+                tl.fromTo(".background", { clipPath: "inset(15% 0%)" },
+                    { clipPath: "inset(0% 0%)", ease: "power2.in", clearProps: "all" }, ">1");
+                if (sizeQuery.matches) tl.from(heroText, { yPercent: -75, scale: 1.25, ease: "power2.out", clearProps: "all" }, "<");
+                //Only do the scroll trigger stuff after ^ because if you scroll it'll create errors (x _ x)
+                tl.call(() => {
+                    //Makes sure inline styles don't contaminate other inline styles when media query updates
+                    ScrollTrigger.saveStyles(heroText);
+                    ScrollTrigger.matchMedia({
+                        //Using match media not because the animations change, but rather for save styles to run on refresh
+                        "(max-width: 50rem)": createAnim,
+                        "(min-width: 50rem)": createAnim,
+                    });
+                    function createAnim() {
+                        new gsap.timeline({ scrollTrigger: { trigger: destination, scrub: 1 } })
+                            .to([scrollingText, clonedScrollingText], { x: "+=100%", autoAlpha: 0, ease: "Power2.out" })
+                            .to(scrollTo, { autoAlpha: 0 }, "<")
+                            .to([heroText, heroText.firstElementChild], { yPercent: "-=150", autoAlpha: 0 }, "<")
+                    }
+                })
             }
         }
     }
 }
 
 //Other scroll effect
-const headings = document.getElementsByTagName("h2");
-for (let i = 0; i < headings.length; i++) {
-    const heading = headings[i];
-    gsap.from(heading, {
-        opacity: 0,
-        xPercent: i % 2 === 0 ? 200 : -200,
-        ease: "Power2.out",
+gsap.utils.toArray("section > h2").forEach(heading => {
+    heading = wrapInDiv(heading);
+    gsap.from(heading.firstElementChild, {
+        yPercent: -100,
+        duration: .5,
+        ease: "power2.out",
         scrollTrigger: {
-            trigger: heading.parentElement,
-            scrub: 1,
-            end: "top top"
+            trigger: heading,
+            toggleActions: "play none none reset"
         }
     });
-}
+})
+gsap.utils.toArray("section > p").forEach(paragraph => {
+    gsap.from(paragraph, {
+        xPercent: "random(-100, 100)",
+        autoAlpha: 0,
+        duration: .5,
+        ease: "power2.out",
+        scrollTrigger: {
+            trigger: paragraph,
+            toggleActions: "play none none reset"
+        }
+    });
+})

@@ -1,28 +1,27 @@
-window.onload = function () {
-    //Media Query for small screen
-    const mediaQuery = window.matchMedia("(max-width: 50rem)");
+gsap.registerPlugin(ScrollToPlugin);
+gsap.registerPlugin(EasePack);
+gsap.registerPlugin(ScrollTrigger);
 
+//Define some variables early so it can be used
+let frame, stand, painting, currentPeriod, panelElement;
+window.onload = function () {
     //Get loading variables
     //Loading System (Unique and more complex because it uses a tasks system)
     const loadingSection = document.getElementById("loading-section"),
-        loadingBar = loadingSection.querySelector(".progress-bar"),
-        progressCompleted = loadingBar.querySelector(".progress-completed"),
-        loadingContext = document.getElementById("loading-context"),
+        loadingValue = loadingSection.querySelector(".progress-value"),
         loadingSystem = {
-            progress: loadingBar.value,
+            progress: 0,
             //Weights for all tasks should add up to 1
             //Tasks internally have their own progress that updates the main progress bar based off of its weight
             tasks: [],
-            createTask: function (context, weight) {
+            createTask: function (weight) {
                 const task = {
                     _progress: 0,
                     weight,
-                    context,
                     get progress() { return this._progress },
                     set progress(value) {
                         if (value === this._progress) return;
                         this._progress = value;
-                        loadingContext.textContent = this.context;
                         loadingSystem.updateMainProgress();
                     }
                 }
@@ -30,40 +29,49 @@ window.onload = function () {
                 return task;
             },
             updateMainProgress: function () {
-                this.progress = 0;
-                for (let i = 0; i < this.tasks.length; i++) {
-                    const task = this.tasks[i];
-                    this.progress += task.progress * task.weight;
-                }
-                progressCompleted.style.width = this.progress + "%";
+                this.progress = this.tasks.reduce((sumProgress, task) => sumProgress + task.progress * task.weight, 0);
+                loadingValue.textContent = Math.round(this.progress);
                 if (this.progress >= 100) this.complete();
             },
             complete: function () {
-                progressCompleted.style.width = 100 + "%";
-                gsap.to(loadingSection, {
-                    autoAlpha: 0, pointerEvents: "none",
-                    delay: 1, ease: "power2.out", duration: 2, onComplete: blockTransition, onCompleteParams: [loadingSection]
-                });
+                loadingValue.textContent = 100;
                 this.tasks = null;
+
+                //Animate away (I animate display because it is the main area as well)
+                new gsap.timeline({ defaults: { ease: "power2.out", duration: .5 } }, "+=2")
+                    .set(document.body, { overflowY: "hidden" })
+                    .to(loadingSection, {
+                        xPercent: -100, display: "none", ease: "power2.in",
+                        onComplete: blockTransition, onCompleteParams: [loadingSection]
+                    })
+                    .from(display, { xPercent: 100, ease: "power2.in" }, "<")
+                    .from([focusLight, spotLight], {
+                        intensity: 0, duration: 2,
+                        ease: "rough({ template: power2.in, strength: 2, points: 200, taper: 'out', randomize: true, clamp: false})"
+                    })
+                    .from("nav li", { yPercent: -200, duration: .25, clearProps: "yPercent", stagger: { each: .1, from: "center" } })
+                    .from("aside", { opacity: 0, yPercent: "+=100", clearProps: "all" }, "<")
+                    .set(document.body, { overflowY: null });
             }
         },
         textureLoader = new THREE.TextureLoader(),
         gltfLoader = new THREE.GLTFLoader();
 
-    //Tell loading system that the dom has loaded
-    loadingSystem.createTask("Loading Website...", .25).progress = 100;
+    function progressFromEvent(event) {
+        return event.loaded / event.total * 100;
+    }
 
+    //Tell loading system that the dom has loaded
+    loadingSystem.createTask(.25).progress = 100;
 
     //Setup
-    gsap.registerPlugin(ScrollTrigger);
     const display = document.getElementById("display"),
         background = document.getElementById("display-background");
 
     //Camera setup
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 100);
     camera.position.z = 3;
-    const camBaseY = 1.5;
-    camera.position.y = camBaseY;
+    camera.position.y = 2;
 
     //Renderer setup
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -85,11 +93,15 @@ window.onload = function () {
             //Update renderer
             renderer.setSize(viewport.vw, viewport.vh);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            //Update Cam
+
+            //Update cam
             if (preventCamUpdate) {
                 camera.aspect = viewport.vw / viewport.vh;
                 camera.updateProjectionMatrix();
             }
+
+            //Update stand
+            adjustStand();
         }
     };
     viewport.update(true);
@@ -102,7 +114,7 @@ window.onload = function () {
     //Create background shapes with staggered anims
     const shapesGroup = new THREE.Group();
 
-    const sphere = new THREE.SphereGeometry(5, 30, 30);
+    const sphere = new THREE.SphereBufferGeometry(5, 30, 30);
     const mat = new THREE.MeshLambertMaterial({ color: 0x525251 });
 
     const sphere1 = new THREE.Mesh(sphere, mat);
@@ -139,49 +151,35 @@ window.onload = function () {
         }
     });
 
-    //Define frame base pos (early for focus light) and painting data raycast
-    let frame, stand, painting, currentPeriod, cancelRaycasts = true;
+    //Tooltip that provides info about the painting if the painting is hovered over
     const raycaster = new THREE.Raycaster();
-    const frameBasePos = new THREE.Vector3(0, 2.25, 0);
     //Painting data tooltip
     const paintingTooltip = {
-        domElement: document.getElementsByTagName("figcaption")[0],
-        visible: true,
-        set: function (pos) {
-            //Set pos
-            this.xSet(pos.x);
-            this.ySet(pos.y);
-        },
+        domElement: document.getElementById("tooltip"),
+        visible: false,
         show: function (paintingObj) {
-            //Set visibility
-            if (!this.visible) {
-                this.visible = true;
-                paintingTooltip.hideAnim.reverse();
-            }
-            //Set content
+            //Show the tooltip if not visible
+            if (!this.visible) customCursor.setState("painting info");
+            //Set content if the content changed
             if (paintingObj.name != this.name.textContent) {
                 this.name.textContent = paintingObj.name;
                 this.artist.textContent = paintingObj.artist;
                 this.painted.textContent = paintingObj.painted;
                 this.from.textContent = paintingObj.from;
             }
+
+            this.visible = true;
         },
         hide: function () {
-            //Set visibilty
-            if (this.visible) {
-                this.visible = false;
-                paintingTooltip.hideAnim.play();
-            }
+            if (this.visible) customCursor.removeState("painting info");
+            this.visible = false;
         },
         init: function () {
-            //Hide and add animation
-            this.visible = false;
-            this.hideAnim = gsap.to(this.domElement, { autoAlpha: 0, transformOrigin: "top left", scale: .5, ease: "power2.inOut", duration: .25 });
-            //Init position setters
-            this.xSet = gsap.quickSetter(this.domElement, "x", "px");
-            this.ySet = gsap.quickSetter(this.domElement, "y", "px");
+            //Add to cursor (I override useCursor because some of this info is NEEDED for mobile users)
+            this.domElement = customCursor.addState("painting info", this.domElement, 2, { overrideUseCursor: true, overrideDifference: true });
+
             //Textcontents for changing content
-            this.name = this.domElement.children[0];
+            this.name = this.domElement.children[0].firstElementChild;
             this.artist = this.domElement.children[1];
             this.painted = this.domElement.children[2];
             this.from = this.domElement.children[3];
@@ -213,6 +211,8 @@ window.onload = function () {
     backgroundScene.add(spotLight);
 
     //Light in the direction of the camera somewhat
+    //The frame base pos will be the location the light will look at
+    const frameBasePos = new THREE.Vector3(0, 2.25, 0);
     const focusLight = new THREE.SpotLight(0xA3AAFF, 1.5);
     focusLight.penumbra = 1;
     focusLight.decay = 2;
@@ -220,16 +220,14 @@ window.onload = function () {
     focusLight.lookAt(frameBasePos);
     backgroundScene.add(focusLight);
 
-    //Do not show tooltip if the canvas is even being hovered over (applies only to non-mobile devices)
-    background.onmouseenter = function () { cancelRaycasts = false };
-    background.onmouseleave = function () { cancelRaycasts = true };
-
     //Render loop
     function render() {
         //Raycast to the painting every render loop for the tooltip
-        paintingTooltip.set(mouse.pos);
-        if (currentPeriod && gyro.use ? paintingSelected : !cancelRaycasts) {
+        //Only if a period is defined and the canvas is the currently hovered element
+        if (currentPeriod && mouse.lastTarget && renderer.domElement.contains(mouse.lastTarget)) {
+            //Send cast
             raycaster.setFromCamera(mouse.normalizedPos, camera);
+            //If it hits something show the tooltip, otherwise hide it
             raycaster.intersectObject(frame, true).length ? paintingTooltip.show(currentPeriod.painting) : paintingTooltip.hide();
         }
         else
@@ -239,12 +237,23 @@ window.onload = function () {
         requestAnimationFrame(render);
     };
 
+    //Smoothly sets the camera with a normalized position
+    const sensitivity = .2;
+    function setCamRotWithPos(x, y) {
+        x *= -sensitivity;
+        y *= sensitivity;
+        gsap.to(camera.rotation, { y: x, x: y, duration: 1, ease: "power2.out", overwrite: "auto" });
+    }
+
     //Move cam with mouse on anything not mobile
     const mouse = {
-        sensitivity: new THREE.Vector2(.25, .5),
         normalizedPos: new THREE.Vector2(0, 0),
         pos: new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2),
-        moveEvent: function (e) {
+        lastTarget: null,
+        moveEvent: e => {
+            //Caches the last target hovered over
+            mouse.lastTarget = e.target;
+
             //Update mouse pos and make sure its normalized (-1 to 1 range)
             mouse.pos.x = e.clientX;
             mouse.pos.y = e.clientY;
@@ -252,42 +261,38 @@ window.onload = function () {
             mouse.normalizedPos.y = mouse.pos.y / viewport.vh * -2 + 1;
             //Do NOT use the mouse if the gyro should be used
             if (gyro.use) return;
-            setCamPos(mouse.normalizedPos.x * mouse.sensitivity.x, mouse.normalizedPos.y * mouse.sensitivity.y);
+            setCamRotWithPos(mouse.normalizedPos.x, mouse.normalizedPos.y);
         }
     }
-    document.addEventListener("mousemove", mouse.moveEvent, false);
-
     //Add orientation support to look around on mobile
     const gyro = {
+        pos: new THREE.Vector2(0, 0),
         supported: window.DeviceOrientationEvent !== undefined,
         _use: false,
-        sensitivity: new THREE.Vector2(1, 1),
         get use() { return this._use },
-        set use(value) { this._use = value && this.supported },
+        set use(value) {
+            setCamRotWithPos(0, 0);
+            this._use = value && this.supported;
+        },
         changeEvent: function (e) {
-            const x = e.gamma / 90;
-            const y = e.beta / 180;
-            setCamPos(x * gyro.sensitivity.x, y * gyro.sensitivity.y);
+            gyro.pos.x = e.gamma / 90;
+            gyro.pos.y = e.beta / 180;
+            setCamRotWithPos(gyro.pos.x, gyro.pos.y);
         }
     }
-    //This variable tracks whether you selected the painting (applies only on devices that use gyro)
-    let paintingSelected = false;
-    gyro.use = mediaQuery.matches;
-    mediaQuery.addEventListener("change", function () { gyro.use = mediaQuery.matches });
-    window.addEventListener("deviceorientation", gyro.changeEvent, false);
-    window.addEventListener("click", function (e) { paintingSelected = background.contains(e.target) }, false);
 
-    function setCamPos(x, y) {
-        y += camBaseY;
-        gsap.to(camera.position, {
-            x, y, duration: .75, ease: "power2.out", overwrite: "auto",
-            onUpdate: function () { camera.lookAt(frameBasePos) }
-        });
-    }
+    //You gotta do both cuz pointermove works very... unusually...
+    document.addEventListener("pointermove", mouse.moveEvent, false);
+    document.addEventListener("pointerdown", mouse.moveEvent, false);
+
+    //This variable tracks whether you selected the painting (applies only on devices that use gyro)
+    gyro.use = !sizeQuery.matches;
+    sizeQuery.addEventListener("change", () => gyro.use = !sizeQuery.matches);
+    window.addEventListener("deviceorientation", gyro.changeEvent, false);
 
     //Request the gltf and json files
     //Create loading json files task
-    const loadJsonTask = loadingSystem.createTask("Fetching Data...", .25);
+    const loadJsonTask = loadingSystem.createTask(.25);
     readJsonFile("../info.json", function (artEras) {
         //Needed textures
         const textures = [];
@@ -298,7 +303,7 @@ window.onload = function () {
         //Step 1
         function loadTextures() {
             //Create loading textures files task and the value to update progress by
-            const loadTexturesTask = loadingSystem.createTask("Loading Textures...", .25),
+            const loadTexturesTask = loadingSystem.createTask(.25),
                 textureLoadIncrement = 100 / (artEras.length + 2);
             //Load roughness map
             textureLoader.load("../3D/Textures/fabricRough.png", function (loaded) {
@@ -327,7 +332,7 @@ window.onload = function () {
         //Step 2
         function loadModels() {
             //Initiate loader and loading task
-            const loadModelsTask = loadingSystem.createTask("Loading Models...", .25);
+            const loadModelsTask = loadingSystem.createTask(.25);
 
             //The update function when loading a model
             function updateModelLoad(e) { loadModelsTask.progress = progressFromEvent(e) / 2 };
@@ -335,11 +340,11 @@ window.onload = function () {
             //Load frame and painting
             gltfLoader.load("../3D/frame.glb", function (loaded) {
                 //Create painting (approx. 3:4 ratio for textures, just a little bit of stretching its ok (I hope))
-                const paintingGeometry = new THREE.PlaneGeometry(5, 7);
+                const paintingGeometry = new THREE.PlaneBufferGeometry(5, 7);
                 const paintingMat = new THREE.MeshStandardMaterial({ map: textures[0], normalMap, roughnessMap });
                 painting = new THREE.Mesh(paintingGeometry, paintingMat);
                 //Shadow support
-                painting.traverse(function (n) { if (n.isMesh) n.receiveShadow = true });
+                painting.receiveShadow = true;
                 painting.rotation.y = Math.PI / 2;
 
                 //Set frame
@@ -349,17 +354,16 @@ window.onload = function () {
                 frame.position.y = frameBasePos.y - .1;
                 gsap.to(frame.position, { y: "+=.2", repeat: -1, yoyo: true, duration: 5, ease: "sine.inOut" })
                 //Shadow support
-                frame.traverse(function (n) { if (n.isMesh) n.castShadow = n.receiveShadow = true });
+                frame.castShadow = frame.receiveShadow = true;
                 frame.add(painting);
 
-                //Add stage
-                gltfLoader.load("../3D/stage.glb", function (loaded) {
+                //Add stand
+                gltfLoader.load("../3D/stand.glb", function (loaded) {
                     stand = loaded.scene.children[0];
+                    stand.material = mat;
                     //Shadow support
-                    stand.traverse(function (n) {
-                        if (n.isMesh) n.castShadow = n.receiveShadow = true;
-                        if (n.material.map) n.material.map.anisotrophy = 16;
-                    });
+                    stand.castShadow = stand.receiveShadow = true;
+                    //Add to scene
                     backgroundScene.add(stand);
                     stand.add(frame);
 
@@ -401,10 +405,10 @@ window.onload = function () {
                 }
 
             //Set up the panel that will display the information about a given period
+            panelElement = document.getElementById("info-panel");
             const eraList = document.getElementById("era-list"),
-                panelElement = document.getElementById("info-panel"),
                 infoButton = panelElement.children[0],
-                period = panelElement.children[1],
+                period = panelElement.children[1].firstElementChild,
                 times = panelElement.children[2],
                 info = panelElement.children[3],
                 infoPanel = {
@@ -449,96 +453,85 @@ window.onload = function () {
                     },
                     init: function () {
                         this.set(0);
-                        this.mobileMode = mediaQuery.matches;
+                        this.mobileMode = !sizeQuery.matches;
                         //Open panel on click
                         infoButton.onclick = function () { this.visible ? this.hide(true) : this.show(true) }.bind(this);
-                        //Prevents dragPanel from reacting
-                        infoButton.ontouchstart = infoButton.onmousedown = function (e) { e.stopPropagation() }
+
+                        //Drag panel events
                         function dragPanel(e) {
                             //User must click on the container. Not the paragraphs, the buttons, etc.
-                            if (panelElement !== e.target) return;
-
-                            //The click event will not reach the window so I manually tell paintingSelected its false
-                            paintingSelected = false;
+                            if (!e.target.contains(panelElement)) return;
                             e.preventDefault();
 
                             //Only drag in mobile mode
                             if (!this.mobileMode) return;
                             //Define important vars
-                            const touchEvents = e.touches != undefined,
-                                panelBounds = panelElement.getBoundingClientRect(),
+                            const panelBounds = panelElement.getBoundingClientRect(),
                                 threshold = window.innerHeight * .5,
                                 maxY = panelBounds.height - convertRemToPixels(4),
                                 startTransform = getComputedStyle(panelElement).transform,
-                                startY = touchEvents ? e.touches[0].clientY : e.clientY;
+                                startY = e.clientY;
                             let deltaY = 0;
-                            //This prevents panel element from transitioning during forced transformations
-                            blockTransition(panelElement);
-                            //Drag events
-                            function drag(e) {
-                                e.preventDefault();
 
+                            //if the user is dragging with their finger, this prevents them from scrolling at the same time
+                            panelElement.style.touchAction = "none";
+
+                            //Drag events
+                            const draggingPanel = (e => {
                                 //Gives the amount the mouse moved by in a 0-1 range
-                                deltaY = startY - (touchEvents ? e.touches[0].clientY : e.clientY);
+                                deltaY = startY - e.clientY;
                                 deltaY = this.visible ? gsap.utils.clamp(-maxY, 0, deltaY) : gsap.utils.clamp(0, maxY, deltaY);
                                 //Sets the new transform (without interfering with the original transform if there was one)
                                 panelElement.style.transform = startTransform != "none" ? startTransform + ` translateY(${-deltaY}px)` : `translateY(${-deltaY}px)`;
-                            }
-                            function stopDrag(e) {
-                                e.preventDefault();
-
+                            }).bind(this);
+                            const stopDraggingPanel = (() => {
                                 //Remove inline styles
+                                panelElement.style.touchAction = null;
                                 panelElement.style.transform = null;
+
                                 //Snap to the swipe end
                                 this.visible ?
                                     -deltaY > threshold ? this.hide(true) : this.show(true) :
                                     deltaY > threshold ? this.show(true) : this.hide(true);
+
                                 //Remove events
-                                if (touchEvents) {
-                                    document.removeEventListener("touchmove", drag, false);
-                                    document.removeEventListener("touchend", stopDrag, false);
-                                    document.addEventListener("touchcancel", stopDrag, false);
-                                } else {
-                                    document.removeEventListener("mousemove", drag, false);
-                                    document.removeEventListener("mouseup", stopDrag, false);
-                                }
+                                document.removeEventListener("pointermove", draggingPanel);
+                                document.removeEventListener("pointerup", stopDraggingPanel);
                                 allowTransition(panelElement);
-                            }
+                            }).bind(this);
+
+                            //This prevents panel element from transitioning during forced transformations
+                            blockTransition(panelElement);
                             //Assign events to correct actions
-                            drag = drag.bind(this);
-                            stopDrag = stopDrag.bind(this);
-                            if (touchEvents) {
-                                document.addEventListener("touchmove", drag, { passive: false });
-                                document.addEventListener("touchend", stopDrag, { passive: false });
-                                document.addEventListener("touchcancel", stopDrag, { passive: false });
-                            } else {
-                                document.addEventListener("mousemove", drag, false);
-                                document.addEventListener("mouseup", stopDrag, false);
-                            }
+                            document.addEventListener("pointermove", draggingPanel);
+                            document.addEventListener("pointerup", stopDraggingPanel);
                         };
+
                         dragPanel = dragPanel.bind(this);
                         //Open panel on drag
-                        panelElement.addEventListener("mousedown", dragPanel, false);
-                        panelElement.addEventListener("touchstart", dragPanel, { passive: false });
+                        panelElement.addEventListener("pointerdown", dragPanel);
+
+                        //Adjust stand
+                        adjustStand();
                     }
                 };
+
             //Initialize panel
             infoPanel.init();
 
             //Change mode on media query
-            mediaQuery.addEventListener("change", function () { infoPanel.mobileMode = mediaQuery.matches }, false);
+            sizeQuery.addEventListener("change", () => infoPanel.mobileMode = !sizeQuery.matches, false);
 
             //The scroll drives the animation
             let scrollingCheck;
-            const startingPeriod = artEras[0];
+            const startingPeriod = artEras[0], len = artEras.length, lenMin1 = len - 1;
 
             //Go through each time period and add it to the animation (Yes, the first one must be written out seperately)
             //Build the base timeline object driven by scrolling
-            let scrollDuration = 3000;
             const tl = new gsap.timeline({
                 scrollTrigger: {
                     trigger: display,
-                    end: scrollDuration,
+                    end: () => innerHeight * lenMin1,
                     pin: true,
                     scrub: 1,
                     snap: {
@@ -557,25 +550,29 @@ window.onload = function () {
             //Create a list fragment to append the many era label 
             const listFragment = new DocumentFragment(),
                 eraLabelTemplate = document.createElement("li"),
+                eraScrollButton = document.createElement("button"),
                 labelText = document.createElement("h4");
             //Set up the first era label that will be used as a template for the rest
             labelText.textContent = startingPeriod.title;
-            eraLabelTemplate.appendChild(labelText);
+            eraScrollButton.classList.add("no-flex");
+            eraScrollButton.onpointerdown = () => { gsap.to(window, { scrollTo: 0, ease: "power2.out", duration: .5 }) };
+            eraScrollButton.appendChild(labelText);
+            eraLabelTemplate.appendChild(eraScrollButton);
             listFragment.appendChild(eraLabelTemplate);
 
             //Add the initial state (Must be done seperately)
             tl.addLabel("0")
                 .set(timeData, { current: startingPeriod.timeStart })
                 .set(background, { backgroundColor: startingPeriod.associatedColor })
-                .set(eraLabelTemplate, { scale: 2, transformOrigin: "right", color: "white" });
+                .set(eraLabelTemplate, { scale: 2, color: "white" });
 
-
-            for (let i = 1; i < artEras.length; i++) {
+            for (let i = 1; i < len; i++) {
                 const timePeriod = artEras[i];
 
                 //Duplicate the era label and add it to the fragment list
                 const eraLabel = eraLabelTemplate.cloneNode(true);
-                eraLabel.firstElementChild.textContent = timePeriod.title;
+                eraLabel.firstElementChild.firstElementChild.textContent = timePeriod.title;
+                eraLabel.firstElementChild.onpointerdown = () => { gsap.to(window, { scrollTo: i * innerHeight, ease: "power2.out", duration: .5 }) };
                 listFragment.appendChild(eraLabel);
 
                 //It is important for labels to be the index so that the correct period is accessed when snapping
@@ -587,8 +584,8 @@ window.onload = function () {
                     .to(ambientLight.color, { r: associatedColorRGB[0], g: associatedColorRGB[1], b: associatedColorRGB[2] }, "<")
                     .to(mat.color, { r: associatedColorRGB[0], g: associatedColorRGB[1], b: associatedColorRGB[2] }, "<")
                     .fromTo(stand.rotation, { y: 0 }, { y: Math.PI * 2, ease: "none" }, "<")
-                    .fromTo(eraLabel, { opacity: .5 }, { scale: 2, transformOrigin: "right", opacity: 1 }, "<")
-                    .to(eraLabel.previousSibling, { scale: 1, transformOrigin: "right", opacity: .25 }, "<")
+                    .fromTo(eraLabel, { opacity: .5 }, { scale: 2, opacity: 1 }, "<")
+                    .to(eraLabel.previousSibling, { scale: 1, opacity: .25 }, "<")
                     .addLabel(i);
             }
             //Add fragment to the actual DOM
@@ -598,26 +595,18 @@ window.onload = function () {
             loadingSystem.complete();
         }
     },
-        function (e) { loadJsonTask.progress = progressFromEvent(e) });
-}
+        e => loadJsonTask.progress = progressFromEvent(e));
 
-/*Used Functions*/
-function readJsonFile(file, callback, progressCallback) {
-    const xmlhttp = new XMLHttpRequest();
-    xmlhttp.overrideMimeType("application/json");
-    xmlhttp.onreadystatechange = function () { if (this.readyState === 4 && this.status == "200") callback(JSON.parse(this.responseText)) };
-    xmlhttp.onprogress = progressCallback;
-    xmlhttp.open("GET", file, true);
-    xmlhttp.send();
-}
-function progressFromEvent(event) {
-    return event.loaded / event.total * 100;
-}
-function arrayFromProperty(array, property) {
-    const newArray = [];
-    for (let i = 0; i < array.length; i++) newArray.push(array[i][property]);
-    return newArray;
-}
-function convertRemToPixels(rem) {
-    return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+    //Places the frame in a good location not blocked by the info panel
+    const minSpaceTaken = .3, offsetLeftBy = 3;
+    function adjustStand() {
+        if (!stand || !panelElement) return;
+
+        //Total screen space taken by panel element
+        const spaceTaken = panelElement.clientWidth / viewport.vw;
+        //If on mobile or theres enough screen space, don't worry about it
+        if (!sizeQuery.matches || spaceTaken < minSpaceTaken) return stand.position.x = 0;
+        //If there is not enough space, move the frame left on the screen by the needed amount
+        stand.position.x = -spaceTaken * offsetLeftBy;
+    }
 }
