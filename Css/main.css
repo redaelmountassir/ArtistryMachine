@@ -530,7 +530,6 @@ section[class*="container"] {
 	user-select: none;
 	white-space: nowrap;
 	text-shadow: none;
-	touch-action: none;
 }
 .watermark:not(img) {
 	position: absolute;
