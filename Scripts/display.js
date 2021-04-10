@@ -293,7 +293,7 @@ window.onload = function () {
     //Request the gltf and json files
     //Create loading json files task
     const loadJsonTask = loadingSystem.createTask(.25);
-    readJsonFile("../info.json", function (artEras) {
+    readJsonFile("info.json", function (artEras) {
         //Needed textures
         const textures = [];
         let roughnessMap, normalMap;
@@ -306,12 +306,12 @@ window.onload = function () {
             const loadTexturesTask = loadingSystem.createTask(.25),
                 textureLoadIncrement = 100 / (artEras.length + 2);
             //Load roughness map
-            textureLoader.load("../3D/Textures/fabricRough.png", function (loaded) {
+            textureLoader.load("3D/Textures/fabricRough.png", function (loaded) {
                 roughnessMap = loaded;
                 //Increase progress
                 loadTexturesTask.progress += textureLoadIncrement;
                 //Load normal map
-                textureLoader.load("../3D/Textures/fabricNormal.png", function (loaded) {
+                textureLoader.load("3D/Textures/fabricNormal.png", function (loaded) {
                     normalMap = loaded;
                     //Update progress
                     loadTexturesTask.progress += textureLoadIncrement;
@@ -319,7 +319,7 @@ window.onload = function () {
                     let i = 0;
                     openPainting(artEras[i].painting.fileName);
                     function openPainting(paintingName) {
-                        textureLoader.load("../Images/" + paintingName + ".jpg", function (loaded) {
+                        textureLoader.load(`Images/${paintingName}.jpg`, function (loaded) {
                             textures.push(loaded);
                             loadTexturesTask.progress += textureLoadIncrement;
                             ++i < artEras.length ? openPainting(artEras[i].painting.fileName) : loadModels();
@@ -338,7 +338,7 @@ window.onload = function () {
             function updateModelLoad(e) { loadModelsTask.progress = progressFromEvent(e) / 2 };
 
             //Load frame and painting
-            gltfLoader.load("../3D/frame.glb", function (loaded) {
+            gltfLoader.load("3D/frame.glb", function (loaded) {
                 //Create painting (approx. 3:4 ratio for textures, just a little bit of stretching its ok (I hope))
                 const paintingGeometry = new THREE.PlaneBufferGeometry(5, 7);
                 const paintingMat = new THREE.MeshStandardMaterial({ map: textures[0], normalMap, roughnessMap });
@@ -358,7 +358,7 @@ window.onload = function () {
                 frame.add(painting);
 
                 //Add stand
-                gltfLoader.load("../3D/stand.glb", function (loaded) {
+                gltfLoader.load("3D/stand.glb", function (loaded) {
                     stand = loaded.scene.children[0];
                     stand.material = mat;
                     //Shadow support

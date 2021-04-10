@@ -18,7 +18,7 @@ if (scrollingText && oldBackground && newBackground) {
     function applyThemeEffects(elements) {
         for (let i = 0; i < elements.length; i++) {
             const artText = elements[i];
-            const src = "../Images/" + artText.getAttribute("data-art") + ".jpg";
+            const src = `Images/${artText.getAttribute("data-art")}.jpg`;
             const color = artText.getAttribute("data-base-color");
             artText.onpointerover = function () {
                 artText.classList.add("solid");

@@ -96,7 +96,7 @@ if (quote) {
 
         //This mode will alert the user that they may skip the read delay by clicking
         const skipAlert = document.createElement("div");
-        skipAlert.appendChild(createImg("../Icons/cursorStates/arrow.svg"));
+        skipAlert.appendChild(createImg(`Icons/cursorStates/arrow.svg`));
         const alertText = document.createElement("p");
         alertText.textContent = "Click to skip wait";
         skipAlert.appendChild(alertText);

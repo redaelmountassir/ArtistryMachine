@@ -40,7 +40,6 @@ for (let i = 0; i < beforeAndAfters.length; i++) {
     }
     //Add event listeners
     beforeAndAfter.addEventListener("pointerenter", () => {
-        //customCursor.setCursorImg("../Icons/left-right.svg");
         const bounds = beforeAndAfter.getBoundingClientRect();
         left = bounds.left;
         width = bounds.width;
@@ -216,7 +215,7 @@ scene.add(cameraHolder);
 
 //Add terrain
 const galleryLoad = new LoadEvent();
-new THREE.GLTFLoader().load("../3D/art-gallery.glb", function (loaded) {
+new THREE.GLTFLoader().load("3D/art-gallery.glb", function (loaded) {
     //Add gallery
     const artGallery = loaded.scene.children[0];
     artGallery.position.set(-2, -2.5, -13);

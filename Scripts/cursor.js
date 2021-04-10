@@ -23,7 +23,7 @@ customCursor.addState = function (name, pathOrElement, priority, settings) {
         overrideUseCursor: settings.overrideUseCursor,
         overrideDifference: settings.overrideDifference
     };
-    if (typeof pathOrElement === "string") pathOrElement = createImg(rootDir + `Icons/cursorStates/${pathOrElement}.svg`, name);
+    if (typeof pathOrElement === "string") pathOrElement = createImg(`Icons/cursorStates/${pathOrElement}.svg`, name);
 
     //Hide the element for later use
     this.domCursor.appendChild(pathOrElement);
