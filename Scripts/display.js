@@ -25,9 +25,7 @@ window.onload = function () {
                         loadingSystem.updateMainProgress();
                     }
                 }
-                console.log(this);
-                this.tasks.push(task);
-                console.log(this);
+                loadingSystem.tasks.push(task);
                 return task;
             },
             updateMainProgress: function () {
