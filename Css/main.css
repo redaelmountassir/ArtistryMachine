@@ -396,7 +396,7 @@ aside {
 [class*="container"][class*="clear-"] { background: none !important }
 
 /*Types of containers*/
-[class*="container"][class*="text-"] { padding: 3rem }
+[class*="container"][class*="text-"] { padding: 2rem }
 [class*="container"][class*="text-"] *:not(div) { margin-bottom: .5em }
 section[class*="container"] {
 	border-radius: 0;

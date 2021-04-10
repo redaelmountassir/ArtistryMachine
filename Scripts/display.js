@@ -14,10 +14,12 @@ window.onload = function () {
             //Weights for all tasks should add up to 1
             //Tasks internally have their own progress that updates the main progress bar based off of its weight
             tasks: [],
-            createTask: function (weight) {
+            createTask: function (weight, name) {
                 const task = {
                     _progress: 0,
                     weight,
+                    //Only exists for testing
+                    name,
                     get progress() { return this._progress },
                     set progress(value) {
                         if (value === this._progress) return;
@@ -38,7 +40,6 @@ window.onload = function () {
 
                 //Animate away (I animate display because it is the main area as well)
                 new gsap.timeline({ defaults: { ease: "power2.out", duration: .5 } }, "+=2")
-                    .set(document.body, { overflowY: "hidden" })
                     .to(loadingSection, {
                         xPercent: -100, display: "none", ease: "power2.in",
                         onComplete: blockTransition, onCompleteParams: [loadingSection]
@@ -49,8 +50,7 @@ window.onload = function () {
                         ease: "rough({ template: power2.in, strength: 2, points: 200, taper: 'out', randomize: true, clamp: false})"
                     })
                     .from("nav li", { yPercent: -200, duration: .25, clearProps: "yPercent", stagger: { each: .1, from: "center" } })
-                    .from("aside", { opacity: 0, yPercent: "+=100", clearProps: "all" }, "<")
-                    .set(document.body, { overflowY: null });
+                    .from("aside", { opacity: 0, yPercent: "+=100", clearProps: "all" }, "<");
             }
         },
         textureLoader = new THREE.TextureLoader(),
@@ -61,7 +61,7 @@ window.onload = function () {
     }
 
     //Tell loading system that the dom has loaded
-    loadingSystem.createTask(.25).progress = 100;
+    loadingSystem.createTask(.25, "DOM loaded").progress = 100;
 
     //Setup
     const display = document.getElementById("display"),
@@ -291,7 +291,7 @@ window.onload = function () {
 
     //Request the gltf and json files
     //Create loading json files task
-    const loadJsonTask = loadingSystem.createTask(.25);
+    const loadJsonTask = loadingSystem.createTask(.25, "Loaded Json");
     readJsonFile("info.json", function (artEras) {
         //Needed textures
         const textures = [];
@@ -302,7 +302,7 @@ window.onload = function () {
         //Step 1
         function loadTextures() {
             //Create loading textures files task and the value to update progress by
-            const loadTexturesTask = loadingSystem.createTask(.25),
+            const loadTexturesTask = loadingSystem.createTask(.25, "Loaded Textures"),
                 textureLoadIncrement = 100 / (artEras.length + 2);
             //Load roughness map
             textureLoader.load("3D/Textures/fabricRough.png", function (loaded) {
@@ -331,7 +331,7 @@ window.onload = function () {
         //Step 2
         function loadModels() {
             //Initiate loader and loading task
-            const loadModelsTask = loadingSystem.createTask(.25);
+            const loadModelsTask = loadingSystem.createTask(.25, "Loaded Models");
 
             //The update function when loading a model
             function updateModelLoad(e) { loadModelsTask.progress = progressFromEvent(e) / 2 };
@@ -390,7 +390,7 @@ window.onload = function () {
                             if (year < 0) { year = Math.abs(year); appendBC = true };
                             //Add zeroes to the beginning of the year for better formatting i.e. 1 -> 0001
                             year = year.toString();
-                            if (year.length < 4) { const neededZeros = 4 - year.length; for (let i = 0; i < neededZeros; i++) year = "0" + year; }
+                            year = (year.length < 4) ? ("0".repeat(4 - year.length)) + year : year;
                             //Add bc
                             if (appendBC) year += "BC";
                         }
