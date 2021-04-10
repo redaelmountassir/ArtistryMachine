@@ -168,7 +168,7 @@ em, nav.vertical .nav-link {
 	animation-delay: var(--rand-delay);
 }
 @supports (-webkit-text-fill-color: transparent) and ((-webkit-background-clip: text) or (background-clip: text)) {
-	em, nav.vertical .nav-link {
+	em, em *, nav.vertical .nav-link {
 		background: var(--color-grad);
 		background-size: 1000% 1000%;
 		-webkit-text-fill-color: transparent;
@@ -203,6 +203,13 @@ a[href="#"] {
 a[href="#"]::after {
 	top: 50%;
 	transform: translateY(-50%);
+}
+span {
+	font-family: inherit;
+	font-weight: inherit;
+	text-transform: none;
+	display: inline-block;
+	backface-visibility: hidden;
 }
 blockquote {
     margin-left: 0;
@@ -315,6 +322,9 @@ nav.vertical .nav-link { font-size: 5vmin }
 #hero-text {
 	bottom: 50%;
 	transform: translate(-50%, 50%);
+}
+#hero-text em {
+	
 }
 #scroll-to {
 	bottom: 1rem;

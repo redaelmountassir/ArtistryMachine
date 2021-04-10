@@ -51,27 +51,36 @@ if (scrollTo) {
     if (destination) {
         scrollTo.onclick = function () { gsap.to(window, { scrollTo: destination, duration: .5, ease: "Power2.out" }) };
         if (scrollingText) {
-            const heroText = document.getElementById("hero-text");
+            const heroText = document.getElementById("hero-text"),
+                letters = splitTextLetters(heroText.firstElementChild);
 
             //Home intro animation
             extendIntro = tl => {
                 tl.fromTo(".background", { clipPath: "inset(15% 0%)" },
-                    { clipPath: "inset(0% 0%)", ease: "power2.in", clearProps: "all" }, ">1");
-                if (sizeQuery.matches) tl.from(heroText, { yPercent: -75, scale: 1.25, ease: "power2.out", clearProps: "all" }, "<");
+                    { clipPath: "inset(0% 0%)", ease: "power2.in", clearProps: "all" });
+                let stagger = 0;
+                gsap.utils.toArray(letters).forEach(letter => {
+                    const rotObject = { ease: "back.out(1.7)", duration: .5, clearProps: "all" };
+                    rotObject[gsap.utils.random(["rotateX", "rotateY"])] = gsap.utils.random([180, -180]);
+                    tl.from(letter, rotObject, "<" + stagger)
+                    //This ensures the first one won't have any delay
+                    stagger = .1;
+                });
+                if (sizeQuery.matches) tl.from(heroText, { yPercent: -75, scale: 1.25, ease: "power2.out", clearProps: "all" });
                 //Only do the scroll trigger stuff after ^ because if you scroll it'll create errors (x _ x)
                 tl.call(() => {
                     //Makes sure inline styles don't contaminate other inline styles when media query updates
                     ScrollTrigger.saveStyles(heroText);
                     ScrollTrigger.matchMedia({
                         //Using match media not because the animations change, but rather for save styles to run on refresh
-                        "(max-width: 50rem)": createAnim,
-                        "(min-width: 50rem)": createAnim,
+                        "(max-width: 50rem)": createAnim, "(min-width: 50rem)": createAnim,
                     });
                     function createAnim() {
                         new gsap.timeline({ scrollTrigger: { trigger: destination, scrub: 1 } })
                             .to([scrollingText, clonedScrollingText], { x: "+=100%", autoAlpha: 0, ease: "Power2.out" })
                             .to(scrollTo, { autoAlpha: 0 }, "<")
-                            .to([heroText, heroText.firstElementChild], { yPercent: "-=150", autoAlpha: 0 }, "<")
+                            .to(heroText, { yPercent: "-=100", autoAlpha: 0 }, "<")
+                            .to(letters, { yPercent: "-=100", autoAlpha: 0, stagger: .025 }, "<");
                     }
                 })
             }

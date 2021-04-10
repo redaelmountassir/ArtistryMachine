@@ -23,7 +23,17 @@ function allowTransition(element) {
     element.classList.remove("no-anim");
 }
 
-//This is used to wrap elements in a div for animating
+//All of these functions/methods are used to modify text in a way thats animatable
+
+//This is the basic line structure for cloning
+const lineTemplate = document.createElement("div");
+//These are temp styles to ensure that we minimize the impact of checking offset height
+lineTemplate.style.display = "inline-block";
+lineTemplate.style.visibility = "hidden";
+lineTemplate.style.width = "100%";
+lineTemplate.style.position = "absolute";
+lineTemplate.appendChild(document.createElement("p"));
+
 function wrapInDiv(element) {
     const container = document.createElement("div");
     //Useful for appear animations
@@ -34,8 +44,6 @@ function wrapInDiv(element) {
     container.appendChild(element);
     return container;
 }
-
-//Splits lastText into lines based off of the built-in css wrapping
 function splitText(textElement) {
     //Cache these values for later use
     const words = textElement.textContent.split(" "), wordsLength = words.length;
@@ -104,15 +112,23 @@ function Line(lines, str) {
     //If there is starter text, apply it
     if (typeof str === "string") this.append(str);
 }
+function splitTextLetters(textElement) {
+    //Good for 3d
+    textElement.style.transformStyle = "preserve-3D";
+    textElement.style.perspective = "300px";
+    textElement.style.display = "block";
 
-//This is the basic line structure for cloning
-const lineTemplate = document.createElement("div");
-//These are temp styles to ensure that we minimize the impact of checking offset height
-lineTemplate.style.display = "inline-block";
-lineTemplate.style.visibility = "hidden";
-lineTemplate.style.width = "100%";
-lineTemplate.style.position = "absolute";
-lineTemplate.appendChild(document.createElement("p"));
+    const text = textElement.textContent;
+    const letters = text.split("");
+    const letterFrag = document.createDocumentFragment();
+    letters.forEach(letter => {
+        const letterDiv = document.createElement("span");
+        letterDiv.textContent = letter;
+        letterFrag.appendChild(letterDiv);
+    });
+    textElement.replaceChild(letterFrag, textElement.firstChild);
+    return textElement.children;
+}
 
 //Global screen query
 const sizeQuery = window.matchMedia("(min-width: 50rem)");
@@ -133,8 +149,9 @@ function convertRemToPixels(rem) {
 function readJsonFile(file, callback, progressCallback) {
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.overrideMimeType("application/json");
-    xmlhttp.onreadystatechange = function () { if (this.readyState === 4 && this.status == "200") callback(JSON.parse(this.responseText)) };
+    xmlhttp.onreadystatechange = () => { if (this.readyState === 4 && this.status == "200") callback(JSON.parse(this.responseText)) };
     xmlhttp.onprogress = progressCallback;
+    xmlhttp.onerror = () => { location.reload() };
     xmlhttp.open("GET", file, true);
     xmlhttp.send();
 }

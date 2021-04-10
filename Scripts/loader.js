@@ -116,12 +116,7 @@ if (quote) {
             //Split the text for individual animation
             splitText(quote);
             const introTL = new gsap.timeline({ defaults: { ease: "power2.in", duration: .5 }, onComplete: blockTransition, onCompleteParams: [loadingSection] })
-                .to("#loading-section p", {
-                    yPercent: 100, stagger: {
-                        from: "end",
-                        each: .25
-                    }
-                })
+                .to("#loading-section p", { yPercent: 100, stagger: { from: "end", each: .1 } })
                 .from("main", { xPercent: 100, clearProps: "xPercent" })
                 .to(loadingSection, { xPercent: -100, display: "none" }, "<");
 
