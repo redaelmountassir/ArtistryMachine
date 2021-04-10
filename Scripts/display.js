@@ -25,11 +25,11 @@ window.onload = function () {
                         loadingSystem.updateMainProgress();
                     }
                 }
-                loadingSystem.tasks.push(task);
+                this.tasks.push(task);
                 return task;
             },
             updateMainProgress: function () {
-                this.progress = this.tasks.reduce((sumProgress, task) => sumProgress + task.progress * task.weight, 0);
+                this.progress = this.tasks.reduce((sumProgress, task) => sumProgress + Math.min(100, task.progress) * task.weight, 0);
                 loadingValue.textContent = Math.round(this.progress);
                 if (this.progress >= 100) this.complete();
             },
