@@ -22,9 +22,16 @@ window.onload = function () {
                     name,
                     get progress() { return this._progress },
                     set progress(value) {
+                        //Cannot set to infinity, which often happens when the XMLHTTP request has a total of 0 for some odd reason
+                        if (value === Infinity) return this.progress = 0;
                         if (value === this._progress) return;
                         this._progress = value;
                         loadingSystem.updateMainProgress();
+                    },
+                    forceComplete: function () {
+                        //With certain types of events 100 isn't quite reached, or Infinity is the value given
+                        //This prevents that
+                        if (!this.progress >= 100) this.progress = 100;
                     }
                 }
                 this.tasks.push(task);
@@ -33,10 +40,16 @@ window.onload = function () {
             updateMainProgress: function () {
                 this.progress = this.tasks.reduce((sumProgress, task) => sumProgress + Math.min(100, task.progress) * task.weight, 0);
                 loadingValue.textContent = Math.round(this.progress);
+                if (this.progress >= 100) this.complete();
             },
             complete: function () {
+                //No need to complete a second time!
+                if (this.completed) return;
+
+                //Set extra values
                 loadingValue.textContent = 100;
                 this.tasks = null;
+                this.completed = true;
 
                 //Animate away (I animate display because it is the main area as well)
                 new gsap.timeline({ defaults: { ease: "power2.out", duration: .5 } }, "+=2")
@@ -293,6 +306,8 @@ window.onload = function () {
     //Create loading json files task
     const loadJsonTask = loadingSystem.createTask(.25, "Loaded Json");
     readJsonFile("info.json", function (artEras) {
+        loadJsonTask.forceComplete();
+
         //Needed textures
         const textures = [];
         let roughnessMap, normalMap;
@@ -358,6 +373,8 @@ window.onload = function () {
 
                 //Add stand
                 gltfLoader.load("3D/stand.glb", function (loaded) {
+                    loadModelsTask.forceComplete();
+
                     stand = loaded.scene.children[0];
                     stand.material = mat;
                     //Shadow support
@@ -590,7 +607,7 @@ window.onload = function () {
             //Add fragment to the actual DOM
             eraList.firstElementChild.appendChild(listFragment);
 
-            //You MUST force complete or else progress will never actually hit 100 because of how progress events work
+            //This is optional, but it is a safeguard to ensure nothing prevents progress from reaching >= 100
             loadingSystem.complete();
         }
     },
