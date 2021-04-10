@@ -31,7 +31,6 @@ window.onload = function () {
             updateMainProgress: function () {
                 this.progress = this.tasks.reduce((sumProgress, task) => sumProgress + Math.min(100, task.progress) * task.weight, 0);
                 loadingValue.textContent = Math.round(this.progress);
-                if (this.progress >= 100) this.complete();
             },
             complete: function () {
                 loadingValue.textContent = 100;
