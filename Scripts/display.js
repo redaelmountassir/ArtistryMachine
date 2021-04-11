@@ -96,7 +96,6 @@ window.onload = function () {
             //Convert the pos to a usuable rotation
             this.rotation.x = pos.y * this.sensitivity;
             this.rotation.y = -pos.x * this.sensitivity;
-            gsap.to(camera.rotation, { y: x, x: y, duration: 1, ease: "power2.out", overwrite: "auto" });
         },
         updateCam: function () {
             //Need update makes sure that animations are delegated to the animation frame
