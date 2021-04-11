@@ -134,13 +134,6 @@ function splitTextLetters(textElement) {
     return textElement.children;
 }
 
-//Creates an array made of the property of a previous array
-function arrayFromProperty(array, property) {
-    const newArray = [];
-    for (let i = 0; i < array.length; i++) newArray.push(array[i][property]);
-    return newArray;
-}
-
 //Converts rem to pixels with the font size of the document element
 function convertRemToPixels(rem) {
     return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);

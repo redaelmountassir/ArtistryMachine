@@ -428,6 +428,11 @@ section[class*="container"] {
 	margin: 0 auto;
 }
 
+/*Useful colors*/
+.dark {
+	color: var(--black);
+}
+
 /*Before-and-after image slider*/
 .before-after {
     position: relative;
@@ -573,7 +578,6 @@ img.watermark {
 .link-button.dark {
 	border-color: var(--black);
 	box-shadow: 0 10px 0 0 var(--black);
-	color: var(--black);
 }
 .link-button.dark:hover, .link-button.dark:focus { box-shadow: 0 0 0 0 var(--black) }
 .link-button::after { display: none }

@@ -160,45 +160,44 @@ function getPosRelativeToElement(clientPos, elementPos, elementSize) {
 };
 
 //3D TIME
-const viewport = {
-    width: window.innerWidth,
-    height: window.innerHeight
-}, camDamping = .5, camMoveAmount = .5;
-
-//Move cam with mouse
-window.addEventListener("pointermove", e => {
-    const mouseXNormalized = e.clientX / viewport.width * -2 - 1;
-    gsap.to(camera.position, {
-        x: mouseXNormalized * camMoveAmount,
-        duration: camDamping,
-        ease: "power2.out"
-    });
-});
-
-//Update on resize
-window.addEventListener("resize", () => {
-    //Update viewport
-    viewport.width = window.innerWidth;
-    viewport.height = window.innerHeight;
-
-    //Update camera
-    camera.aspect = viewport.width / viewport.height;
-    camera.updateProjectionMatrix();
-
-    //Update renderer
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(viewport.width, viewport.height, false);
-});
-
 //Add renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, canvas: document.getElementsByTagName("canvas")[0] });
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = .75;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(viewport.width, viewport.height, false);
 
+const viewport = {
+    vw: window.innerWidth
+        || document.documentElement.clientWidth
+        || document.body.clientWidth,
+    vh: window.innerHeight
+        || document.documentElement.clientHeight
+        || document.body.clientHeight,
+    update: function () {
+        //Update viewport
+        this.vw = window.innerWidth
+            || document.documentElement.clientWidth
+            || document.body.clientWidth;
+        this.vh = window.innerHeight
+            || document.documentElement.clientHeight
+            || document.body.clientHeight;
+
+        //Update camera
+        camera.aspect = viewport.vw / viewport.vh;
+        camera.updateProjectionMatrix();
+
+        //Update renderer
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(viewport.vw, viewport.vh, false);
+    }
+};
+//Update on resize
+window.addEventListener("resize", viewport.update.bind(viewport), false);
+
+//Set initial values
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(viewport.vw, viewport.vh, false);
 
 //Build scene
 const scene = new THREE.Scene();
@@ -206,12 +205,24 @@ const scene = new THREE.Scene();
 //Add camera
 const focusPoint = new THREE.Vector3(0, 1, -13),
     cameraHolder = new THREE.Object3D(),
-    camera = new THREE.PerspectiveCamera(75, viewport.width / viewport.height, 0.1, 100);
+    camera = new THREE.PerspectiveCamera(75, viewport.vw / viewport.vh, 0.1, 100),
+    camDamping = .5,
+    camMoveAmount = .5;
 
 cameraHolder.lookAt(focusPoint)
 camera.scale.set(-1, 1, -1);
 cameraHolder.add(camera);
 scene.add(cameraHolder);
+
+//Move cam with mouse
+window.addEventListener("pointermove", e => {
+    const mouseXNormalized = e.clientX / viewport.vw * -2 - 1;
+    gsap.to(camera.position, {
+        x: mouseXNormalized * camMoveAmount,
+        duration: camDamping,
+        ease: "power2.out"
+    });
+});
 
 //Add terrain
 const galleryLoad = new LoadEvent();

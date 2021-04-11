@@ -52,7 +52,7 @@ window.onload = function () {
                 this.completed = true;
 
                 //Animate away (I animate display because it is the main area as well)
-                new gsap.timeline({ defaults: { ease: "power2.out", duration: .5 } }, "+=2")
+                const tl = new gsap.timeline({ defaults: { ease: "power2.out", duration: .5 } }, "+=2")
                     .to(loadingSection, {
                         xPercent: -100, display: "none", ease: "power2.in",
                         onComplete: blockTransition, onCompleteParams: [loadingSection]
@@ -62,8 +62,8 @@ window.onload = function () {
                         intensity: 0, duration: 2,
                         ease: "rough({ template: power2.in, strength: 2, points: 200, taper: 'out', randomize: true, clamp: false})"
                     })
-                    .from("nav li", { yPercent: -200, duration: .25, clearProps: "yPercent", stagger: { each: .1, from: "center" } })
                     .from("aside", { opacity: 0, yPercent: "+=100", clearProps: "all" }, "<");
+                if (sizeQuery.matches) tl.from("nav li", { yPercent: -200, duration: .25, clearProps: "yPercent", stagger: { each: .1, from: "center" } }, "<");
             }
         },
         textureLoader = new THREE.TextureLoader(),
@@ -76,18 +76,62 @@ window.onload = function () {
     //Tell loading system that the dom has loaded
     loadingSystem.createTask(.1, "DOM loaded").progress = 100;
 
-    //Setup
+    //Add renderer to dom
     const display = document.getElementById("display"),
-        background = document.getElementById("display-background");
+        background = document.getElementById("display-background"),
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.5;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    background.appendChild(renderer.domElement);
+
+    //Properly updates dom
+    const viewport = {
+        vw: window.innerWidth
+            || document.documentElement.clientWidth
+            || document.body.clientWidth,
+        vh: window.innerHeight
+            || document.documentElement.clientHeight
+            || document.body.clientHeight,
+        update: function () {
+            //Update viewport dimensions
+            this.vw = window.innerWidth
+                || document.documentElement.clientWidth
+                || document.body.clientWidth;
+            this.vh = window.innerHeight
+                || document.documentElement.clientHeight
+                || document.body.clientHeight;
+
+            //Update camera
+            camera.aspect = viewport.vw / viewport.vh;
+            camera.updateProjectionMatrix();
+
+            //Update renderer
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setSize(this.vw, this.vh, false);
+
+            //Update stand
+            adjustStand();
+        }
+    };
+    window.addEventListener("resize", viewport.update.bind(viewport), false);
+
+    //Set initial values
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(viewport.vw, viewport.vh, false);
+
+    //Make main scene
+    const scene = new THREE.Scene();
 
     //Camera setup
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 100);
     camera.position.z = 3;
     camera.position.y = 2;
+    scene.add(camera);
 
     //Smoothly sets the camera with a normalized position
     const camController = {
-        camera,
         sensitivity: .2,
         rotation: new THREE.Vector2(0, 0),
         needsUpdate: false,
@@ -103,48 +147,9 @@ window.onload = function () {
             if (!this.needsUpdate) return;
             this.needsUpdate = false;
             //Animate rotation
-            gsap.to(this.camera.rotation, { x: this.rotation.x, y: this.rotation.y, duration: 1, ease: "power2.out", overwrite: "auto" });
+            gsap.to(camera.rotation, { x: this.rotation.x, y: this.rotation.y, duration: 1, ease: "power2.out", overwrite: "auto" });
         }
     };
-
-    //Renderer setup
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.5;
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    const viewport = {
-        vw: null,
-        vh: null,
-        update: function (preventCamUpdate) {
-            viewport.vw = window.innerWidth
-                || document.documentElement.clientWidth
-                || document.body.clientWidth;
-            viewport.vh = window.innerHeight
-                || document.documentElement.clientHeight
-                || document.body.clientHeight;
-
-            //Update renderer
-            renderer.setSize(viewport.vw, viewport.vh);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-            //Update cam
-            if (preventCamUpdate) {
-                camera.aspect = viewport.vw / viewport.vh;
-                camera.updateProjectionMatrix();
-            }
-
-            //Update stand
-            adjustStand();
-            console.log("updated");
-        }
-    };
-    viewport.update(true);
-    window.addEventListener("resize", viewport.update, false);
-    background.appendChild(renderer.domElement);
-
-    //Make main scene
-    const backgroundScene = new THREE.Scene();
 
     //Create background shapes with staggered anims
     const shapesGroup = new THREE.Group();
@@ -170,13 +175,11 @@ window.onload = function () {
     sphere5.position.set(0, 70, -60);
     shapesGroup.add(sphere5);
 
-    backgroundScene.add(shapesGroup);
+    scene.add(shapesGroup);
 
     //Animate with random stagger
-    const childrenPositions = arrayFromProperty(shapesGroup.children, "position");
-    const raiseAmount = "+=5";
-    const raiseTime = 1;
-    gsap.to(childrenPositions, {
+    const raiseAmount = "+=5", raiseTime = 1;
+    gsap.to(shapesGroup.children.map(child => child.position), {
         y: raiseAmount, ease: "power2.inOut", duration: raiseTime,
         stagger: {
             from: "random",
@@ -225,12 +228,12 @@ window.onload = function () {
     //Add lighting
     //Overall colored light
     const ambientLight = new THREE.AmbientLight(0x404040, .25);
-    backgroundScene.add(ambientLight);
+    scene.add(ambientLight);
 
     //Lights up the spheres in the back and the back of the painting a little
     const backLight = new THREE.PointLight(0xFFF7F8, 3, 100, 2);
     backLight.position.set(0, 10, -50);
-    backgroundScene.add(backLight);
+    scene.add(backLight);
 
     //Light that goes down on the painting and display
     const spotLight = new THREE.SpotLight(0xFFA3A0, .5);
@@ -243,7 +246,7 @@ window.onload = function () {
     const shadowRes = 1024 * 4;
     spotLight.shadow.mapSize.width = shadowRes;
     spotLight.shadow.mapSize.height = shadowRes;
-    backgroundScene.add(spotLight);
+    scene.add(spotLight);
 
     //Light in the direction of the camera somewhat
     //The frame base pos will be the location the light will look at
@@ -253,7 +256,7 @@ window.onload = function () {
     focusLight.decay = 2;
     focusLight.position.set(0, 5, 4);
     focusLight.lookAt(frameBasePos);
-    backgroundScene.add(focusLight);
+    scene.add(focusLight);
 
     //Render loop
     function render() {
@@ -270,7 +273,7 @@ window.onload = function () {
         else
             paintingTooltip.hide();
 
-        renderer.render(backgroundScene, camera);
+        renderer.render(scene, camera);
         requestAnimationFrame(render);
     };
 
@@ -294,6 +297,7 @@ window.onload = function () {
         }
     }
     //Add orientation support to look around on mobile
+    const orientationQuery = window.matchMedia("(orientation: portrait)");
     const gyro = {
         pos: new THREE.Vector2(0, 0),
         supported: window.DeviceOrientationEvent !== undefined,
@@ -304,8 +308,15 @@ window.onload = function () {
             this._use = value && this.supported;
         },
         changeEvent: e => {
-            gyro.pos.x = e.gamma / -90;
-            gyro.pos.y = e.beta / 180;
+            e.gamma /= -90;
+            e.beta /= 180;
+            if (orientationQuery.matches) {
+                gyro.pos.x = e.gamma;
+                gyro.pos.y = e.beta;
+            } else {
+                gyro.pos.x = e.beta;
+                gyro.pos.y = e.gamma;
+            }
             camController.setCamRotWithPos(gyro.pos);
         }
     }
@@ -397,7 +408,7 @@ window.onload = function () {
                     //Shadow support
                     stand.castShadow = stand.receiveShadow = true;
                     //Add to scene
-                    backgroundScene.add(stand);
+                    scene.add(stand);
                     stand.add(frame);
 
                     startDisplay(stand, painting, textures);
