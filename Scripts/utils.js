@@ -1,4 +1,8 @@
-//Check css to better understand purpose
+
+//Global screen query
+const sizeQuery = window.matchMedia("(min-width: 50rem)");
+
+//This value drives the anim offset of the gradient position
 document.documentElement.style.setProperty('--rand-delay', Math.random() * -50 + "s");
 
 //Creates a basic img for code
@@ -129,9 +133,6 @@ function splitTextLetters(textElement) {
     textElement.replaceChild(letterFrag, textElement.firstChild);
     return textElement.children;
 }
-
-//Global screen query
-const sizeQuery = window.matchMedia("(min-width: 50rem)");
 
 //Creates an array made of the property of a previous array
 function arrayFromProperty(array, property) {

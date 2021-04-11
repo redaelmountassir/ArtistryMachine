@@ -74,7 +74,7 @@ window.onload = function () {
     }
 
     //Tell loading system that the dom has loaded
-    loadingSystem.createTask(.25, "DOM loaded").progress = 100;
+    loadingSystem.createTask(.1, "DOM loaded").progress = 100;
 
     //Setup
     const display = document.getElementById("display"),
@@ -304,7 +304,7 @@ window.onload = function () {
 
     //Request the gltf and json files
     //Create loading json files task
-    const loadJsonTask = loadingSystem.createTask(.25, "Loaded Json");
+    const loadJsonTask = loadingSystem.createTask(.1, "Loaded Json");
     readJsonFile("info.json", function (artEras) {
         loadJsonTask.forceComplete();
 
@@ -317,7 +317,7 @@ window.onload = function () {
         //Step 1
         function loadTextures() {
             //Create loading textures files task and the value to update progress by
-            const loadTexturesTask = loadingSystem.createTask(.25, "Loaded Textures"),
+            const loadTexturesTask = loadingSystem.createTask(.4, "Loaded Textures"),
                 textureLoadIncrement = 100 / (artEras.length + 2);
             //Load roughness map
             textureLoader.load("3D/Textures/fabricRough.png", function (loaded) {
@@ -346,7 +346,7 @@ window.onload = function () {
         //Step 2
         function loadModels() {
             //Initiate loader and loading task
-            const loadModelsTask = loadingSystem.createTask(.25, "Loaded Models");
+            const loadModelsTask = loadingSystem.createTask(.4, "Loaded Models");
 
             //The update function when loading a model
             function updateModelLoad(e) { loadModelsTask.progress = progressFromEvent(e) / 2 };
