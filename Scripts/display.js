@@ -103,7 +103,7 @@ window.onload = function () {
             if (!this.needsUpdate) return;
             this.needsUpdate = false;
             //Animate rotation
-            gsap.to(this.camera.rotation, { x: this.x, y: this.y, duration: 1, ease: "power2.out", overwrite: "auto" });
+            gsap.to(this.camera.rotation, { x: this.rotation.x, y: this.rotation.y, duration: 1, ease: "power2.out", overwrite: "auto" });
         }
     };
 
