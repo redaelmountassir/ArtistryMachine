@@ -114,6 +114,7 @@ window.onload = function () {
 
             //Update stand
             adjustStand();
+            console.log("updated");
         }
     };
     viewport.update(true);
@@ -286,9 +287,10 @@ window.onload = function () {
             setCamRotWithPos(0, 0);
             this._use = value && this.supported;
         },
-        changeEvent: function (e) {
+        changeEvent: e => {
             gyro.pos.x = e.gamma / 90;
             gyro.pos.y = e.beta / 180;
+            console.log(e);
             setCamRotWithPos(gyro.pos.x, gyro.pos.y);
         }
     }
