@@ -149,7 +149,9 @@ function convertRemToPixels(rem) {
 function readJsonFile(file, callback, progressCallback) {
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.overrideMimeType("application/json");
-    xmlhttp.onreadystatechange = () => { if (this.readyState === 4 && this.status == "200") callback(JSON.parse(this.responseText)) };
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status == "200") callback(JSON.parse(this.responseText))
+    };
     xmlhttp.onprogress = progressCallback;
     xmlhttp.onerror = () => { location.reload() };
     xmlhttp.open("GET", file, true);

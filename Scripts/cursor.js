@@ -108,19 +108,15 @@ document.addEventListener("pointercancel", () => {
 //Built-in behaviours
 window.addEventListener("load", () => {
     //Buttons will change the cursor into a pointer
-    const buttons = document.getElementsByTagName("button");
-    for (let i = 0; i < buttons.length; i++) {
-        const button = buttons[i];
+    gsap.utils.toArray("button").forEach(button => {
         button.addEventListener("pointerover", () => { customCursor.setState("pointer") }, false);
         button.addEventListener("pointerout", () => { customCursor.removeState("pointer") }, false);
-    }
+    });
     //Links will indicate that they will change your location
-    const links = document.getElementsByTagName("a");
-    for (let i = 0; i < links.length; i++) {
-        const link = links[i];
+    gsap.utils.toArray("a").forEach(link => {
         link.addEventListener("pointerover", () => { customCursor.setState("link") }, false);
         link.addEventListener("pointerout", () => { customCursor.removeState("link") }, false);
-    }
+    });
 }, false);
 
 //When you click, the click cursor will appear
