@@ -85,6 +85,29 @@ window.onload = function () {
     camera.position.z = 3;
     camera.position.y = 2;
 
+    //Smoothly sets the camera with a normalized position
+    const camController = {
+        camera,
+        sensitivity: .2,
+        rotation: new THREE.Vector2(0, 0),
+        needsUpdate: false,
+        setCamRotWithPos: function (pos) {
+            this.needsUpdate = true;
+            //Convert the pos to a usuable rotation
+            this.rotation.x = pos.y * this.sensitivity;
+            this.rotation.y = -pos.x * this.sensitivity;
+            gsap.to(camera.rotation, { y: x, x: y, duration: 1, ease: "power2.out", overwrite: "auto" });
+        },
+        updateCam: function () {
+            //Need update makes sure that animations are delegated to the animation frame
+            //otherwise, constant setCamRotWithPos could slow devices down
+            if (!this.needsUpdate) return;
+            this.needsUpdate = false;
+            //Animate rotation
+            gsap.to(this.camera.rotation, { x: this.x, y: this.y, duration: 1, ease: "power2.out", overwrite: "auto" });
+        }
+    };
+
     //Renderer setup
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -235,6 +258,8 @@ window.onload = function () {
 
     //Render loop
     function render() {
+        camController.updateCam();
+
         //Raycast to the painting every render loop for the tooltip
         //Only if a period is defined and the canvas is the currently hovered element
         if (currentPeriod && mouse.lastTarget && renderer.domElement.contains(mouse.lastTarget)) {
@@ -249,14 +274,6 @@ window.onload = function () {
         renderer.render(backgroundScene, camera);
         requestAnimationFrame(render);
     };
-
-    //Smoothly sets the camera with a normalized position
-    const sensitivity = .2;
-    function setCamRotWithPos(x, y) {
-        x *= -sensitivity;
-        y *= sensitivity;
-        gsap.to(camera.rotation, { y: x, x: y, duration: 1, ease: "power2.out", overwrite: "auto" });
-    }
 
     //Move cam with mouse on anything not mobile
     const mouse = {
@@ -274,7 +291,7 @@ window.onload = function () {
             mouse.normalizedPos.y = mouse.pos.y / viewport.vh * -2 + 1;
             //Do NOT use the mouse if the gyro should be used
             if (gyro.use) return;
-            setCamRotWithPos(mouse.normalizedPos.x, mouse.normalizedPos.y);
+            camController.setCamRotWithPos(mouse.normalizedPos);
         }
     }
     //Add orientation support to look around on mobile
@@ -284,13 +301,13 @@ window.onload = function () {
         _use: false,
         get use() { return this._use },
         set use(value) {
-            setCamRotWithPos(0, 0);
+            camController.setCamRotWithPos(new THREE.Vector2(0, 0));
             this._use = value && this.supported;
         },
         changeEvent: e => {
             gyro.pos.x = e.gamma / 90;
             gyro.pos.y = e.beta / 180;
-            setCamRotWithPos(gyro.pos.x, gyro.pos.y);
+            camController.setCamRotWithPos(gyro.pos);
         }
     }
 
