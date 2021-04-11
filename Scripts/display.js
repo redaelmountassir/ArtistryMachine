@@ -304,7 +304,7 @@ window.onload = function () {
             this._use = value && this.supported;
         },
         changeEvent: e => {
-            gyro.pos.x = e.gamma / 90;
+            gyro.pos.x = e.gamma / -90;
             gyro.pos.y = e.beta / 180;
             camController.setCamRotWithPos(gyro.pos);
         }
