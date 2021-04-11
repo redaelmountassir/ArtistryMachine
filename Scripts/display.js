@@ -290,7 +290,6 @@ window.onload = function () {
         changeEvent: e => {
             gyro.pos.x = e.gamma / 90;
             gyro.pos.y = e.beta / 180;
-            console.log(e);
             setCamRotWithPos(gyro.pos.x, gyro.pos.y);
         }
     }
