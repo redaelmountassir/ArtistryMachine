@@ -308,14 +308,14 @@ window.onload = function () {
             this._use = value && this.supported;
         },
         changeEvent: e => {
-            e.gamma /= -90;
-            e.beta /= 180;
+            const gamma = e.gamma / -90,
+                beta = e.beta / 180;
             if (orientationQuery.matches) {
-                gyro.pos.x = e.gamma;
-                gyro.pos.y = e.beta;
+                gyro.pos.x = gamma;
+                gyro.pos.y = beta;
             } else {
-                gyro.pos.x = e.beta;
-                gyro.pos.y = e.gamma;
+                gyro.pos.x = beta;
+                gyro.pos.y = gamma;
             }
             camController.setCamRotWithPos(gyro.pos);
         }
