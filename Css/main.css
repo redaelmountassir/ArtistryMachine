@@ -348,25 +348,93 @@ nav.vertical .nav-link { font-size: 5vmin }
 
 /*-----------------Aside areas-----------------*/
 aside {
-	position: absolute;
+	--nav-height: 5rem;
+	--docked-size: 5rem;
+	--expand-button-adjust: 5rem;
+	--margin: 1rem;
+	padding: 1em !important;
+	position: fixed;
+	transition: transform .5s ease-out;
+}
+aside[class*="text-"] {
+	padding: 3em !important;
+    overflow: auto;
+	z-index: 1;
+}
+aside .expand-button {
+	display: none;
+	transition: transform .5s ease-out;
+}
+
+/*Panel that is on the right side of the screen*/
+aside.right {
+	right: var(--margin);
+	bottom: var(--margin);
+	max-width: 25rem;
+	height: calc(100vh - var(--nav-height) - var(--margin) * 2);
+}
+aside.right.unexpand { transform: translateX(105%) }
+
+/*Unlike just the positional asides, docked ones touch the edges and can be opened*/
+aside.docked .expand-button { display: block }
+aside.docked {
+	touch-action: pinch-zoom;
+}
+aside.bottom.docked {
+	bottom: 0;
+	width: 100%;
+	height: calc(100vh - var(--nav-height) - var(--margin));
+}
+aside.bottom.docked.unexpand {
+	transform: translateY(100%) translateY(calc(-1 * var(--docked-size)));
+}
+aside.bottom.docked.unexpand .expand-button {
+	transform: rotate(180deg) translateY(calc(var(--docked-size) * .25));
+}
+aside.bottom.docked ~ aside.right {
+	bottom: calc(var(--margin) + var(--docked-size));
+	height: calc(100vh - var(--nav-height) - var(--margin) * 2 - var(--docked-size));
+}
+/*aside {
     bottom: -.5rem;
     width: 100%;
     height: 100%;
     overflow: auto;
 	padding: 2.5rem !important;
-	transition: all .5s ease-out;
-	transition-property: transform, opacity;
 }
 .expandable { transform: translateY(100%) }
 .expandable.expand { transform: none }
-/*If it has an expand button, it needs to be offsetted slightly to compensate*/
+If it has an expand button, it needs to be offsetted slightly to compensate
 .with-expand-button { transform: translateY(100%) translateY(-4rem); }
 .expand-button {
-	/*Its important that this is !important so that gsap will not animate this transform*/
+	Its important that this is !important so that gsap will not animate this transform
 	transform: rotate(180deg) translateY(90%);
 	transition: transform .5s ease-out;
 }
 .expand .expand-button { transform: none }
+
+aside {
+	--margin: 1rem;
+	position: absolute;
+	right: 2.5%;
+	The calcs compensate for the space taken by the nav
+	top: calc(5rem + var(--margin));
+	width: 25rem;
+	height: calc(100% - 5rem - var(--margin) * 2);
+	min-height: 2rem;
+	transform: translateY(-50%);
+}
+aside.expandable {
+	transform: translateX(100%);
+	opacity: 0;
+}
+aside.expandable.expand {
+	transform: none;
+	opacity: 1;
+}
+.expand-button {
+	display: none;
+}*/
 
 /*-----------------Loading Section-----------------*/
 .progress-value {
@@ -377,9 +445,8 @@ aside {
 .progress-value::after {
 	content: "%";
 	color: inherit;
-	font-family: inherit;
-	font-weight: inherit;
     font-size: .5em;
+	font-weight: inherit;
     margin-left: .2em;
 }
 
@@ -406,8 +473,16 @@ aside {
 [class*="container"][class*="clear-"] { background: none !important }
 
 /*Types of containers*/
-[class*="container"][class*="text-"] { padding: 4rem 2rem }
+[class*="container"][class*="text-"] { padding: 10vw }
 [class*="container"][class*="text-"] *:not(div) { margin-bottom: .5em }
+
+/*Extras for containers*/
+[class*="container"][class*="center-"] {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
 section[class*="container"] {
 	border-radius: 0;
 	overflow: hidden;
@@ -429,9 +504,7 @@ section[class*="container"] {
 }
 
 /*Useful colors*/
-.dark {
-	color: var(--black);
-}
+.dark { color: var(--black) }
 
 /*Before-and-after image slider*/
 .before-after {
@@ -455,21 +528,15 @@ section[class*="container"] {
 }
 
 /*Centering classes*/
-.center-x {
+.center-x, .center {
 	position: absolute;
 	left: 50%;
 	transform: translateX(-50%);
 }
-.center-y {
+.center-y, .center {
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);
-}
-.center-content {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
 }
 
 
@@ -584,22 +651,24 @@ img.watermark {
 
 /*-----------------Cursor + Fixed Elements-----------------*/
 /*Fixed elements in general*/
-.fixed-element {
+.fixed-element, .cover {
 	position: fixed;
 	z-index: 999;
 	left: 0;
 	top: 0;
 }
-.fixed-element:not(section) {
-	pointer-events: none;
-	user-select: none;
-	opacity: .8;
+.cover {
+	width: 100vw;
+	height: 100vh;
+	border-radius: 0;
 }
 
 /*Cursor*/
 #cursor {
 	transform-origin: center center;
 	mix-blend-mode: difference;
+	pointer-events: none;
+	opacity: .8;
 }
 #cursor img {
 	width: 50px;
@@ -644,30 +713,6 @@ img.cursor-mode { margin: 0 !important }
 	h2 { font-size: 5rem }
 	a, p { font-size: 1.5rem }
 
-	/*Aside*/
-	aside {
-		--margin: 1rem;
-		position: absolute;
-		right: 2.5%;
-		/*The calcs compensate for the space taken by the nav*/
-		top: calc(5rem + var(--margin));
-		width: 25rem;
-		height: calc(100% - 5rem - var(--margin) * 2);
-		min-height: 2rem;
-		transform: translateY(-50%);
-	}
-	aside.expandable {
-		transform: translateX(100%);
-		opacity: 0;
-	}
-	aside.expandable.expand {
-		transform: none;
-		opacity: 1;
-	}
-	.expand-button {
-		display: none;
-	}
-
 	/*Misc.*/
 	#hero-text { bottom: 2em }
 	.square {
@@ -675,12 +720,8 @@ img.cursor-mode { margin: 0 !important }
 		width: 3rem;
 	}
 	.watermark:not(img) { font-size: 7rem }
-	[class*="container"][class*="text-"] { padding: 5rem 7rem }
 	.parallax-child { position: initial }
 	#sources a { font-size: 3rem }
-}
-@media screen and (min-width: 75rem) {
-	[class*="container"][class*="text-"] { padding: 5rem 15rem }
 }
 
 /*-----------------Animations-----------------*/

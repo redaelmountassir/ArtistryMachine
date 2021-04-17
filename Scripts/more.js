@@ -120,7 +120,7 @@ gsap.utils.toArray("section > p").forEach(paragraph => {
 
 //Show sources... but COOL!
 const sourceList = document.getElementById("sources"),
-    moveTime = 100,
+    moveTime = 200,
     //I put it on one main timeline so changing the timescale would affect all of them
     baseSourceTl = new gsap.timeline({ defaults: { repeat: -1, ease: "none", duration: moveTime } }),
     proxy = {
@@ -140,8 +140,8 @@ gsap.utils.toArray(sourceList.children).forEach((source, i) => {
     source.appendChild(linkClone);
 
     baseSourceTl
-        .fromTo(link, { xPercent: 0 }, { xPercent: end }, "<")
-        .fromTo(linkClone, { xPercent: start }, { xPercent: 0 }, "<");
+        .to(link, { xPercent: end }, "<")
+        .from(linkClone, { xPercent: start }, "<");
 });
 
 ScrollTrigger.create({
@@ -225,7 +225,7 @@ window.addEventListener("pointermove", e => {
 });
 
 //Add terrain
-const galleryLoad = new LoadEvent();
+const loadGallery = new LoadEvent();
 new THREE.GLTFLoader().load("3D/art-gallery.glb", function (loaded) {
     //Add gallery
     const artGallery = loaded.scene.children[0];
@@ -241,14 +241,16 @@ new THREE.GLTFLoader().load("3D/art-gallery.glb", function (loaded) {
     renderer.shadowMap.needsUpdate = true;
 
     //Extend loading animation
+    const title = document.getElementsByTagName("h1")[0];
     extendIntro = tl => {
         tl.from(artGallery.position, { y: "-=2.5", duration: 1.5, ease: "power2.out" })
-            .from(artGallery.rotation, { y: "+=" + Math.PI * .1, duration: 1.5, ease: "power2.out" }, "<");
+            .from(artGallery.rotation, { y: "+=" + Math.PI * .1, duration: 1.5, ease: "power2.out" }, "<")
+            .from(title, { y: "-50vw", duration: 1.5, ease: "power2.out" }, "<.5")
+            .from(title.lastElementChild, { y: "100vw", duration: 1.5, ease: "power2.out" }, "<");
     }
 
     //Animation on scroll
     startRenderLoop();
-    const title = document.getElementsByTagName("h1")[0];
     new gsap.timeline({
         defaults: { ease: "power2.out" },
         scrollTrigger: {
@@ -268,9 +270,10 @@ new THREE.GLTFLoader().load("3D/art-gallery.glb", function (loaded) {
         .to(title.lastElementChild, { x: 800, opacity: 0 }, "<")
         .to(cameraHolder.position, { x: 10, y: 1, z: -12.5 }, "<")
         .to(focusPoint, { x: -9, y: -.5, onUpdate: () => { cameraHolder.lookAt(focusPoint) } }, "<")
-        .fromTo(renderer.domElement, { clipPath: "inset(0)" }, { clipPath: "inset(10%)" });
+        .fromTo(renderer.domElement, { clipPath: "inset(0)" }, { clipPath: "inset(10%)" })
+        .from(document.body, { background: "#DCD1D1" }, "<");
 
-    complete(galleryLoad);
+    complete(loadGallery);
 });
 
 //Add lights

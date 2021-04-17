@@ -56,15 +56,11 @@ if (scrollTo) {
 
             //Home intro animation
             extendIntro = tl => {
-                tl.fromTo(".background", { clipPath: "inset(15% 0%)" },
-                    { clipPath: "inset(0% 0%)", ease: "power2.in", clearProps: "all" });
-                let stagger = 0;
-                gsap.utils.toArray(letters).forEach(letter => {
+                const stagger = .1;
+                gsap.utils.toArray(letters).forEach((letter, i) => {
                     const rotObject = { ease: "back.out(1.7)", duration: .5, clearProps: "all" };
                     rotObject[gsap.utils.random(["rotateX", "rotateY"])] = gsap.utils.random([180, -180]);
-                    tl.from(letter, rotObject, "<" + stagger)
-                    //This ensures the first one won't have any delay
-                    stagger = .1;
+                    tl.from(letter, rotObject, (i === 0 ? ">" : "<") + stagger)
                 });
                 if (sizeQuery.matches) tl.from(heroText, { yPercent: -75, scale: 1.25, ease: "power2.out", clearProps: "all" });
                 //Only do the scroll trigger stuff after ^ because if you scroll it'll create errors (x _ x)

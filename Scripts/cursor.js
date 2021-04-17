@@ -91,7 +91,7 @@ gsap.set(customCursor.domCursor, { xPercent: -50, yPercent: -50, x: window.inner
 let waitToHide;
 function cursorMove(e) {
     //Animate to the event point
-    gsap.to(customCursor.domCursor, { autoAlpha: 1, x: e.clientX, y: e.clientY, duration: customCursor.damping, ease: "power2.out" });
+    gsap.to(customCursor.domCursor, { autoAlpha: .8, x: e.clientX, y: e.clientY, duration: customCursor.damping, ease: "power2.out" });
     //Hide timeout
     if (waitToHide) clearTimeout(waitToHide);
     waitToHide = setTimeout(() => gsap.to(customCursor.domCursor, { autoAlpha: 0, ease: "power2.out" }), 10000);

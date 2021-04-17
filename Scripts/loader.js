@@ -77,12 +77,14 @@ const loadEvents = [],
         loadEvent.completed = true;
         finish();
     }
-function LoadEvent() {
+function LoadEvent(name) {
+    //Name is merely for testing purposes
+    this.name = name;
     loadEvents.push(this);
 }
 
 //Function to call when a load event is completed or the window loads
-let finish, extendIntro;
+let finish, extendIntro, onComplete;
 if (quote) {
     const cite = loadingSection.querySelector("blockquote cite"),
         randomQuote = gsap.utils.random(quotesList);
@@ -105,6 +107,8 @@ if (quote) {
 
         //This animates the loader away
         function animate() {
+            if (onComplete) onComplete();
+
             //Stop alerting the user
             customCursor.removeState("skipAlert");
 
@@ -117,13 +121,13 @@ if (quote) {
             splitText(quote);
             const introTL = new gsap.timeline({ defaults: { ease: "power2.in", duration: .5 }, onComplete: blockTransition, onCompleteParams: [loadingSection] })
                 .to("#loading-section p", { yPercent: 100, stagger: { from: "end", each: .1 } })
-                .from("main", { xPercent: 100, clearProps: "xPercent" })
-                .to(loadingSection, { xPercent: -100, display: "none" }, "<");
+                .to(loadingSection, { clipPath: "inset(0 100% 0 0)", display: "none", ease: "power2.out" });
 
             //If the page wants to add additional animation in the intro
             if (extendIntro) extendIntro(introTL);
 
             //Reveal nav at the end
+            if (!sizeQuery.matches) return;
             introTL.from("nav li", {
                 yPercent: -200, duration: .25, ease: "power2.out", clearProps: "yPercent", stagger: {
                     each: .1,
@@ -147,12 +151,32 @@ if (quote) {
     }
 } else {
     finish = () => {
+        if (onComplete) onComplete();
+
         //You can only finish if all loadEvents are completed or there are no loadEvents
         if (!loadEvents.length || !loadEvents.every(function (loadEvent) { return loadEvent.completed })) return;
 
         //Fade awwwwwwwwwway
-        gsap.to(loadingSection, { yPercent: -100, display: "none" })
+        new gsap.timeline({ defaults: { ease: "power2.in", duration: .5 } })
+            .to(loadingSection, { clipPath: "inset(0 100% 0 0)", display: "none" });
     }
 }
-const windowLoadEvent = new LoadEvent();
-window.onload = () => { complete(windowLoadEvent) };
+const windowLoadEvent = new LoadEvent("DOM");
+window.addEventListener("load", () => {
+    complete(windowLoadEvent)
+
+    //For cooler redirects
+    exitCover = document.getElementById("exit-cover");
+    if (exitCover) {
+        gsap.to(exitCover, { clipPath: "inset(100% 0 0 0)", display: "none", duration: .5, ease: "power2.out" });
+        gsap.utils.toArray("a").forEach(link => {
+            //Only animate links that should be taking you to another page of my website
+            if (link.target && link.target !== "_self") return;
+            link.addEventListener("click", function (e) {
+                e.preventDefault();
+                gsap.fromTo(exitCover, { display: null, clipPath: `inset(0 0 100% 0)` },
+                    { clipPath: `inset(0 0 0% 0)`, duration: .5, ease: "power2.out", onComplete: () => window.location.href = this.href });
+            });
+        })
+    }
+});
