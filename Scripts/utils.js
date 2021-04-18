@@ -1,3 +1,5 @@
+//Register scroll trigger for all pages
+gsap.registerPlugin(ScrollTrigger);
 
 //Global screen query
 const sizeQuery = window.matchMedia("(min-width: 50rem)");
@@ -151,3 +153,35 @@ function readJsonFile(file, callback, progressCallback) {
     xmlhttp.open("GET", file, true);
     xmlhttp.send();
 }
+
+//Add global effects (effects that should affect every page)
+window.addEventListener("load", () => {
+    gsap.utils.toArray("section > h2").forEach(heading => {
+        heading = wrapInDiv(heading);
+        gsap.from(heading.firstElementChild, {
+            yPercent: -100,
+            duration: .5,
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: heading,
+                toggleActions: "play none none reset"
+            }
+        });
+    })
+    gsap.utils.toArray("section > p").forEach(paragraph => {
+        gsap.from(paragraph, {
+            xPercent: "random(-100, 100)",
+            autoAlpha: 0,
+            duration: .5,
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: paragraph,
+                toggleActions: "play none none reset"
+            }
+        });
+    })
+    //Divider is a seperate element instead of psuedo so I can animate it
+    new gsap.timeline({ defaults: { ease: "power2.out", duration: 1 }, scrollTrigger: { trigger: "footer", toggleActions: "play none none reset" } })
+        .from("footer hr", { autoAlpha: 0, scaleX: 0 })
+        .from("footer > *:not(hr)", { autoAlpha: 0, yPercent: 100, stagger: .25 }, "<.25");
+})

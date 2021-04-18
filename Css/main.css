@@ -8,17 +8,17 @@
 	--white: #FFF7F8;
 	--mid: #DCD1D1;
 	--dark: #525251;
+	--dark-transparent: #525251bd;
 	--black: #111111;
 	/*Accents*/
-	--yellow: #E2EF70;
-	--red: #FB3640;
+	--yellow: #E5EDA1;
+	--red: #FF6B73;
 	--purple: #E2C2FF;
 	--blue: #70E4EF;
 	--green: #78C091;
-	--dark-transparent: #525251bd;
 	/*Grads*/
 	--light-grad: linear-gradient(to bottom right, #DCD1D150, #52525185);
-	--dark-grad: linear-gradient(to bottom right, #525251eb, #111111cf);
+	--dark-grad: linear-gradient(to bottom right, #525251EB, #111111CF);
 	--color-grad: linear-gradient(to top right,
 		var(--yellow), var(--purple), var(--blue), var(--red), var(--green)
 	);
@@ -60,6 +60,16 @@ section {
 	position: relative;
 	overflow: hidden;
 }
+
+footer {
+	height: 20vh;
+	min-height: 5rem;
+	flex-direction: row !important;
+	justify-content: space-around !important;
+	position: relative;
+	border: 0 !important;
+}
+footer a::after { display: none }
 
 ul {
 	list-style-type: none;
@@ -132,6 +142,20 @@ figure figcaption a { margin-top: auto }
 figure:hover figcaption,
 figure:focus figcaption { clip-path: inset(0 0 0 0) }
 
+hr {
+	left: 50%;
+	top: 0;
+	width: 90vw;
+	height: var(--border-width);
+	border-radius: var(--border-radius);
+	border: none;
+	position: absolute;
+	background: var(--mid);
+	transform: translate(-50%, -50%);
+	border: none;
+}
+hr:last-child { top: 100% }
+
 /*-----------------Typography-----------------*/
 h1, h2, h3, h4 {
 	text-shadow: var(--text-shadow);
@@ -159,22 +183,21 @@ strong, em, b {
 }
 /*Whatever is the current font size, scale by 3*/
 strong { font-size: 3em }
-em, nav.vertical .nav-link {
+em, em *, nav.vertical .nav-link {
 	display: inline-block;
 	text-transform: capitalize;
 	font-style: normal;
 	margin: 0 !important;
-	animation: multi-color 50s linear infinite alternate;
-	animation-delay: var(--rand-delay);
+	animation: multi-color 50s linear var(--rand-delay) infinite alternate;
 }
 @supports (-webkit-text-fill-color: transparent) and ((-webkit-background-clip: text) or (background-clip: text)) {
 	em, em *, nav.vertical .nav-link {
 		background: var(--color-grad);
-		background-size: 1000% 1000%;
+		background-size: 500vw 500vh;
 		-webkit-text-fill-color: transparent;
 		-webkit-background-clip: text;
 		background-clip: text;
-		animation: move-background 50s linear infinite alternate;
+		animation: move-background 50s linear var(--rand-delay) infinite alternate;
 	}
 }
 a {
@@ -301,13 +324,13 @@ nav.open {
 }
 nav.vertical .nav-link { font-size: 5vmin }
 #nav-burger {
-	display: flex;
-	flex-direction: column;
 	justify-content: space-around;
 	margin-left: 0;
 }
 .line {
 	width: 100%;
+	/*Strange solution to IE mobile problem*/
+	min-width: 2rem;
 	height: var(--border-width);
 	border-radius: var(--border-radius);
 	background-color: var(--white);
@@ -323,12 +346,7 @@ nav.vertical .nav-link { font-size: 5vmin }
 	bottom: 50%;
 	transform: translate(-50%, 50%);
 }
-#hero-text em {
-	
-}
-#scroll-to {
-	bottom: 1rem;
-} 
+#scroll-to { bottom: 1rem }
 .scrolling-text {
 	flex-direction: column;
 	align-items: flex-end;
@@ -377,9 +395,6 @@ aside.right.unexpand { transform: translateX(105%) }
 
 /*Unlike just the positional asides, docked ones touch the edges and can be opened*/
 aside.docked .expand-button { display: block }
-aside.docked {
-	touch-action: pinch-zoom;
-}
 aside.bottom.docked {
 	bottom: 0;
 	width: 100%;
@@ -394,60 +409,6 @@ aside.bottom.docked.unexpand .expand-button {
 aside.bottom.docked ~ aside.right {
 	bottom: calc(var(--margin) + var(--docked-size));
 	height: calc(100vh - var(--nav-height) - var(--margin) * 2 - var(--docked-size));
-}
-/*aside {
-    bottom: -.5rem;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-	padding: 2.5rem !important;
-}
-.expandable { transform: translateY(100%) }
-.expandable.expand { transform: none }
-If it has an expand button, it needs to be offsetted slightly to compensate
-.with-expand-button { transform: translateY(100%) translateY(-4rem); }
-.expand-button {
-	Its important that this is !important so that gsap will not animate this transform
-	transform: rotate(180deg) translateY(90%);
-	transition: transform .5s ease-out;
-}
-.expand .expand-button { transform: none }
-
-aside {
-	--margin: 1rem;
-	position: absolute;
-	right: 2.5%;
-	The calcs compensate for the space taken by the nav
-	top: calc(5rem + var(--margin));
-	width: 25rem;
-	height: calc(100% - 5rem - var(--margin) * 2);
-	min-height: 2rem;
-	transform: translateY(-50%);
-}
-aside.expandable {
-	transform: translateX(100%);
-	opacity: 0;
-}
-aside.expandable.expand {
-	transform: none;
-	opacity: 1;
-}
-.expand-button {
-	display: none;
-}*/
-
-/*-----------------Loading Section-----------------*/
-.progress-value {
-	font-size: 5em;
-	font-family: var(--secondary-font);
-	color: var(--white);
-}
-.progress-value::after {
-	content: "%";
-	color: inherit;
-    font-size: .5em;
-	font-weight: inherit;
-    margin-left: .2em;
 }
 
 /*-----------------Containers-----------------*/
@@ -464,9 +425,8 @@ aside.expandable.expand {
 [class*="container"][class*="black-"] { background: var(--black) }
 [class*="container"][class*="multi-"] {
 	background: var(--color-grad);
-	background-size: 1000% 1000%;
-	animation: move-background 50s linear infinite alternate;
-	animation-delay: var(--rand-delay);
+	background-size: 500vw 500vh;
+	animation: move-background 50s linear var(--rand-delay) infinite alternate;
 }
 [class*="container"][class*="multi-"] *:not(h1, h2, h3) { color: var(--black) }
 [class*="container"][class*="multi-"] a::after { background: var(--black) }
@@ -505,6 +465,7 @@ section[class*="container"] {
 
 /*Useful colors*/
 .dark { color: var(--black) }
+hr.dark { background: var(--black) }
 
 /*Before-and-after image slider*/
 .before-after {
@@ -538,6 +499,7 @@ section[class*="container"] {
 	top: 50%;
 	transform: translateY(-50%);
 }
+.center { transform: translate(-50%, -50%) !important }
 
 
 /*Pointer classes*/
@@ -568,20 +530,6 @@ section[class*="container"] {
 	margin: 0;
 	padding: 1em 0;
 }
-#sources li:before, #sources li:last-child:after {
-	content: "";
-	position: absolute;
-	width: 90vw;
-	height: var(--border-width);
-	background: var(--black);
-	left: 50%;
-	top: 0;
-	transform: translateX(-50%);
-}
-#sources li:last-child:after {
-	bottom: 0;
-	top: auto;
-}
 #sources a {
 	display: inline-block;
 	white-space: nowrap;
@@ -591,8 +539,8 @@ section[class*="container"] {
 	padding: 0 .25em;
 	margin: 0;
 }
-#sources a:after { display: none }
-#sources a:last-child {
+#sources a::after { display: none }
+#sources a + a {
 	position: absolute;
 	left: 0;
 }
@@ -648,6 +596,12 @@ img.watermark {
 }
 .link-button.dark:hover, .link-button.dark:focus { box-shadow: 0 0 0 0 var(--black) }
 .link-button::after { display: none }
+
+/*Misc.*/
+.emoji:hover {
+	transform: rotate(1turn) scale(2);
+	transition: all .5s ease-out;
+}
 
 /*-----------------Cursor + Fixed Elements-----------------*/
 /*Fixed elements in general*/

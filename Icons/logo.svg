@@ -6,10 +6,10 @@
     </filter>
   </defs>
   <g filter="url(#goo)">
-    <circle cx="25" cy="80" fill="#78c091" r="15"/>
-    <circle cx="20" cy="42.5" fill="#70e4ef" r="15"/>
-    <circle cx="50" cy="20" fill="#e2ef70" r="15"/>
-    <circle cx="80" cy="42.5" fill="#fb3640" r="15"/>
-    <circle cx="75" cy="80" fill="#e2c2ff" r="15"/>
+    <circle cx="25" cy="80" fill="#78C091" r="15"/>
+    <circle cx="20" cy="42.5" fill="#70E4EF" r="15"/>
+    <circle cx="50" cy="20" fill="#E5EDA1" r="15"/>
+    <circle cx="80" cy="42.5" fill="#FF6B73" r="15"/>
+    <circle cx="75" cy="80" fill="#E2C2FF" r="15"/>
   </g>
 </svg>

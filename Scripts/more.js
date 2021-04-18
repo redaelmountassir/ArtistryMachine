@@ -1,6 +1,3 @@
-//Setup
-gsap.registerPlugin(ScrollTrigger);
-
 //Image List
 const paintingList = document.getElementById("additional-paintings"), scrollDuration = "+=5000";
 gsap.fromTo(paintingList, { xPercent: 100 }, {
@@ -92,32 +89,6 @@ gsap.utils.toArray(".parallax-parent").forEach(function (parallaxParent) {
     });
 });
 
-//Other scroll effect
-gsap.utils.toArray("section > h2").forEach(heading => {
-    heading = wrapInDiv(heading);
-    gsap.from(heading.firstElementChild, {
-        yPercent: -100,
-        duration: .5,
-        ease: "power2.out",
-        scrollTrigger: {
-            trigger: heading,
-            toggleActions: "play none none reset"
-        }
-    });
-})
-gsap.utils.toArray("section > p").forEach(paragraph => {
-    gsap.from(paragraph, {
-        xPercent: "random(-100, 100)",
-        autoAlpha: 0,
-        duration: .5,
-        ease: "power2.out",
-        scrollTrigger: {
-            trigger: paragraph,
-            toggleActions: "play none none reset"
-        }
-    });
-})
-
 //Show sources... but COOL!
 const sourceList = document.getElementById("sources"),
     moveTime = 200,
@@ -133,11 +104,11 @@ const sourceList = document.getElementById("sources"),
     }
 
 gsap.utils.toArray(sourceList.children).forEach((source, i) => {
-    const link = source.firstElementChild,
+    const link = source.children[1],
         linkClone = link.cloneNode(true),
         direction = i % 2 ? 1 : -1,
         start = direction * -100, end = direction * 100;
-    source.appendChild(linkClone);
+    source.insertBefore(linkClone, link);
 
     baseSourceTl
         .to(link, { xPercent: end }, "<")
@@ -243,10 +214,10 @@ new THREE.GLTFLoader().load("3D/art-gallery.glb", function (loaded) {
     //Extend loading animation
     const title = document.getElementsByTagName("h1")[0];
     extendIntro = tl => {
-        tl.from(artGallery.position, { y: "-=2.5", duration: 1.5, ease: "power2.out" })
-            .from(artGallery.rotation, { y: "+=" + Math.PI * .1, duration: 1.5, ease: "power2.out" }, "<")
-            .from(title, { y: "-50vw", duration: 1.5, ease: "power2.out" }, "<.5")
-            .from(title.lastElementChild, { y: "100vw", duration: 1.5, ease: "power2.out" }, "<");
+        tl.from(artGallery.position, { y: "-=2.5", duration: 1.5 }, "<-.1")
+            .from(artGallery.rotation, { y: "+=" + Math.PI * .1, duration: 1.5 }, "<")
+            .from(title, { y: "-50vw", duration: 1.5 }, "<.5")
+            .from(title.lastElementChild, { y: "100vw", duration: 1.5 }, "<");
     }
 
     //Animation on scroll

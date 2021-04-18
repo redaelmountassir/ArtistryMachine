@@ -119,9 +119,9 @@ if (quote) {
 
             //Split the text for individual animation
             splitText(quote);
-            const introTL = new gsap.timeline({ defaults: { ease: "power2.in", duration: .5 }, onComplete: blockTransition, onCompleteParams: [loadingSection] })
+            const introTL = new gsap.timeline({ defaults: { ease: "power2.out", duration: .5 }, onComplete: blockTransition, onCompleteParams: [loadingSection] })
                 .to("#loading-section p", { yPercent: 100, stagger: { from: "end", each: .1 } })
-                .to(loadingSection, { clipPath: "inset(0 100% 0 0)", display: "none", ease: "power2.out" });
+                .to(loadingSection, { clipPath: "inset(0 100% 0 0)", display: "none" });
 
             //If the page wants to add additional animation in the intro
             if (extendIntro) extendIntro(introTL);
@@ -129,7 +129,7 @@ if (quote) {
             //Reveal nav at the end
             if (!sizeQuery.matches) return;
             introTL.from("nav li", {
-                yPercent: -200, duration: .25, ease: "power2.out", clearProps: "yPercent", stagger: {
+                yPercent: -200, duration: .25, clearProps: "yPercent", stagger: {
                     each: .1,
                     from: "center"
                 }
@@ -157,7 +157,7 @@ if (quote) {
         if (!loadEvents.length || !loadEvents.every(function (loadEvent) { return loadEvent.completed })) return;
 
         //Fade awwwwwwwwwway
-        new gsap.timeline({ defaults: { ease: "power2.in", duration: .5 } })
+        new gsap.timeline({ defaults: { ease: "power2.out", duration: .5 } })
             .to(loadingSection, { clipPath: "inset(0 100% 0 0)", display: "none" });
     }
 }

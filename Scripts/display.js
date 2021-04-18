@@ -8,6 +8,14 @@ const textureLoader = new THREE.TextureLoader(), gltfLoader = new THREE.GLTFLoad
     loadJson = new LoadEvent("json"), loadModels = new LoadEvent("models"),
     loadTextures = new LoadEvent("textures"), loadHDRI = new LoadEvent("hdri");
 
+extendIntro = tl => {
+    tl
+        .from(renderer.domElement, { clipPath: "inset(100% 0 0 0)", ease: "power2.out" })
+        .from("aside", { opacity: 0, yPercent: "+=100", clearProps: "all" })
+        .from(stand.scale, { x: 0, y: 0, z: 0, duration: 1.5, ease: "back.out(1.7)" })
+        .from(stand.rotation, { y: Math.PI / -2, duration: 2.5, ease: "power2.out" }, "<");
+}
+
 //Add renderer to dom
 const display = document.getElementById("display"),
     background = document.getElementById("display-background"),
@@ -410,6 +418,9 @@ readJsonFile("info.json", artEras => {
                             startY = e.clientY;
                         let deltaY = 0;
 
+                        //Makes sure scroll doesn't interfere
+                        panelElement.style.touchAction = "none";
+
                         //Drag events
                         const draggingPanel = (e => {
                             //Gives the amount the mouse moved by in a 0-1 range
@@ -423,6 +434,7 @@ readJsonFile("info.json", artEras => {
                         const stopDraggingPanel = (() => {
                             //Remove inline styles
                             panelElement.style.transform = null;
+                            panelElement.style.touchAction = null;
 
                             //Snap to the swipe end
                             this.visible ?

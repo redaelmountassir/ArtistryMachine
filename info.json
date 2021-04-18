@@ -17,7 +17,7 @@
         "title": "None",
         "timeStart": 0,
         "time": "0000-1875",
-        "associatedColor": "#E2EF70",
+        "associatedColor": "#E5EDA1",
         "painting": {
             "fileName": "test2",
             "name": "la image de chicken",
@@ -31,7 +31,7 @@
         "title": "Renaissance",
         "timeStart": 1875,
         "time": "1875-1900",
-        "associatedColor": "#FB3640",
+        "associatedColor": "#FF6B73",
         "painting": {
             "fileName": "test",
             "name": "la image de images",
@@ -59,7 +59,7 @@
         "title": "Renaissance 2",
         "timeStart": "Current",
         "time": "1966-Current",
-        "associatedColor": "#70E4EF",
+        "associatedColor": "#78C091",
         "painting": {
             "fileName": "test",
             "name": "la image de images",
