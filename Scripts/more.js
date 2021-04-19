@@ -196,7 +196,7 @@ window.addEventListener("pointermove", e => {
 });
 
 //Add terrain
-const loadGallery = new LoadEvent();
+const loadGalleryEvent = new LoadEvent();
 new THREE.GLTFLoader().load("3D/art-gallery.glb", function (loaded) {
     //Add gallery
     const artGallery = loaded.scene.children[0];
@@ -213,11 +213,11 @@ new THREE.GLTFLoader().load("3D/art-gallery.glb", function (loaded) {
 
     //Extend loading animation
     const title = document.getElementsByTagName("h1")[0];
-    extendIntro = tl => {
+    LoadingManager.animation.extend = tl => {
         tl.from(artGallery.position, { y: "-=2.5", duration: 1.5 }, "<-.1")
             .from(artGallery.rotation, { y: "+=" + Math.PI * .1, duration: 1.5 }, "<")
-            .from(title, { y: "-50vw", duration: 1.5 }, "<.5")
-            .from(title.lastElementChild, { y: "100vw", duration: 1.5 }, "<");
+            .from(title, { y: "-50vh", duration: 1.5 }, "<.5")
+            .from(title.lastElementChild, { y: "100vh", duration: 1.5 }, "<");
     }
 
     //Animation on scroll
@@ -244,7 +244,7 @@ new THREE.GLTFLoader().load("3D/art-gallery.glb", function (loaded) {
         .fromTo(renderer.domElement, { clipPath: "inset(0)" }, { clipPath: "inset(10%)" })
         .from(document.body, { background: "#DCD1D1" }, "<");
 
-    complete(loadGallery);
+    loadGalleryEvent.finish();
 });
 
 //Add lights

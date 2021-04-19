@@ -60,7 +60,6 @@ section {
 	position: relative;
 	overflow: hidden;
 }
-
 footer {
 	height: 20vh;
 	min-height: 5rem;
@@ -94,10 +93,9 @@ button img {
 	height: 100%;
 	width: auto;
 	user-select: none;
+	-webkit-user-drag: none;
 }
-button:focus {
-	outline: none;
-}
+button:focus { outline: none }
 button * {
 	filter: drop-shadow(var(--text-shadow));
 	transition: all .1s ease-out;
@@ -134,10 +132,12 @@ figure figcaption {
 	clip-path: inset(0 0 0 100%);
 	background: var(--dark-transparent);
 	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(2em);
 	transition: all .5s ease-in-out;
 	position: absolute;
 	top: 0;
 }
+
 figure figcaption a { margin-top: auto }
 figure:hover figcaption,
 figure:focus figcaption { clip-path: inset(0 0 0 0) }
@@ -189,16 +189,6 @@ em, em *, nav.vertical .nav-link {
 	font-style: normal;
 	margin: 0 !important;
 	animation: multi-color 50s linear var(--rand-delay) infinite alternate;
-}
-@supports (-webkit-text-fill-color: transparent) and ((-webkit-background-clip: text) or (background-clip: text)) {
-	em, em *, nav.vertical .nav-link {
-		background: var(--color-grad);
-		background-size: 500vw 500vh;
-		-webkit-text-fill-color: transparent;
-		-webkit-background-clip: text;
-		background-clip: text;
-		animation: move-background 50s linear var(--rand-delay) infinite alternate;
-	}
 }
 a {
 	text-decoration: none;
@@ -289,6 +279,7 @@ nav {
 .nav-link {
 	position: relative;
 	user-select: none;
+	-webkit-user-drag: none;
 	font-size: 1rem;
 }
 nav ul {
@@ -299,6 +290,10 @@ nav li {
 	display: flex;
 	justify-content: center;
 	overflow: hidden;
+}
+#nav-logo img {
+	user-select: none;
+	-webkit-user-drag: none;
 }
 
 /*Nav bar - Horizontal*/
@@ -326,6 +321,7 @@ nav.vertical .nav-link { font-size: 5vmin }
 #nav-burger {
 	justify-content: space-around;
 	margin-left: 0;
+	overflow: hidden;
 }
 .line {
 	width: 100%;
@@ -334,10 +330,10 @@ nav.vertical .nav-link { font-size: 5vmin }
 	height: var(--border-width);
 	border-radius: var(--border-radius);
 	background-color: var(--white);
-	transition: all .5s ease-out;
+	transition: all .5s ease-in-out;
 }
 .open .line:first-child { transform: translateY(.65rem) rotate(45deg) }
-.open .line:nth-child(2) { opacity: 0 }
+.open .line:nth-child(2) { transform: translateX(100%) }
 .open .line:last-child { transform: translateY(-.65rem) rotate(-45deg) }
 
 
@@ -377,6 +373,7 @@ aside {
 aside[class*="text-"] {
 	padding: 3em !important;
     overflow: auto;
+	position: absolute;
 	z-index: 1;
 }
 aside .expand-button {
@@ -399,6 +396,8 @@ aside.bottom.docked {
 	bottom: 0;
 	width: 100%;
 	height: calc(100vh - var(--nav-height) - var(--margin));
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
 }
 aside.bottom.docked.unexpand {
 	transform: translateY(100%) translateY(calc(-1 * var(--docked-size)));
@@ -419,8 +418,10 @@ aside.bottom.docked ~ aside.right {
 }
 
 /*Container colors*/
-@supports not (backdrop-filter: blur(20px) brightness(.6)) { [class*="container"][class*="glass-"] { background: var(--dark-grad) } }
-[class*="container"][class*="glass-"] { backdrop-filter: blur(20px) brightness(.6) }
+[class*="container"][class*="glass-"] {
+	backdrop-filter: blur(20px) brightness(.6);
+	-webkit-backdrop-filter: blur(20px) brightness(.6);
+}
 [class*="container"][class*="dark-"] { background: var(--dark-grad) }
 [class*="container"][class*="black-"] { background: var(--black) }
 [class*="container"][class*="multi-"] {
@@ -443,10 +444,7 @@ aside.bottom.docked ~ aside.right {
 	justify-content: center;
 	flex-direction: column;
 }
-section[class*="container"] {
-	border-radius: 0;
-	overflow: hidden;
-}
+section[class*="container"] { border-radius: 0 }
 
 /*-----------------Extra Classes-----------------*/
 /*Useful shapes*/
@@ -506,6 +504,7 @@ hr.dark { background: var(--black) }
 .no-pointer {
 	pointer-events: none;
 	user-select: none;
+	-webkit-user-drag: none;
 }
 .no-pointer * {
 	pointer-events: all;
@@ -548,6 +547,7 @@ hr.dark { background: var(--black) }
 /*Background watermark effects*/
 .watermark:not(img), .watermark:not(img) * {
 	user-select: none;
+	-webkit-user-drag: none;
 	white-space: nowrap;
 	text-shadow: none;
 }
@@ -634,6 +634,7 @@ img.cursor-mode { margin: 0 !important }
 	--shrink-speed: .1s;
 	--grow-speed: .25s;
 	user-select: none;
+	-webkit-user-drag: none;
 	position: absolute;
 	transform: translate(-50%, -50%) scale(0);
 	transition: transform var(--shrink-speed) ease-out;
@@ -676,6 +677,21 @@ img.cursor-mode { margin: 0 !important }
 	.watermark:not(img) { font-size: 7rem }
 	.parallax-child { position: initial }
 	#sources a { font-size: 3rem }
+}
+
+/*-----------------Polyfills-----------------*/
+@supports (-webkit-text-fill-color: transparent) and ((-webkit-background-clip: text) or (background-clip: text)) {
+	em, em *, nav.vertical .nav-link {
+		background: var(--color-grad);
+		background-size: 500vw 500vh;
+		-webkit-text-fill-color: transparent;
+		-webkit-background-clip: text;
+		background-clip: text;
+		animation: move-background 50s linear var(--rand-delay) infinite alternate;
+	}
+}
+@supports not ((backdrop-filter: blur(20px) brightness(.6)) or (-webkit-backdrop-filter: blur(20px) brightness(.6))) {
+	[class*="container"][class*="glass-"] { background: var(--dark-grad) }
 }
 
 /*-----------------Animations-----------------*/

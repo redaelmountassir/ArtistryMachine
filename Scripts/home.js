@@ -55,7 +55,7 @@ if (scrollTo) {
                 letters = splitTextLetters(heroText.firstElementChild);
 
             //Home intro animation
-            extendIntro = tl => {
+            LoadingManager.animation.extend = tl => {
                 const stagger = .1;
                 gsap.utils.toArray(letters).forEach((letter, i) => {
                     const rotObject = { ease: "back.out(1.7)", clearProps: "all" };

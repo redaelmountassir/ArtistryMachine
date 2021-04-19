@@ -80,7 +80,7 @@ function LinesBuilder(replaceElement, parentElement) {
     };
     this.finish = function () {
         //Officially add to dom
-        parentElement.replaceChild(lines, replaceElement);
+        if (parentElement) parentElement.replaceChild(lines, replaceElement);
         currentLine.finish();
         //Force width with fixed amount (because it changes for some reason)
         lines.style.width = ogWidth + "px";
@@ -88,7 +88,7 @@ function LinesBuilder(replaceElement, parentElement) {
         return lines.children;
     };
     //It is IMPERITAVE that the lines are added to the dom. While this is worse for performance, it must be done to ensure that we can get the offsetHeight
-    parentElement.appendChild(lines);
+    if (parentElement) parentElement.appendChild(lines);
 }
 function Line(lines, str) {
     //Create element and the span (I make a span because it is important for animating seperately for cool overflow hidden affects)
