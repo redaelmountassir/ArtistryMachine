@@ -51,6 +51,11 @@ const canvas = {
         viewport.onResize = this.resizeCanvas.bind(this);
         this.ctx.restore();
     },
+    defaultStyles() {
+        //Default canvas settings
+        canvas.ctx.lineCap = "round";
+        canvas.ctx.lineJoin = "round";
+    },
     init() {
         this.canvasElement = document.getElementsByTagName("canvas")[0];
         this.canvasElement.style.touchAction = "none";
@@ -59,6 +64,7 @@ const canvas = {
 
         this.ctx = this.canvasElement.getContext("2d", { alpha: false });
         this.clear();
+        this.defaultStyles();
 
         //Gallery reference system
         this.reference = document.getElementsByClassName("reference")[0];
@@ -109,7 +115,7 @@ const viewport = {
     }
 }
 const mouse = {
-    pressure: 0,
+    down: false,
     pos: { x: 0, y: 0 },
     remapped: { x: 0, y: 0 },
     onStart(e) {
@@ -119,15 +125,15 @@ const mouse = {
         document.addEventListener("pointercancel", this.onUp);
     },
     onDown(e) {
-        this.pressure = e.pressure;
-        if (!this.pressure) return;
+        this.down = true;
+        if (!this.down) return;
         this.pos.x = e.clientX;
         this.pos.y = e.clientY;
         this.remapped = canvas.toCanvasSpace(this.pos);
         this.moved = true;
     },
     onUp() {
-        this.pressure = 0;
+        this.down = false;
         document.removeEventListener("pointermove", this.onDown);
         document.removeEventListener("pointerup", this.onUp);
         document.removeEventListener("pointercancel", this.onUp);
@@ -137,10 +143,6 @@ const mouse = {
         this.onDown = this.onDown.bind(this);
         this.onUp = this.onUp.bind(this);
         canvas.canvasElement.addEventListener("pointerdown", this.onStart, false);
-
-        //Default canvas settings
-        canvas.ctx.lineCap = "round";
-        canvas.ctx.lineJoin = "round";
     }
 }
 const pen = {
@@ -163,6 +165,11 @@ const pen = {
             if (!this.canUndo) return;
             this.redoStack.push(this.undoStack.pop());
             this.redraw();
+            this.updateBtns();
+        },
+        clear() {
+            this.undoStack = [];
+            this.redoStack = [];
             this.updateBtns();
         },
         redraw() {
@@ -214,6 +221,7 @@ const pen = {
         this.history.undoButton.addEventListener("click", (() => this.history.undo()).bind(this));
         this.history.redoButton.addEventListener("click", (() => this.history.redo()).bind(this));
         document.getElementById("restart").addEventListener("click", () => {
+            pen.history.clear();
             new gsap.timeline({ defaults: { duration: .25, ease: "power2.out" } })
                 .to(canvas.canvasElement, { scaleY: 0 })
                 .call(() => {
@@ -221,8 +229,7 @@ const pen = {
                     canvas.resizeCanvas(viewport);
                     canvas.clear();
                     //Default canvas settings
-                    canvas.ctx.lineCap = "round";
-                    canvas.ctx.lineJoin = "round";
+                    this.defaultStyles();
                 })
                 .to(canvas.canvasElement, { scaleY: 1, clearProps: "scale" })
                 .call(() => canvas.resizeCanvas(viewport));
@@ -233,7 +240,7 @@ const pen = {
     },
     update() {
         requestAnimationFrame(this.update);
-        if (mouse.pressure) {
+        if (mouse.down) {
             //On pointer down
             if (!this.currentAction) {
                 this.currentAction = new DrawAction(this.tool, this.stroke, this.strokeCol, this.fillCol);
@@ -244,14 +251,14 @@ const pen = {
 
             //On pointer move
             if (mouse.moved) {
-                this.currentAction.draw(mouse.remapped);
+                this.currentAction.draw({ x: mouse.remapped.x, y: mouse.remapped.y });
                 mouse.moved = false;
             }
             return;
         }
         //On pointer up
         if (this.currentAction) {
-            this.currentAction.up(mouse.remapped);
+            this.currentAction.up({ x: mouse.remapped.x, y: mouse.remapped.y });
             this.history.add(this.currentAction);
             this.currentAction = null;
 
@@ -369,49 +376,48 @@ function DrawAction(tool, strokeWidth, strokeCol, fillCol) {
     this.strokeWidth = strokeWidth;
     this.strokeCol = strokeCol;
     this.fillCol = fillCol;
-    if (this.tool.recordPts) this.points = [];
-    this.down(mouse.remapped);
+    if (this.tool.inbetween) this.points = [];
+    this.down({ x: mouse.remapped.x, y: mouse.remapped.y });
 }
-DrawAction.prototype.down = function (pos, redraw) {
-    //The strange extra obj is here to make sure a new obj is created rather than one reference
-    this.start = { x: pos.x, y: pos.y };
+DrawAction.prototype.down = function (mouse, redraw) {
     canvas.ctx.fillStyle = this.fillCol;
     canvas.ctx.strokeStyle = this.strokeCol;
+    canvas.ctx.lineWidth = this.strokeWidth;
+    this.start = mouse;
     canvas.ctx.beginPath();
     if (this.tool.down) this.tool.down(this.start, redraw);
 }
-DrawAction.prototype.draw = function (pos, noPush) {
-    //The strange extra obj is here to make sure a new obj is created rather than one reference
-    if (!noPush && this.tool.recordPts) this.points.push({ x: pos.x, y: pos.y });
-    canvas.ctx.lineWidth = this.strokeWidth;
-    if (this.tool.draw) this.tool.draw(pos);
-    this.color();
+DrawAction.prototype.draw = function (mouse) {
+    //End will always be set to the last value (in draw bc pressure is 0 on up)
+    if (this.tool.draw) this.tool.draw(mouse);
+    if (this.tool.inbetween) {
+        if (!this.end) this.points.push(mouse);
+        this.color();
+    }
 }
-DrawAction.prototype.up = function (pos, redraw) {
-    //The strange extra obj is here to make sure a new obj is created rather than one reference
-    this.end = { x: pos.x, y: pos.y };
+DrawAction.prototype.up = function (mouse, redraw) {
+    this.end = mouse;
     if (this.tool.up) this.tool.up(this.end, redraw);
-    if (!this.tool.recordPts) this.color();
-    canvas.ctx.closePath();
+    if (!this.tool.inbetween) this.color();
 }
 DrawAction.prototype.color = function () {
-    if (this.fillCol != "#00000000") canvas.ctx.fill("evenodd");
     if (this.strokeCol != "#00000000") canvas.ctx.stroke();
+    if (this.strokeCol != "#00000000") canvas.ctx.fill("evenodd");
 }
 DrawAction.prototype.redraw = function () {
     this.down(this.start, true);
-    if (this.tool.recordPts) this.points.forEach((pos => this.draw(pos, true)).bind(this));
+    if (this.tool.inbetween) this.points.forEach((pt => this.draw(pt)).bind(this));
     this.up(this.end, true);
 }
 
-function Tool(toolElement, down, draw, up, onchange, recordPts) {
+function Tool(toolElement, down, draw, up, onchange, inbetween) {
     this.down = down;
     this.draw = draw;
     this.up = up;
     this.onchange = onchange;
     this.element = toolElement;
     //Record the points inbetween (The only time this is false is if the end product does not depend on the steps between)
-    this.recordPts = recordPts === undefined ? true : recordPts;
+    this.inbetween = inbetween === undefined ? true : inbetween;
     if (this.element) this.element.addEventListener("click", this.select.bind(this));
 }
 Tool.prototype.select = function () {
@@ -428,7 +434,7 @@ function addTools() {
     //Pen
     new Tool(tools.children[0],
         undefined,
-        pos => { canvas.ctx.lineTo(pos.x, pos.y) }
+        mouse => canvas.ctx.lineTo(mouse.x, mouse.y)
     ).select();
     //Eraser
     new Tool(tools.children[1],
@@ -452,7 +458,7 @@ function addTools() {
             if (redraw) return;
             this.mStart = { x: mouse.pos.x, y: mouse.pos.y };
             visualizers.setAttribute("viewBox", `0 0 ${viewport.vw} ${viewport.vh}`);
-            gsap.to(boxVisualizer, { autoAlpha: 1, stroke: pen.strokeCol, fill: pen.fillCol, strokeWidth: Math.min(50, pen.stroke) / 2, ease: "power2.out", duration: .25 });
+            gsap.to(boxVisualizer, { autoAlpha: 1, stroke: pen.strokeCol, fill: pen.fillCol, ease: "power2.out", duration: .25 });
         },
         function () {
             let x = this.mStart.x,
