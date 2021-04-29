@@ -163,7 +163,7 @@ function addGlobalEffects() {
         gsap.from(heading.firstElementChild, {
             yPercent: -100,
             duration: .5,
-            ease: "power2.rgb",
+            ease: "power2.out",
             scrollTrigger: {
                 trigger: heading,
                 toggleActions: "play none none reset"
@@ -177,7 +177,7 @@ function addGlobalEffects() {
             xPercent: "random(-100, 100)",
             autoAlpha: 0,
             duration: .5,
-            ease: "power2.rgb",
+            ease: "power2.out",
             scrollTrigger: {
                 trigger: paragraph,
                 toggleActions: "play none none reset"
@@ -195,7 +195,7 @@ function addGlobalEffects() {
                 x = gsap.utils.mapRange(bounds.left, bounds.right, 0, 100, e.clientX),
                 y = 15 + (Math.random() * 2 - 1) * 5;
             gsap.fromTo(path, { attr: { d: `M0,15 Q${x},${y} 100,15` } },
-                { attr: { d: `M0,15 Q${x},15 100,15` }, duration: 1, ease: "elastic.rgb(1, 0.3)" });
+                { attr: { d: `M0,15 Q${x},15 100,15` }, duration: 1, ease: "elastic.out(1, 0.3)" });
         }
 
         divided.addEventListener("pointerenter", bounce);
@@ -213,10 +213,11 @@ function addGlobalEffects() {
     });
 
     //Footer
-    new gsap.timeline({ defaults: { ease: "power2.rgb", duration: 1 }, scrollTrigger: { trigger: "footer", toggleActions: "play none none reset" } })
+    new gsap.timeline({ defaults: { ease: "power2.out", duration: 1 }, scrollTrigger: { trigger: "footer", toggleActions: "play none none reset" } })
         .from("footer .divider path", { autoAlpha: 0, scaleX: 0, transformOrigin: "center" })
         .from("footer > *:not(.divider)", { autoAlpha: 0, yPercent: 100, stagger: .25 }, "<.25");
     gsap.utils.toArray("footer .divider").forEach(divider => {
+        console.log(divider);
         const path = divider.firstElementChild,
             divided = divider.parentElement,
             pathSetter = new gsap.quickSetter(path, "attr");
@@ -229,7 +230,7 @@ function addGlobalEffects() {
             pathSetter({ d: `M0,15 Q${x},${y} 100,15` });
         });
         divided.addEventListener("mouseenter", () => bounds = divider.getBoundingClientRect());
-        divided.addEventListener("mouseleave", () => gsap.to(path, { attr: { d: "M0,15 Q50,15 100,15" }, duration: 1, ease: "elastic.rgb(1, 0.3)" }));
+        divided.addEventListener("mouseleave", () => gsap.to(path, { attr: { d: "M0,15 Q50,15 100,15" }, duration: 1, ease: "elastic.out(1, 0.3)" }));
     });
 }
 window.addEventListener("load", addGlobalEffects)

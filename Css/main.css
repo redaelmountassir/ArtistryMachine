@@ -192,6 +192,7 @@ input[type="range"]::-moz-range-thumb {
 .divider path {
 	fill: none;
 	stroke: currentColor;
+	stroke-width: .25px;
 }
 .divider:last-child { top: 100% }
 
