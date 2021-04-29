@@ -55,6 +55,7 @@ const infoPanel = {
     },
     updateReferences() {
         this.eraList = document.getElementById("era-list");
+        this.panelElement = document.getElementById("info-panel");
         this.infoButton = this.panelElement.children[0];
         this.period = this.panelElement.children[1].firstElementChild;
         this.times = this.panelElement.children[2];
@@ -153,7 +154,9 @@ const paintingTooltip = {
     },
     init: function () {
         //Add to cursor (I override useCursor because some of this info is NEEDED for mobile users)
-        this.domElement = customCursor.addState("painting info", this.domElement, 2, { overrideUseCursor: true, overrideDifference: true });
+        this.domElement = customCursor.addState("painting info", this.domElement, 2, {
+            overrideUseCursor: true, overrideDifference: true
+        });
 
         //Textcontents for changing content
         this.name = this.domElement.children[0].firstElementChild;

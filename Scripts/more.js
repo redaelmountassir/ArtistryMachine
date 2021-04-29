@@ -93,7 +93,9 @@ gsap.utils.toArray(".parallax-parent").forEach(function (parallaxParent) {
 const sourceList = document.getElementById("sources"),
     moveTime = 200,
     //I put it on one main timeline so changing the timescale would affect all of them
-    baseSourceTl = new gsap.timeline({ defaults: { repeat: -1, ease: "none", duration: moveTime } }),
+    baseSourceTl = new gsap.timeline({
+        defaults: { repeat: -1, ease: "none", duration: moveTime }, onReverseComplete: function () { this.progress(1) }
+    }),
     proxy = {
         _timeScale: 1,
         get timeScale() { return this._timeScale },

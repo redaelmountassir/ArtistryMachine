@@ -18,8 +18,12 @@
     <!--Custom Scripts-->
     <script src="Scripts/utils.js"></script>
     <script src="Scripts/nav.js" defer></script>
+    <script src="Scripts/drawing.js"></script>
 </head>
 <body>
+    <div id="cursor" class="fixed-element"></div>
+    <script src="Scripts/cursor.js"></script>
+
     <section id="loading-section" class="multi-center-container fixed-element">
         <blockquote>
             <p>"Art evokes the mystery without which the world would not exist."</p>
@@ -28,9 +32,6 @@
     </section>
     <div class="cover black-container" id="exit-cover"></div>
     <script src="Scripts/loader.js"></script>
-    
-    <div id="cursor" class="fixed-element"></div>
-    <script src="Scripts/cursor.js"></script>
 
     <header>
         <nav>
@@ -49,16 +50,100 @@
         </nav>
     </header>
     <main>
-        <section>
-            <h2 class="center">More Coming <span>S👀n!</span></h2>
+        <section class="reference">
+            <canvas class="center">Canvas is not supported in your browser</canvas>
+            <svg viewBox="0 0 1 1" class="visualizers cover">
+                <rect class="visualizer" x="0" y="0" width="1" height="1"></rect>
+                <ellipse class="visualizer" cx=".5" cy=".5" r=".5"></ellipse>
+            </svg>
         </section>
-        <canvas></canvas>
+        <aside class="left glass-container">
+            <ul class="vertical full-size">
+                <li>
+                    <button class="square"><img src="Icons/draw.svg" alt="tools"></button>
+                    <div class="margin-popup dark-glass-container" id="tool-panel">
+                        <button disabled>
+                            <img class="square watermark" src="Icons/pencil.svg" alt="pencil tool">
+                            <p>Pen Tool</p>
+                        </button>
+                        <button>
+                            <img class="square watermark" src="Icons/eraser.svg" alt="eraser tool">
+                            <p>Eraser Tool</p>
+                        </button>
+                        <button>
+                            <img class="square watermark" src="Icons/box.svg" alt="box tool">
+                            <p>Box Tool</p>
+                        </button>
+                        <button>
+                            <img class="square watermark" src="Icons/circle.svg" alt="circle tool">
+                            <p>Ellipse Tool</p>
+                        </button>
+                    </div>
+                </li>
+                <li class="relative-parent">
+                    <button class="square"><img src="Icons/color.svg" alt="colors"></button>
+                    <div class="popup dark-glass-container">
+                        <button class="color"><p>Fill</p></button>
+                        <div class="color-picker dark-glass-container popup">
+                            <div class="palette"><div class="knob"></div></div>
+                            <input type="range" min="0" max="360" class="hue">
+                            <input type="range" min="0" max="1" step=".01" class="opacity">
+                            <label for="fill-hex">Hex</label><input id="fill-hex" type="text" class="hex">
+                        </div>
+                        <button class="color"><p>Stroke</p></button>
+                        <div class="color-picker dark-glass-container popup">
+                            <div class="palette"><div class="knob"></div></div>
+                            <input type="range" min="0" max="360" class="hue">
+                            <input type="range" min="0" max="1" step=".01" class="opacity">
+                            <label for="stroke-hex">Hex</label><input id="stroke-hex" type="text" class="hex">
+                        </div>
+                    </div>
+                </li>
+                <li class="relative-parent">
+                    <button class="square"><img src="Icons/weight.svg" alt="stroke weight"></button>
+                    <div class="horizontal-popup  dark-glass-container">
+                        <label for="stroke">Stroke</label>
+                        <input id="stroke" type="text" class="stroke" value="25"><p>px</p>
+                        <input type="range" min="1" max="500" value="25">
+                        <svg viewBox="0 0 100 30"><path d="M10,15 Q30,0 50,15 Q70,30 90,15" /></svg>
+                    </div>
+                </li>
+                <li><button class="square" id="undo" disabled><img src="Icons/undo.svg" alt="undo"></button></li>
+                <li><button class="square" id="redo" disabled><img src="Icons/redo.svg" alt="redo"></button></li>
+                <li>
+                    <button class="square"><img src="icons/x.svg" alt="clear"></button>
+                    <div class="margin-popup dark-glass-container">
+                        <p>Are you sure you want to <em>restart</em> your drawing?</p>
+                        <button class="multi-container" id="restart"><p>YES!</p></button>
+                    </div>
+                </li>
+                <li>
+                    <button class="square"><img src="icons/check.svg" alt="finish"></button>
+                    <div class="margin-popup dark-glass-container" id="finalize">
+                        <p>Are you sure you want to <em>finalize</em> your drawing?</p>
+                        <button class="multi-container"><p>YES!</p></button>
+                    </div>
+                </li>
+            </ul>
+        </aside>
+        <aside class="right docked unexpand dark-glass-container">
+            <button class="square expand-button"><img src="Icons/arrow-down.svg" alt="Expand or Collapse"></button>
+            <div class="full-size gallery-view">
+                <div class="gallery">
+                    <img src="Images/test.jpg" alt="test">
+                    <img src="Images/test2.jpg" alt="test">
+                    <img src="Images/test.jpg" alt="test">
+                    <img src="Images/test2.jpg" alt="test">
+                    <img src="Images/test.jpg" alt="test">
+                    <img src="Images/test2.jpg" alt="test">
+                    <img src="Images/test.jpg" alt="test">
+                    <img src="Images/test2.jpg" alt="test">
+                    <img src="Images/test.jpg" alt="test">
+                    <img src="Images/test2.jpg" alt="test">
+                </div>
+            </div>
+        </aside>
     </main>
-    <footer class="black-center-container">
-        <hr>
-        <p>® 2021 - By Reda Elmountassir <span class="emoji">💻</span></p>
-        <a target="_blank" href="https://github.com/hubbahu123"><img src="Icons/github.svg" alt="my github" class="square"></a>
-    </footer>
     <noscript>
         <section class="black-center-container fixed-element">
             <h1>Why No Scripts 😢</h1>

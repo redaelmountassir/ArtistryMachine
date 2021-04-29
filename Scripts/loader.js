@@ -82,6 +82,7 @@ const LoadingManager = {
         if (!this.loadEvents.every(loadEvent => loadEvent.finished)) return;
 
         //Callback for completion
+        this.loadingSection.style.cursor = "pointer";
         if (this.onComplete) this.onComplete();
         this.animation.play(true);
     }
@@ -92,24 +93,15 @@ LoadingManager.animation = {
         this.removeDelay = this.removeDelay.bind(this);
         this.play = this.play.bind(this);
 
-        //This mode will alert the user that they may skip the read delay by clicking
-        const skipAlert = document.createElement("div");
-        skipAlert.appendChild(createImg(`Icons/cursorStates/arrow.svg`));
-        const alertText = document.createElement("p");
-        alertText.textContent = "Click to skip wait";
-        skipAlert.appendChild(alertText);
-        customCursor.addState("skipAlert", skipAlert, 9999999);
-        customCursor.setState("skipAlert");
-
         //The read delay will be the number of words multiplied by seconds per word
-        const readDelay = LoadingManager.quote.textContent.split(" ").length * delay;
+        const readDelay = Math.min(2.5, LoadingManager.quote.textContent.split(" ").length * delay);
         this.delayObj = gsap.delayedCall(readDelay, this.play);
 
         //Adds ability to skip reading delay
         window.addEventListener("keydown", this.removeDelay);
         window.addEventListener("click", this.removeDelay);
     },
-    removeDelay: function () {
+    removeDelay: function (autoPlay) {
         if (this.delayCompleted) return;
 
         this.delayCompleted = true;
@@ -121,13 +113,10 @@ LoadingManager.animation = {
         window.removeEventListener("keydown", this.removeDelay);
         window.removeEventListener("click", this.removeDelay);
 
-        //Stop alerting the user
-        customCursor.removeState("skipAlert");
-
-        this.play();
+        if (autoPlay) this.play();
     },
     play: function (withDelay) {
-        if (withDelay) return this.createDelay(.25);
+        if (withDelay) return this.createDelay(.1);
 
         this.removeDelay();
 

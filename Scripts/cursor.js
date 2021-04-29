@@ -3,32 +3,39 @@
 const customCursor = {
     currentStates: [],
     domCursor: document.getElementById("cursor"),
-    cursorStates: {},
+    cursorStates: new Map(),
     damping: .75,
     hideSpeed: .25
 }
 
 //Allows for the addition of states to set the cursor to besides the default ones
-customCursor.addState = function (name, pathOrElement, priority, settings) {
+customCursor.addState = function (name, element, priority, settings) {
     /*
-        pathOrElement - if string the filepath to the cursor img, or a domElement to be toggled when set to this state
+        element - if string the filepath to the cursor img, or a domElement to be toggled when set to this state
         priority - determines whether a cursor state should take higher precedence over another (default 0)
         overrideUseCursor - not recommended. useCursor stops any actions from taking place if the user uses a mobile device,
         since a mobile device will have some weird behaviour (it won't REALLY be pointermove, more like pointerdown)
         overrideDifference - by default the mix-blend-mode is difference, however for certain elements, this can look bad
     */
     if (typeof settings !== "object") settings = {};
-    this.cursorStates[name] = {
+    const newState = {
         priority: typeof priority === "number" ? priority : 0,
         overrideUseCursor: settings.overrideUseCursor,
         overrideDifference: settings.overrideDifference
     };
-    if (typeof pathOrElement === "string") pathOrElement = createImg(`Icons/cursorStates/${pathOrElement}.svg`, name);
+    if (typeof element === "string") element = createImg(`Icons/cursorStates/${element}.svg`, name);
 
     //Hide the element for later use
-    this.domCursor.appendChild(pathOrElement);
-    pathOrElement.classList.add("cursor-mode");
-    return this.cursorStates[name].element = pathOrElement;
+    this.domCursor.appendChild(element);
+    element.classList.add("cursor-mode");
+    newState.element = element;
+    this.cursorStates.set(name, {
+        priority: typeof priority === "number" ? priority : 0,
+        overrideUseCursor: settings.overrideUseCursor,
+        overrideDifference: settings.overrideDifference,
+        element: element
+    });
+    return element;
 }
 //Add the default states the cursor will have
 customCursor.addState("auto", "cursor", -1);
@@ -40,7 +47,7 @@ customCursor.addState("click", "click", 1);
 const lastElement = array => { return array[array.length - 1] }
 customCursor.setState = function (stateName) {
     //Find new state
-    const newState = this.cursorStates[stateName], currentState = lastElement(this.currentStates);
+    const newState = this.cursorStates.get(stateName), currentState = lastElement(this.currentStates);
 
     //Check if the newState actually exists or already is active
     if (newState === undefined || this.currentStates.includes(newState)) return;
@@ -68,7 +75,7 @@ customCursor.setState("auto");
 //Revert current state
 customCursor.removeState = function (stateName) {
     //Find state to remove
-    const stateToRemove = this.cursorStates[stateName],
+    const stateToRemove = this.cursorStates.get(stateName),
         indexToRemove = stateToRemove ? this.currentStates.indexOf(stateToRemove) : -1;
 
     //Quit if the state doesnt actually exist or it isnt a current state
