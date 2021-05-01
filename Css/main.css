@@ -48,6 +48,7 @@ body {
 	overflow-x: hidden;
 	font-family: var(--main-font);
 }
+main { overflow: hidden }
 :root,
 body,
 .full-size {
