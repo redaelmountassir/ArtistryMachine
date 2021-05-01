@@ -419,7 +419,7 @@ function render() {
 function loadTextures() {
     let loaded = 1;
     eras.forEach(era => {
-        textureLoader.load(`Images/${era.painting.fileName}.jpg`, texture => {
+        textureLoader.load(`Images/Eras/${era.title.replaceAll(" ", "_")}.jpg`, texture => {
             textures.push(texture);
             if (loaded++ === eras.length) loadTexturesEvent.finish();
         });
@@ -440,6 +440,8 @@ function loadStand() {
 
         //Set painting
         painting = stand.children[0].children[2];
+        //Reduces the scale of the normals so the image is more discernable
+        painting.material.normalScale = new THREE.Vector2(.5, .5);
 
         //Finish up
         scene.add(stand);
