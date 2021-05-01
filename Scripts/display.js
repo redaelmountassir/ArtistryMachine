@@ -419,7 +419,9 @@ function render() {
 function loadTextures() {
     let loaded = 1;
     eras.forEach(era => {
-        textureLoader.load(`Images/Eras/${era.title.replaceAll(" ", "_")}.jpg`, texture => {
+        //I replace twice because replace all has suprisingly bad support
+        const replacedOnce = era.title.replace(" ", "_");
+        textureLoader.load(`Images/Eras/${replacedOnce.replace(" ", "_")}.jpg`, texture => {
             textures.push(texture);
             if (loaded++ === eras.length) loadTexturesEvent.finish();
         });

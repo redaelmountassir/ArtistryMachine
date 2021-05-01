@@ -234,8 +234,11 @@ const pen = {
                 .to(canvas.canvasElement, { scaleY: 1, clearProps: "scale" })
                 .call(() => canvas.resizeCanvas(viewport));
         });
-        document.getElementById("finalize").addEventListener("click", () => {
-
+        document.getElementById("download").addEventListener("click", () => {
+            if (!canvas.canvasElement.toBlob) return alert("Sorry. Your browser does not meet the nescessary requirements");
+            canvas.canvasElement.toBlob(blob => {
+                saveAs(blob, "my_drawing.jpg");
+            }, "image/jpeg")
         });
     },
     update() {
