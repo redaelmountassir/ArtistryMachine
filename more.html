@@ -1,208 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artistry Machine - More</title>
-    <link rel="icon" href="Icons/logo.svg" type="image/icon svg">
-    <link rel="stylesheet" href="Css/main.css" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Poppins:wght@300;500;600&display=swap"
-        rel="stylesheet"
-    />
-    <!--Dependencies-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/ScrollTrigger.min.js"></script>
-    <script src="3D/three.min.js"></script>
-    <script src="3D/GLTFLoader.js"></script>
-    <!--Custom Scripts-->
-    <script src="Scripts/utils.js"></script>
-    <script src="Scripts/nav.js" defer></script>
-    <script src="Scripts/more.js" defer></script>
-</head>
-<body>
-    <div id="cursor" class="fixed-element"></div>
-    <script src="Scripts/cursor.js"></script>
-    
-    <section id="loading-section" class="center-content multi-container fixed-element">
-        <blockquote>
-            <p>"Art evokes the mystery without which the world would not exist."</p>
-            <cite>- René Magritte</cite>
-        </blockquote>
-    </section>
-    <div class="cover black-container" id="exit-cover"></div>
-    <script src="Scripts/loader.js"></script>
-    
-    <header>
-        <nav>
-            <button id="nav-burger" class="square">
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Artistry Machine - More</title>
+        <link rel="icon" href="Icons/logo.svg" type="image/icon svg">
+        <link rel="stylesheet" href="Css/main.css" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Poppins:wght@300;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <!--Dependencies-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/ScrollToPlugin.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/ScrollTrigger.min.js"></script>
+        <script src="3D/three.min.js"></script>
+        <script src="3D/GLTFLoader.js"></script>
+        <!--Custom Scripts-->
+        <script src="Scripts/utils.js"></script>
+        <script src="Scripts/nav.js" defer></script>
+        <script src="Scripts/more.js" defer></script>
+    </head>
+    <body>
+        <div id="cursor" class="fixed-element"></div>
+        <script src="Scripts/cursor.js"></script>
+        
+        <section id="loading-section" class="center-content multi-container fixed-element">
+            <blockquote>
+                <p>"Art evokes the mystery without which the world would not exist."</p>
+                <cite>- René Magritte</cite>
+            </blockquote>
+        </section>
+        <div class="cover black-container" id="exit-cover"></div>
+        <script src="Scripts/loader.js"></script>
+        
+        <header>
+            <nav>
+                <button id="nav-burger" class="square">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </button>
+                <ul>
+                    <li><a href="index.html" class="nav-link" tabindex="-1">Home</a></li>
+                    <li><a href="learn.html" class="nav-link">Learn</a></li>
+                    <li id="nav-logo" class="square"><img src="Icons/animated-logo.svg"></li>
+                    <li><a href="#" class="nav-link">More</a></li>
+                    <li><a href="draw.html" class="nav-link">Try Yourself</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <section class="clear-text-container center-content">
+                <div class="full-size"></div>
+                <h1 class="dark">Learn<br><em>More</em></h1>
+            </section>
+            <canvas class="no-pointer"></canvas>
+            <button id="scroll-to" class="center-x dark" class="center-absolute">
+                <label>Scroll Down</label>
+                <img class="square" src="Icons/scroll.svg" alt="scroll down">
             </button>
-            <ul>
-                <li><a href="index.html" class="nav-link" tabindex="-1">Home</a></li>
-                <li><a href="learn.html" class="nav-link">Learn</a></li>
-                <li id="nav-logo" class="square"><img src="Icons/animated-logo.svg"></li>
-                <li><a href="#" class="nav-link">More</a></li>
-                <li><a href="draw.html" class="nav-link">Try Yourself</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <section class="clear-text-container center-content">
-            <div class="full-size"></div>
-            <h1 class="dark">Learn<br><em>More</em></h1>
-        </section>
-        <canvas class="no-pointer"></canvas>
-        <section class="clear-text-container center-content">
-            <h2 data-no-anim="true" class="dark"><em>Honorable</em> Mentions</h2>
-            <ul id="additional-paintings" class="center-y no-pointer">
-                <li><figure class="tall-box">
-                    <img src="Images/Starry_Night.jpg" alt="Starry Night">
-                    <figcaption>
-                        <h4>The Starry Night</h4>
-                        <p>Made in the Netherlands in 1889</p>
-                        <p>Painted By Vincent van Gogh</p>
-                        <a target="_blank" href="https://en.wikipedia.org/wiki/The_Starry_Night"><p>Learn More</p></a>
-                    </figcaption>
-                </figure></li>
-                <li><figure class="tall-box">
-                    <img src="Images/A_Sunday_on_La_Grande_Jatte.jpg" alt="A Sunday on La Grande Jatte">
-                    <figcaption>
-                        <h4>A Sunday Afternoon on the Island of La Grande Jatte</h4>
-                        <p>Made in Paris, France in 1884-1886</p>
-                        <p>Painted by Georges Seurat</p>
-                        <a target="_blank" href="https://en.wikipedia.org/wiki/A_Sunday_Afternoon_on_the_Island_of_La_Grande_Jatte"><p>Learn More</p></a>
-                    </figcaption>
-                </figure></li>
-                <li><figure class="tall-box">
-                    <img src="Images/American_Gothic.jpg" alt="American Gothic">
-                    <figcaption>
-                        <h4>American Gothic</h4>
-                        <p>Made in America in 1930</p>
-                        <p>Painted by Grant Wood</p>
-                        <a target="_blank" href="https://en.wikipedia.org/wiki/American_Gothic"><p>Learn More</p></a>
-                    </figcaption>
-                </figure></li>
-                <li><figure class="tall-box">
-                    <img src="Images/Impression_Sunrise.jpg" alt="Impression Sunrise">
-                    <figcaption>
-                        <h4>Impression, Sunrise</h4>
-                        <p>Made in France in 1872</p>
-                        <p>Painted By Claude Monet</p>
-                        <a target="_blank" href="https://en.wikipedia.org/wiki/Impression,_Sunriset"><p>Learn More</p></a>
-                    </figcaption>
-                </figure></li>
-                <li><figure class="tall-box">
-                    <img src="Images/Meisje_met_de_parel.jpg" alt="Girl with a Pearl Earring">
-                    <figcaption>
-                        <h4>Girl with a Pearl Earring</h4>
-                        <p>Made in the Netherlands in circa 1665</p>
-                        <p>Painted by Johannes Vermeer</p>
-                        <a target="_blank" href="https://en.wikipedia.org/wiki/Girl_with_a_Pearl_Earring"><p>Learn More</p></a>
-                    </figcaption>
-                </figure></li>
-            </ul>
-        </section>
-        <section class="black-text-container center-content parallax-parent">
-            <h2>My <em>Attempts</em></h2>
-            <p>Here are my attempts to replicate/mimic three artistic pieces from the past utilizing the tools in the try yourself page. How close do you think they are? Think you can do better?</p>
-            <ul class="center-x no-pointer">
-                <li class="parallax-child" data-parallax-index="0">
-                    <div class="before-after">
-                        <div><img src="Images/Eras/Abstract_Expressionism.jpg" alt="Original" class="tall-box"></div>
-                        <div class="after"><img src="Images/Abstract_Attempt.jpg" alt="Mine" class="tall-box"></div>
-                        <div class="slider"></div>
-                    </div>
-                </li>
-                <li class="parallax-child" data-parallax-index="2">
-                    <div class="before-after">
-                        <div><img src="Images/Eras/Renaissance.jpg" alt="Original" class="tall-box"></div>
-                        <div class="after"><img src="Images/Mona_Lisa_Attempt.jpg" alt="Mine" class="tall-box"></div>
-                        <div class="slider"></div>
-                    </div>
-                </li>
-                <li class="parallax-child" data-parallax-index="1">
-                    <div class="before-after">
-                        <div><img src="Images/Eras/Expressionism.jpg" alt="Original" class="tall-box"></div>
-                        <div class="after"><img src="Images/Scream_Attempt.jpg" alt="Mine" class="tall-box"></div>
-                        <div class="slider"></div>
-                    </div>
-                </li>
-            </ul>
-        </section>
-        <section class="multi-text-container center-content">
-            <h2>Sources</h2>
-            <ul id="sources">
-                <li>
-                    <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
-                    <a target="_blank" href="https://mymodernmet.com/art-quotes/">Quotes - My Modern Met</a>
-                </li>
-                <li>
-                    <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
-                    <a target="_blank" href="https://www.goodreads.com/quotes/tag/art">Quotes - Goodreads</a>
-                </li>
-                <li>
-                    <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
-                    <a target="_blank" href="https://www.invaluable.com/blog/art-history-timeline/">Info - Invaluable</a>
-                </li>
-                <li>
-                    <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
-                    <a target="_blank" href="https://www.identifythisart.com/timeline-of-art-history/">Info - Identify This Art</a>
-                </li>
-                <li>
-                    <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
-                    <a target="_blank" href="https://www.thoughtco.com/art-history-timeline-183476">Info - Thought Co</a>
-                </li>
-                <li>
-                    <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
-                    <a target="_blank" href="http://www.arthistory.net/medieval-art/">Info - Art History</a>
-                </li>
-                <li>
-                    <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
-                    <a target="_blank" href="https://artsandculture.google.com/story/prehistoric-art-in-modern-and-contemporary-creations/7QVBYIHNu32FGA?hl=en">Info - Google's Arts and Culture</a>
-                </li>
-                <li>
-                    <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
-                    <a target="_blank" href="https://en.wikipedia.org/wiki/">Info - Wikipedia</a>
-                </li>
-                <li>
-                    <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
-                    <a target="_blank" href="https://iconmonstr.com/">Icons - Icon Monstr</a>
-                </li>
-                <li>
-                    <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
-                    <a target="_blank" href="https://fonts.google.com/">Icons & Font - Google Fonts</a>
-                </li>
-                <li>
-                    <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
-                    <a target="_blank" href="https://commons.wikimedia.org/wiki/Main_Page">Images - Wikimedia</a>
-                </li>
-                <li>
-                    <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
-                    <a target="_blank" href="https://pixabay.com/">Images - Pixabay</a>
-                </li>
-                <li>
-                    <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
-                    <a target="_blank" href="https://www.pexels.com/">Images & Videos - Pexels</a>
-                    <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
-                </li>
-            </ul>
-        </section>
-    </main>
-    <footer class="black-center-container">
-        <svg class="divider" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
-        <p>® 2021 - By Reda Elmountassir <span class="emoji">💻</span></p>
-        <a target="_blank" href="https://github.com/hubbahu123"><img src="Icons/github.svg" alt="my github" class="square"></a>
-    </footer>
-    <noscript>
-        <section class="center-content black-text-container fixed-element">
-            <h1>Why No Scripts 😢</h1>
-            <h3>Please Enable Scripts in your browser settings 👍</h3>
-        </section>
-    </noscript>
-</body>
+            <section class="clear-text-container center-content">
+                <h2 data-no-anim="true" class="dark"><em>Honorable</em> Mentions</h2>
+                <ul id="additional-paintings" class="center-y no-pointer">
+                    <li><figure class="tall-box">
+                        <img src="Images/Starry_Night.jpg" alt="Starry Night">
+                        <figcaption>
+                            <h4>The Starry Night</h4>
+                            <p>Made in the Netherlands in 1889</p>
+                            <p>Painted By Vincent van Gogh</p>
+                            <a target="_blank" href="https://en.wikipedia.org/wiki/The_Starry_Night"><p>Learn More</p></a>
+                        </figcaption>
+                    </figure></li>
+                    <li><figure class="tall-box">
+                        <img src="Images/A_Sunday_on_La_Grande_Jatte.jpg" alt="A Sunday on La Grande Jatte">
+                        <figcaption>
+                            <h4>A Sunday Afternoon on the Island of La Grande Jatte</h4>
+                            <p>Made in Paris, France in 1884-1886</p>
+                            <p>Painted by Georges Seurat</p>
+                            <a target="_blank" href="https://en.wikipedia.org/wiki/A_Sunday_Afternoon_on_the_Island_of_La_Grande_Jatte"><p>Learn More</p></a>
+                        </figcaption>
+                    </figure></li>
+                    <li><figure class="tall-box">
+                        <img src="Images/American_Gothic.jpg" alt="American Gothic">
+                        <figcaption>
+                            <h4>American Gothic</h4>
+                            <p>Made in America in 1930</p>
+                            <p>Painted by Grant Wood</p>
+                            <a target="_blank" href="https://en.wikipedia.org/wiki/American_Gothic"><p>Learn More</p></a>
+                        </figcaption>
+                    </figure></li>
+                    <li><figure class="tall-box">
+                        <img src="Images/Impression_Sunrise.jpg" alt="Impression Sunrise">
+                        <figcaption>
+                            <h4>Impression, Sunrise</h4>
+                            <p>Made in France in 1872</p>
+                            <p>Painted By Claude Monet</p>
+                            <a target="_blank" href="https://en.wikipedia.org/wiki/Impression,_Sunriset"><p>Learn More</p></a>
+                        </figcaption>
+                    </figure></li>
+                    <li><figure class="tall-box">
+                        <img src="Images/Meisje_met_de_parel.jpg" alt="Girl with a Pearl Earring">
+                        <figcaption>
+                            <h4>Girl with a Pearl Earring</h4>
+                            <p>Made in the Netherlands in circa 1665</p>
+                            <p>Painted by Johannes Vermeer</p>
+                            <a target="_blank" href="https://en.wikipedia.org/wiki/Girl_with_a_Pearl_Earring"><p>Learn More</p></a>
+                        </figcaption>
+                    </figure></li>
+                </ul>
+            </section>
+            <section class="black-text-container center-content parallax-parent">
+                <h2>My <em>Attempts</em></h2>
+                <p>Here are my attempts to replicate/mimic three artistic pieces from the past utilizing the tools in the try yourself page. How close do you think they are? Think you can do better?</p>
+                <ul class="center-x no-pointer">
+                    <li class="parallax-child" data-parallax-index="0">
+                        <div class="before-after">
+                            <div><img src="Images/Eras/Abstract_Expressionism.jpg" alt="Original" class="tall-box"></div>
+                            <div class="after"><img src="Images/Abstract_Attempt.jpg" alt="Mine" class="tall-box"></div>
+                            <div class="slider"></div>
+                        </div>
+                    </li>
+                    <li class="parallax-child" data-parallax-index="2">
+                        <div class="before-after">
+                            <div><img src="Images/Eras/Renaissance.jpg" alt="Original" class="tall-box"></div>
+                            <div class="after"><img src="Images/Mona_Lisa_Attempt.jpg" alt="Mine" class="tall-box"></div>
+                            <div class="slider"></div>
+                        </div>
+                    </li>
+                    <li class="parallax-child" data-parallax-index="1">
+                        <div class="before-after">
+                            <div><img src="Images/Eras/Expressionism.jpg" alt="Original" class="tall-box"></div>
+                            <div class="after"><img src="Images/Scream_Attempt.jpg" alt="Mine" class="tall-box"></div>
+                            <div class="slider"></div>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+            <section class="multi-text-container center-content">
+                <h2>Sources</h2>
+                <ul id="sources">
+                    <li>
+                        <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
+                        <a target="_blank" href="https://mymodernmet.com/art-quotes/">Quotes - My Modern Met</a>
+                    </li>
+                    <li>
+                        <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
+                        <a target="_blank" href="https://www.goodreads.com/quotes/tag/art">Quotes - Goodreads</a>
+                    </li>
+                    <li>
+                        <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
+                        <a target="_blank" href="https://www.invaluable.com/blog/art-history-timeline/">Info - Invaluable</a>
+                    </li>
+                    <li>
+                        <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
+                        <a target="_blank" href="https://www.identifythisart.com/timeline-of-art-history/">Info - Identify This Art</a>
+                    </li>
+                    <li>
+                        <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
+                        <a target="_blank" href="https://www.thoughtco.com/art-history-timeline-183476">Info - Thought Co</a>
+                    </li>
+                    <li>
+                        <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
+                        <a target="_blank" href="http://www.arthistory.net/medieval-art/">Info - Art History</a>
+                    </li>
+                    <li>
+                        <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
+                        <a target="_blank" href="https://artsandculture.google.com/story/prehistoric-art-in-modern-and-contemporary-creations/7QVBYIHNu32FGA?hl=en">Info - Google's Arts and Culture</a>
+                    </li>
+                    <li>
+                        <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
+                        <a target="_blank" href="https://en.wikipedia.org/wiki/">Info - Wikipedia</a>
+                    </li>
+                    <li>
+                        <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
+                        <a target="_blank" href="https://iconmonstr.com/">Icons - Icon Monstr</a>
+                    </li>
+                    <li>
+                        <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
+                        <a target="_blank" href="https://fonts.google.com/">Icons & Font - Google Fonts</a>
+                    </li>
+                    <li>
+                        <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
+                        <a target="_blank" href="https://commons.wikimedia.org/wiki/Main_Page">Images - Wikimedia</a>
+                    </li>
+                    <li>
+                        <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
+                        <a target="_blank" href="https://pixabay.com/">Images - Pixabay</a>
+                    </li>
+                    <li>
+                        <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
+                        <a target="_blank" href="https://www.pexels.com/">Images & Videos - Pexels</a>
+                        <svg class="divider only-path" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
+                    </li>
+                </ul>
+            </section>
+        </main>
+        <footer class="black-center-container">
+            <svg class="divider" viewBox="0 0 100 30"><path d="M0,15 Q50,15 100,15"></path></svg>
+            <p>® 2021 - By Reda Elmountassir <span class="emoji">💻</span></p>
+            <a target="_blank" href="https://github.com/hubbahu123"><img src="Icons/github.svg" alt="my github" class="square"></a>
+        </footer>
+        <noscript>
+            <section class="center-content black-text-container fixed-element">
+                <h1>Why No Scripts 😢</h1>
+                <h3>Please Enable Scripts in your browser settings 👍</h3>
+            </section>
+        </noscript>
+    </body>
 </html>

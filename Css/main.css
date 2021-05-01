@@ -521,7 +521,8 @@ section[class*="container"] { border-radius: 0 }
 }
 
 /*Useful colors*/
-.dark { color: var(--black) }
+.dark, .dark * { color: var(--black) }
+.dark img { filter: brightness(0) }
 
 /*Before-and-after image slider*/
 .before-after {

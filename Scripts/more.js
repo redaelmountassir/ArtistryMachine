@@ -1,3 +1,5 @@
+gsap.registerPlugin(scrollTo);
+
 //Image List
 const paintingList = document.getElementById("additional-paintings"), scrollDuration = "+=5000";
 gsap.fromTo(paintingList, { xPercent: 100 }, {
@@ -185,6 +187,16 @@ new THREE.GLTFLoader().load("3D/art-gallery.glb", function (loaded) {
             .from(title.lastElementChild, { y: "100vh", duration: 1.5 }, "<");
     }
 
+    const scrollTo = document.getElementById("scroll-to");
+    let scrollToVisible = true;
+    scrollTo.addEventListener("click", () => gsap.to(window, { scrollTo: viewport.vh, ease: "power2.out", duration: .5 }));
+    document.addEventListener("scroll", hideScrollTo);
+    function hideScrollTo() {
+        if (!scrollToVisible) return;
+        scrollToVisible = false;
+        gsap.to(scrollTo, { autoAlpha: 0, ease: "power2.out", duration: .25 })
+    }
+
     //Animation on scroll
     startRenderLoop();
     new gsap.timeline({
@@ -205,7 +217,7 @@ new THREE.GLTFLoader().load("3D/art-gallery.glb", function (loaded) {
         .to(title, { x: -400, opacity: 0 })
         .to(title.lastElementChild, { x: 800, opacity: 0 }, "<")
         .to(cameraHolder.position, { x: 10, y: 1, z: -12.5 }, "<")
-        .to(focusPoint, { x: -9, y: -.5, onUpdate: () => { cameraHolder.lookAt(focusPoint) } }, "<")
+        .to(focusPoint, { x: -9, y: -.5, onUpdate: () => cameraHolder.lookAt(focusPoint) }, "<")
         .fromTo(renderer.domElement, { clipPath: "inset(0)" }, { clipPath: "inset(10%)" })
         .from(document.body, { background: "#DCD1D1" }, "<");
 
