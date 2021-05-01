@@ -49,9 +49,7 @@ window.addEventListener("load", () => {
 })
 
 //3D TIME
-let scene, camera, viewport, plane, material, shapeAnim, mouse = new THREE.Vector2(), objects = [], textures = [
-    "../Images/brush_painting.jpg", "../Images/acryllic.jpg"
-];
+let scene, camera, viewport, plane, material, shapeAnim, mouse = new THREE.Vector2(), objects = [], videos = [];
 function createScene() {
     scene = new THREE.Scene();
 
@@ -74,11 +72,23 @@ function addobjects() {
     objects[3] = new THREE.Vector4(spacing, spacing * .25, 0, .1);
     objects[4] = new THREE.Vector4(spacing * .75, -spacing, 0, .1);
 }
+let lastVid = null;
+function selectVideo() {
+    const vid = gsap.utils.random(videos);
+    vid.element.play();
+    if (material) {
+        lastVid.element.pause();
+        material.uniforms.video.value = vid.texture;
+    }
+    lastVid = vid;
+    return vid.texture;
+}
 function addPlane() {
-    textures.forEach((t, i) => {
-        const texture = new THREE.TextureLoader().load(t);
-        texture.wrapS = texture.wrapT = THREE.MirroredRepeatWrapping;
-        textures[i] = texture;
+    gsap.utils.toArray("video").forEach((vid, i) => {
+        videos[i] = {
+            element: vid,
+            texture: new THREE.VideoTexture(vid, undefined, THREE.MirroredRepeatWrapping, THREE.MirroredRepeatWrapping)
+        };
     });
     material = new THREE.ShaderMaterial({
         uniforms: {
@@ -88,7 +98,7 @@ function addPlane() {
             objects: { value: objects },
             blend: { value: 0 },
             globalScale: { value: 1 },
-            image: { value: gsap.utils.random(textures) }
+            video: { value: selectVideo() }
         },
         vertexShader: getVertexShader(),
         fragmentShader: getFragmentShader()
@@ -154,7 +164,7 @@ function addAnimsAndEffects() {
         .to(objects[2], { x: 0, y: 0, w: .2 }, "<.1")
         .to(objects[3], { x: .5, y: 0, w: .2 }, "<.1")
         .to(objects[4], { x: 1, y: 0, w: .2 }, "<.1")
-        .call(() => material.uniforms.image.value = gsap.utils.random(textures))
+        .call(selectVideo)
         .to(objects, { x: 0 })
         .to(material.uniforms.blend, { value: 1 }, "<")
         .to(material.uniforms.blend, { value: 0 }, ">5")
@@ -206,7 +216,7 @@ function getFragmentShader() {
         uniform vec4 objects[5];
         uniform float blend;
         uniform float globalScale;
-        uniform sampler2D image;
+        uniform sampler2D video;
         varying vec2 vUv;
         
         float sdSphere(vec3 pos, vec3 sPos, float r) {
@@ -323,7 +333,7 @@ function getFragmentShader() {
 
                 vec3 refracted = refract(camDir, normal, 1. / 3.);
                 screenUv += refracted.xy + .5;
-                vec3 img = toBlackNWhite(texture2D(image, screenUv));
+                vec3 img = toBlackNWhite(texture2D(video, screenUv / 2.));
 
                 float fresnel = clamp(pow(1. + dot(camDir, normal), fresnelPower) * fresnelStrength, 0., 5.);
 

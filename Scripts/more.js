@@ -89,43 +89,6 @@ gsap.utils.toArray(".parallax-parent").forEach(function (parallaxParent) {
     });
 });
 
-//Show sources... but COOL!
-const sourceList = document.getElementById("sources"),
-    moveTime = 200,
-    //I put it on one main timeline so changing the timescale would affect all of them
-    baseSourceTl = new gsap.timeline({
-        defaults: { repeat: -1, ease: "none", duration: moveTime }, onReverseComplete: function () { this.progress(1) }
-    }),
-    proxy = {
-        _timeScale: 1,
-        get timeScale() { return this._timeScale },
-        set timeScale(value) {
-            this._timeScale = value;
-            baseSourceTl.timeScale(this.timeScale);
-        }
-    }
-
-gsap.utils.toArray(sourceList.children).forEach((source, i) => {
-    const link = source.children[1],
-        linkClone = link.cloneNode(true),
-        direction = i % 2 ? 1 : -1,
-        start = direction * -100, end = direction * 100;
-    source.insertBefore(linkClone, link);
-
-    baseSourceTl
-        .to(link, { xPercent: end }, "<")
-        .from(linkClone, { xPercent: start }, "<");
-});
-
-ScrollTrigger.create({
-    trigger: sourceList,
-    start: "top bottom",
-    end: "bottom top",
-    onUpdate: self => gsap.fromTo(proxy,
-        { timeScale: self.getVelocity() / 300 },
-        { timeScale: self.getVelocity() > 0 ? 1 : -1, ease: "power2.in", duration: .25, overwrite: true })
-});
-
 //Applies to both width and height, x and y, but I use it for x
 //Gets the percentage (0 - 1) pos of a mouse in an element (0 meaning start, 1 meaning end)
 function getPosRelativeToElement(clientPos, elementPos, elementSize) {

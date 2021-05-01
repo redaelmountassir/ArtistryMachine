@@ -186,20 +186,19 @@ function addGlobalEffects() {
 	});
 
 	//Dividers
-	gsap.utils.toArray(":not(footer) > .divider").forEach(divider => {
-		const divided = divider.parentElement,
-			path = divider.firstElementChild;
+	//Different from the footer divider because it doesnt follow the cursor. Instead it bounces on contact
+	gsap.utils.toArray(".only-path").forEach(divider => {
+		const path = divider.firstElementChild;
 
 		function bounce(e) {
 			const bounds = divider.getBoundingClientRect(),
 				x = gsap.utils.mapRange(bounds.left, bounds.right, 0, 100, e.clientX),
 				y = 15 + (Math.random() * 2 - 1) * 5;
 			gsap.fromTo(path, { attr: { d: `M0,15 Q${x},${y} 100,15` } },
-				{ attr: { d: `M0,15 Q${x},15 100,15` }, duration: 1, ease: "elastic.out(1, 0.3)" });
+				{ attr: { d: `M0,15 Q${x},15 100,15` }, duration: 1, ease: "elastic.out(1, 0.3)", overwrite: true });
 		}
 
-		divided.addEventListener("pointerenter", bounce);
-		divided.addEventListener("pointerleave", bounce);
+		path.addEventListener("pointerover", bounce);
 	});
 
 	//Popups
@@ -229,7 +228,7 @@ function addGlobalEffects() {
 			pathSetter({ d: `M0,15 Q${x},${y} 100,15` });
 		});
 		divided.addEventListener("mouseenter", () => bounds = divider.getBoundingClientRect());
-		divided.addEventListener("mouseleave", () => gsap.to(path, { attr: { d: "M0,15 Q50,15 100,15" }, duration: 1, ease: "elastic.out(1, 0.3)" }));
+		divided.addEventListener("mouseleave", () => gsap.to(path, { attr: { d: "M0,15 Q50,15 100,15" }, duration: 1, ease: "elastic.out(1, 0.3)", overwrite: true }));
 	});
 }
 window.addEventListener("load", addGlobalEffects)

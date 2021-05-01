@@ -128,10 +128,10 @@ figure > * {
 	width: 100%;
 	height: 100%;
 }
-figure figcaption {
+figcaption {
 	display: flex;
 	flex-direction: column;
-	padding: 2em;
+	padding: 1em;
 	clip-path: inset(0 0 0 100%);
 	background: var(--dark-transparent);
 	backdrop-filter: blur(20px);
@@ -140,8 +140,8 @@ figure figcaption {
 	position: absolute;
 	top: 0;
 }
-
-figure figcaption a { margin-top: auto }
+figcaption a { margin-top: auto; margin-bottom: 0 }
+figcaption p { font-size: 1rem }
 figure:hover figcaption,
 figure:focus figcaption { clip-path: inset(0 0 0 0) }
 
@@ -183,19 +183,7 @@ input[type="range"]::-moz-range-thumb {
 	background: var(--white);
 }
 
-.divider {
-	left: 50%;
-    top: 0;
-    width: 90vw;
-    position: absolute;
-    transform: translate(-50%, -50%);
-}
-.divider path {
-	fill: none;
-	stroke: currentColor;
-	stroke-width: .25px;
-}
-.divider:last-child { top: 100% }
+video { display: none }
 
 /*-----------------Typography-----------------*/
 h1, h2, h3, h4 {
@@ -209,9 +197,9 @@ h1 {
 	font-size: 20vmin;
 	text-align: center;
 }
-h2 { font-size: 2.5rem }
-h3 { font-size: 2.5rem }
-h4 { font-size: 1rem }
+h2, h3 { font-size: 2.5rem }
+h4 { font-size: 1.5rem }
+small { font-size: .5em }
 p, a, label, time {
 	color: var(--white);
 	line-height: 1.5em;
@@ -429,6 +417,7 @@ aside[class*="text-"] {
 	position: absolute;
 	z-index: 1;
 }
+aside[class*="text-"] * { margin-bottom: 0em !important }
 aside .expand-button {
 	display: none;
 	transition: transform .5s ease-out;
@@ -594,20 +583,12 @@ section[class*="container"] { border-radius: 0 }
 	padding: 1em 0;
 }
 #sources a {
-	display: inline-block;
 	white-space: nowrap;
     font-size: 1.5rem;
 	font-weight: 600;
-	position: relative;
-	padding: 0 .25em;
 	margin: 0;
-	z-index: 1;
 }
 #sources a::after { display: none }
-#sources a + a {
-	position: absolute;
-	left: 0;
-}
 
 /*Background watermark effects*/
 .watermark {
@@ -800,6 +781,23 @@ input.stroke { width: calc(100% - 3ch); margin-right: .5ch; }
 	z-index: 1;
 }
 
+/*Divider*/
+.divider {
+	left: 50%;
+    top: 0;
+    width: 90vw;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+.divider path {
+	fill: none;
+	stroke: currentColor;
+	stroke-width: .25px;
+}
+.divider:last-child { top: 100% }
+.only-path { pointer-events: none }
+.only-path path { pointer-events: all }
+
 /*The list of eras in the learn page*/
 #era-list {
 	max-width: unset !important;
@@ -887,17 +885,18 @@ img.cursor-mode { margin: 0 !important }
 
 	/*Typography*/
 	h1 { font-size: 5rem }
-	h2 {
-		font-size: 3rem;
-		text-align: center;
-	}
+	h2 { font-size: 3rem; text-align: center }
 	.link-button { margin: 1em }
 	a, p { font-size: 1.25rem }
 }
 @media screen and (min-width: 50rem) {
+	figcaption { padding: 2em }
+	figcaption p { font-size: 1.5rem }
+
 	/*Typography*/
 	h1 { font-size: 7rem }
 	h2 { font-size: 5rem }
+	h4 { font-size: 2rem }
 	a, p { font-size: 1.5rem }
 
 	/*Misc.*/

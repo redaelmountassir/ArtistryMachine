@@ -61,7 +61,7 @@ const infoPanel = {
         this.panelElement = document.getElementById("info-panel");
         this.infoButton = this.panelElement.children[0];
         this.period = this.panelElement.children[1].firstElementChild;
-        this.times = this.panelElement.children[2];
+        this.times = this.panelElement.children[2].firstElementChild;
         this.info = this.panelElement.children[3];
     },
     init() {
