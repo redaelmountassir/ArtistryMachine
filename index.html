@@ -16,8 +16,9 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/ScrollToPlugin.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/ScrollTrigger.min.js"></script>
+		<script src="3D/three.min.js"></script>
 		<!--Custom Scripts-->
-		<script src="Scripts/home.js" defer></script>
+		<script src="Scripts/home.js"></script>
 		<script src="Scripts/utils.js"></script>
 		<script src="Scripts/nav.js" defer></script>
 	</head>
@@ -52,40 +53,39 @@
 		</header>
 		<main>
 			<section class="background">
-				<div id="old" class="full-size"></div>
-				<div id="new" class="full-size"></div>
-				<ul class="watermark scrolling-text">
-					<li data-art="test" data-base-color="#E2EF70">Ancient Art</li>
-					<li data-art="test2" data-base-color="#FF6B73">Medieval Art</li>
-					<li data-art="test" data-base-color="#E2C2FF">Renaissance Art</span>
-					<li data-art="test2" data-base-color="#70E4EF">Mannerism</li>
-					<li data-art="test" data-base-color="#78C091">Neoclassicism</span>
-					<li data-art="test2" data-base-color="#E2EF70">Romanticism</span>
-					<li data-art="test" data-base-color="#FF6B73">Rococo</span>
-					<li data-art="test2" data-base-color="#70E4EF">Prehistoric Art</li>
-				<ul/>
+				<canvas></canvas>
 			</section>
 			<section id="hero-area" class="full-size no-pointer to-black">
-				<h1 id="hero-text" class="center-x"><em>Artistry</em> Machine</h1>
-				<button id="scroll-to" class="center-x" data-destination-id="what" class="center-absolute">
+				<h1 id="hero-text" class="center-x"><b>Artistry</b> Machine</h1>
+				<button id="scroll-to" class="center-x" class="center-absolute">
 					<label>Learn More</label>
 					<img class="square" src="Icons/arrow-down.svg" alt="scroll down">
 				</button>
 			</section>
-			<section class="black-center-text-container" id="what">
+			<section class="black-center-text-container from-black" id="destination">
+				<ul class="watermark scrolling-text">
+					<li>Ancient Art</li>
+					<li>Medieval Art</li>
+					<li>Renaissance Art</li>
+					<li>Mannerism</li>
+					<li>Neoclassicism</li>
+					<li>Romanticism</li>
+					<li>Rococo</li>
+					<li>Prehistoric Art</li>
+				</ul>
 				<h2><em>What</em> is this?</h2>
-				<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Enim accusantium quos, iste earum ab natus hic tempora. Et tempore cupiditate sapiente quibusdam cumque sunt culpa molestias neque! Dolore, eum error!</p>
+				<p>The <i>Artistry Machine</i> is an interactive journey about the evolution of art throughout history. Its goal is to inspire young adults to appreciate and enjoy art, to understand its significance, and maybe even try it themselves. There are <i>14</i> eras to learn about, so let’s get started!</p>
 				<a href="learn.html" class="link-button">Start Learning</a>
 			</section>
 			<section class="multi-center-text-container">
 				<h2>Want more inspiration?</h2>
-				<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Enim accusantium quos, iste earum ab natus hic tempora. Et tempore cupiditate sapiente quibusdam cumque sunt culpa molestias neque! Dolore, eum error!</p>
+				<p>As you near the end of your journey, it is recommended to do some research on your own. The sources I have used to create the project are listed below, and it is highly encouraged you take a look. Additionally, other paintings not included in the learn can be found in the more page.</p>
 				<a href="more.html" class="dark link-button">Learn More</a>
 			</section>
 			<section class="black-center-text-container">
 				<h2>Test your <em>own</em> skills!</h2>
-				<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Enim accusantium quos, iste earum ab natus hic tempora. Et tempore cupiditate sapiente quibusdam cumque sunt culpa molestias neque! Dolore, eum error!</p>
-				<a href="draw.html" class="link-button">Begin Drawing</a>
+				<p>At this point, your journey has met its conclusion. Transfer your newfound knowledge on information onto a canvas. Use the various tools on your left and take inspiration from the examples of paintings on the right that you’ve seen on your journey. Play around with what's given and have fun creating!</p>
+				<a href="draw.html" class="link-button">Start Drawing</a>
 			</section>
 		</main>
 		<footer class="black-center-container">

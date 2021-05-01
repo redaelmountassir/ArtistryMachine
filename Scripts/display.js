@@ -1,6 +1,7 @@
-
+//General setup
 gsap.registerPlugin(ScrollToPlugin);
 gsap.registerPlugin(ScrollTrigger);
+gsap.set(document.body, { scrollTo: 0 });
 
 //Define some variables early so it can be used
 let renderer, background, camController, scene, mat, pointMat, frame, stand, painting, panelElement, textures = [], eras;
@@ -37,12 +38,13 @@ const infoPanel = {
         this.currentPeriod = eras[this.currentIndex];
         this.period.textContent = this.currentPeriod.title;
         this.times.textContent = this.currentPeriod.time;
-        this.info.textContent = this.currentPeriod.text;
+        this.info.innerHTML = this.currentPeriod.text;
         painting.material.map = textures[this.currentIndex];
     },
     show(hideEras) {
         this.visible = true;
         this.panelElement.classList.remove("unexpand");
+        gsap.to(this.panelElement, { scrollTo: 0, delay: 1, duration: .5, ease: "power2.out" });
         if (!this.mobileMode) gsap.from(this.panelElement.children, { opacity: 0, y: -100, stagger: .25, ease: "power2.out", clearProps: "all" });
         if (hideEras) return this.eraList.classList.add("unexpand");
         this.eraList.classList.add("unexpand");
