@@ -765,6 +765,7 @@ input.stroke { width: calc(100% - 3ch); margin-right: .5ch; }
 	grid-template-rows: repeat(3, minmax(0px, 1fr));
 	grid-auto-flow: column;
     justify-items: center;
+    margin-left: 1rem;
 }
 .gallery img {
 	height: 100%;
