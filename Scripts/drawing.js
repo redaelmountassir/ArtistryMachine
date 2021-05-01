@@ -229,7 +229,7 @@ const pen = {
                     canvas.resizeCanvas(viewport);
                     canvas.clear();
                     //Default canvas settings
-                    this.defaultStyles();
+                    canvas.defaultStyles();
                 })
                 .to(canvas.canvasElement, { scaleY: 1, clearProps: "scale" })
                 .call(() => canvas.resizeCanvas(viewport));

@@ -289,7 +289,6 @@ blockquote cite {
 .right-align, .right-align * {
 	text-align: right;
 	transform-origin: right;
-	max-width: unset !important;
 }
 
 /*-----------------Custom scrollbar-----------------*/
@@ -473,7 +472,7 @@ aside.bottom.docked.unexpand {
 	transform: translateY(100%) translateY(calc(-1 * var(--docked-size)));
 }
 aside.bottom.unexpand .expand-button {
-	transform: rotate(180deg) translateY(calc(var(--docked-size) * .25));
+	transform: rotate(180deg) translateY(calc(var(--docked-size) * .5));
 }
 aside.bottom.docked ~ aside.right {
 	bottom: calc(var(--margin) + var(--docked-size));
@@ -797,6 +796,17 @@ input.stroke { width: calc(100% - 3ch); margin-right: .5ch; }
 	position: absolute;
 	background: linear-gradient(to top, transparent, var(--black));
 	z-index: 1;
+}
+
+/*The list of eras in the learn page*/
+#era-list {
+	max-width: unset !important;
+	overflow: hidden;
+	mask: linear-gradient(to bottom, transparent, white 25%, white 75%, transparent);
+	-webkit-mask: linear-gradient(to bottom, transparent, white 25%, white 75%, transparent);
+}
+#era-list ul {
+	height: 200%;
 }
 
 /*Misc.*/

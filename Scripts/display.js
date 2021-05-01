@@ -57,6 +57,7 @@ const infoPanel = {
     },
     updateReferences() {
         this.eraList = document.getElementById("era-list");
+        this.eraListUl = this.eraList.firstElementChild;
         this.panelElement = document.getElementById("info-panel");
         this.infoButton = this.panelElement.children[0];
         this.period = this.panelElement.children[1].firstElementChild;
@@ -501,11 +502,17 @@ function display() {
                 duration: { min: .1, max: .5 }
             }
         },
-        onUpdate: function () {
+        onUpdate: () => {
+            const progress = tl.totalProgress();
+            infoPanel.eraListUl.style.transform = `translateY(${progress * -50}%)`;
+
+            //Updates whether to show infoPanel on scroll
             if (scrollingCheck) scrollingCheck.kill();
             infoPanel.hide();
-            scrollingCheck = gsap.delayedCall(.5, infoPanel.show.bind(infoPanel));
-            infoPanel.set(Math.round(this.totalProgress() * lenMin1));
+            scrollingCheck = gsap.delayedCall(1, infoPanel.show.bind(infoPanel));
+
+            //Updates info panel contents
+            infoPanel.set(Math.round(progress * lenMin1));
         }
     });
 
