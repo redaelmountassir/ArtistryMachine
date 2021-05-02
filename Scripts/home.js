@@ -333,7 +333,7 @@ function getFragmentShader() {
 
                 vec3 refracted = refract(camDir, normal, 1. / 3.);
                 screenUv += refracted.xy + .5;
-                vec3 img = toBlackNWhite(texture2D(video, screenUv / 2.));
+                vec3 img = toBlackNWhite(texture2D(video, screenUv));
 
                 float fresnel = clamp(pow(1. + dot(camDir, normal), fresnelPower) * fresnelStrength, 0., 5.);
 

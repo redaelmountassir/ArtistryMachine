@@ -158,7 +158,7 @@ function readJsonFile(file, callback, progressCallback) {
 //Add global effects (effects that should affect every page)
 function addGlobalEffects() {
 	//Headings
-	gsap.utils.toArray("section > h2").forEach(heading => {
+	gsap.utils.toArray("section:not(.no-script-anim) > h2").forEach(heading => {
 		heading = wrapInDiv(heading);
 		gsap.from(heading.firstElementChild, {
 			yPercent: -100,
@@ -167,12 +167,13 @@ function addGlobalEffects() {
 			scrollTrigger: {
 				trigger: heading,
 				toggleActions: "play none none reset"
-			}
+			},
+			onComplete: () => heading.style.overflow = "visible"
 		});
 	});
 
 	//Paragraphs
-	gsap.utils.toArray("section > p").forEach(paragraph => {
+	gsap.utils.toArray("section:not(.no-script-anim) > p").forEach(paragraph => {
 		gsap.from(paragraph, {
 			xPercent: "random(-100, 100)",
 			autoAlpha: 0,
@@ -248,9 +249,9 @@ function HSV(h, s, v, a) {
 	this.a = a === undefined ? 1 : 0;
 }
 HSV.prototype.toRGB = function () {
-	const rgb = { r: 0, g: 0, b: 0, a: this.a };
-
-	const c = this.v * this.s,
+	//Formula taken from rapidtables.com
+	const rgb = { r: 0, g: 0, b: 0, a: this.a },
+		c = this.v * this.s,
 		x = c * (1 - Math.abs((this.h / 60) % 2 - 1)),
 		m = this.v - c,
 		i = Math.floor((this.h === 360 ? 0 : this.h) / 60);
@@ -271,7 +272,6 @@ HSV.prototype.toRGB = function () {
 			rgb.g = c;
 			rgb.b = x;
 			break;
-
 		case 3:
 			rgb.r = 0;
 			rgb.g = x;
@@ -292,6 +292,9 @@ HSV.prototype.toRGB = function () {
 	rgb.r += m;
 	rgb.g += m;
 	rgb.b += m;
+	rgb.r *= 255;
+	rgb.g *= 255;
+	rgb.b *= 255;
 	return rgb;
 };
 HSV.prototype.toHex = function () {
@@ -302,9 +305,9 @@ HSV.prototype.toHex = function () {
 
 function RGBtoHex(r, g, b, a) {
 	//Change the rgb values to base 16
-	r = Math.round(r * 255).toString(16);
-	g = Math.round(g * 255).toString(16);
-	b = Math.round(b * 255).toString(16);
+	r = Math.round(r).toString(16);
+	g = Math.round(g).toString(16);
+	b = Math.round(b).toString(16);
 
 	if (r.length == 1) r = "0" + r;
 	if (g.length == 1) g = "0" + g;
@@ -318,4 +321,38 @@ function RGBtoHex(r, g, b, a) {
 	}
 	//Append zeroes where nescessary and join together
 	return hexCode;
+}
+function RGBtoHSV(r, g, b, a) {
+	//Formula taken from rapidtables.com
+	const hsv = { h: 0, s: 0, v: 0, a };
+	r /= 255;
+	g /= 255;
+	b /= 255;
+	const cMax = Math.max(r, g, b), cMin = Math.min(r, g, b), delta = cMax - cMin;
+	if (delta !== 0) {
+		switch (cMax) {
+			case r:
+				hsv.h = 60 * mod((g - b) / delta, 6);
+				break;
+			case g:
+				hsv.h = 60 * (((b - r) / delta) + 2);
+				break;
+			case b:
+			default:
+				hsv.h = 60 * (((r - g) / delta) + 4);
+				break;
+		}
+	} else hsv.h = 0;
+	hsv.s = cMax === 0 ? 0 : delta / cMax;
+	hsv.v = cMax;
+	return hsv;
+}
+function validateChannel(channel, alphaMode) {
+	if (isNaN(channel)) return alphaMode ? 1 : 0;
+	if (channel === undefined) return alphaMode ? 1 : 0;
+	return gsap.utils.clamp(0, alphaMode ? 1 : 255, channel);
+}
+function mod(n, m) {
+	//Javascript default behavior not mathematically correct
+	return ((n % m) + m) % m;
 }

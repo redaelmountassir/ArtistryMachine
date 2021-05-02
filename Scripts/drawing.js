@@ -220,7 +220,7 @@ const pen = {
         this.history.redoButton = document.getElementById("redo");
         this.history.undoButton.addEventListener("click", (() => this.history.undo()).bind(this));
         this.history.redoButton.addEventListener("click", (() => this.history.redo()).bind(this));
-        document.getElementById("restart").addEventListener("click", () => {
+        function restart() {
             pen.history.clear();
             new gsap.timeline({ defaults: { duration: .25, ease: "power2.out" } })
                 .to(canvas.canvasElement, { scaleY: 0 })
@@ -233,13 +233,22 @@ const pen = {
                 })
                 .to(canvas.canvasElement, { scaleY: 1, clearProps: "scale" })
                 .call(() => canvas.resizeCanvas(viewport));
+        }
+        document.getElementById("restart").addEventListener("click", restart);
+        document.addEventListener("keydown", e => {
+            if (e.ctrlKey && e.shiftKey && e.key === "R") {
+                e.preventDefault();
+                restart();
+            }
         });
-        document.getElementById("download").addEventListener("click", () => {
+        function download() {
             if (!canvas.canvasElement.toBlob) return alert("Sorry. Your browser does not meet the nescessary requirements");
             canvas.canvasElement.toBlob(blob => {
                 saveAs(blob, "my_drawing.jpg");
             }, "image/jpeg")
-        });
+        }
+        document.getElementById("download").addEventListener("click", download);
+        document.addEventListener("keydown", e => { if (e.ctrlKey && (e.key === "e" || e.key === "s")) download() });
     },
     update() {
         requestAnimationFrame(this.update);
@@ -286,6 +295,24 @@ window.addEventListener("load", () => {
     viewport.init();
     mouse.init();
     pen.init();
+
+    const helpArea = document.getElementsByClassName("help")[0];
+
+    if (localStorage.getItem("skipTut") === "true") return helpArea.style.display = "none";
+
+    LoadingManager.animation.extend = tl => {
+        const anim = gsap.from(helpArea.children, { paused: true, opacity: 0, y: -100, stagger: .25, ease: "power2.out", clearProps: "all" })
+        tl.call(() => anim.play());
+    }
+    function closeHelp() {
+        gsap.to(helpArea, { yPercent: -100, duration: .5, ease: "power2.out" });
+    }
+    const buttons = helpArea.querySelectorAll("button")
+    buttons[0].addEventListener("click", closeHelp);
+    buttons[1].addEventListener("click", () => {
+        localStorage.setItem("skipTut", "true");
+        closeHelp();
+    });
 });
 
 
@@ -310,9 +337,13 @@ function Picker(obj, prop, picker, pickerButton, initial) {
         this.updateColor();
     }).bind(this);
     hexInput.onchange = (() => {
-        rgb = gsap.utils.splitColor(hexInput.value);
-        RGBtoHex(rgb[0], rgb[1], rgb[2], rgb[3])
-        this.updateColor();
+        const rgba = gsap.utils.splitColor(hexInput.value),
+            converted = RGBtoHSV(validateChannel(rgba[0]), validateChannel(rgba[1]), validateChannel(rgba[2]), validateChannel(rgba[3], true));
+        color.h = converted.h;
+        color.s = converted.s;
+        color.v = converted.v;
+        color.a = converted.a;
+        this.updateColor(true);
     }).bind(this);
 
     const color = initial ? initial : new HSV(0, 1, 0);

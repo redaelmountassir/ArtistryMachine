@@ -148,8 +148,7 @@ LoadingManager.animation = {
                 from: "center"
             }
         });
-    },
-    extend: null
+    }
 }
 
 /*These events can be used to extend make sure additional assets can be loaded before the final animation*/
