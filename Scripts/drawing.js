@@ -214,7 +214,7 @@ const pen = {
         addTools();
 
         document.addEventListener("keydown", (e => {
-            if (!this.currentAction && e.ctrlKey && e.key.toLowerCase() === "z") e.shiftKey ? this.history.redo() : this.history.undo()
+            if (!this.currentAction && e.key.toLowerCase() === "z") e.key === "Z" ? this.history.redo() : this.history.undo()
         }).bind(this));
         this.history.undoButton = document.getElementById("undo");
         this.history.redoButton = document.getElementById("redo");
@@ -236,7 +236,7 @@ const pen = {
         }
         document.getElementById("restart").addEventListener("click", restart);
         document.addEventListener("keydown", e => {
-            if (e.ctrlKey && e.shiftKey && e.key === "R") {
+            if (e.ctrlKey && e.key === "R") {
                 e.preventDefault();
                 restart();
             }
