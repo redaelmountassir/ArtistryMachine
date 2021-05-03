@@ -10,7 +10,7 @@
             "painted": "",
             "from": ""
         },
-        "text": "Time is dependent on scrolling. As you scroll down you will move closer and closer to the present. On your right will appear checkpoints that tell you which era you are nearing.<br><p class='full-size right-align'><b>→</b></p> Click on them to skip to that moment of time. The painting in the center will reflect a painting of the era. Hover over it to get more details. That’s all there is to know, Let’s go!"
+        "text": "Time is dependent on your scroll. As you scroll down you will move closer and closer to the present. On your right will appear checkpoints that tell you which era you are nearing.<br><p class='full-size right-align'><b>→</b></p> Click on them to skip to that moment of time. The painting in the center will reflect a painting of the era. Hover over it to get more details. That’s all there is to know, let’s go!"
     },
     {
         "title": "Prehistoric Art",
@@ -23,7 +23,7 @@
             "painted": "From approx. 30,000 to 32,000 years ago",
             "from": "Was made in Southeastern France"
         },
-        "text": "This period is the origin of art history. Discovered artifacts can be traced back to as far as the Paleolithic era, or the Old Stone Age. Common mediums included finger tracings, paintings, engravings, bas-reliefs, and sculptures on the walls of caves. Animals were heavily depicted in this era, and these depictions were oftentimes abstract. Despite the ancient man’s limited access to tools and time, these drawings are a testament to the timelessness and universalness of art.<br>Famous examples include the cave paintings found in caves of Lascaux in France (discovered in 1940), and in Chauvet Cave (discovered in 1994)(painting shown on the canvas)."
+        "text": "This period is the origin of art history, in fact discovered artifacts can be traced back to as far as the Paleolithic era, or the Old Stone Age. Common mediums of this time included finger tracings, paintings, engravings, bas-reliefs, and sculptures on the walls of caves. Animals were heavily depicted in this era, and these depictions were oftentimes abstract. Despite the ancient man’s limited access to tools and time, these drawings are a testament to the timelessness and universalness of art.<br>Famous examples include the cave paintings found in caves of Lascaux in France (discovered in 1940), and in Chauvet Cave (discovered in 1994)(painting shown on the canvas)."
     },
     {
         "title": "Ancient Art",
@@ -36,7 +36,7 @@
             "painted": "From circa 1755-1750 BC",
             "from": "Was made in Babylon (present-day Iran)"
         },
-        "text": "As civilizations advanced, so did their work. The reasons for creating and owning art were significantly clearer: it represented one’s social status, to visualize stories, to decorate objects, and to depict religious imagery. Gods, goddesses, and rulers were often present in these works. Despite having a common purpose, artwork varied greatly from culture to culture. Famous civilizations of this era include Mesopotamia, early Chinese Dynasties, Ancient Egypt, and the Greeks.<br>One famous example is the Code of Hammurabi (shown on the canvas)."
+        "text": "As civilizations advanced, so did their work. The reasons for creating and owning art were significantly clearer: it represented one’s social status, to visualize stories, to decorate objects, and to depict religious imagery. Gods, goddesses, and rulers were often present in these works. Despite having a common purpose, artwork varied greatly from culture to culture. Well-known civilizations of this era include Mesopotamia, early Chinese Dynasties, Ancient Egypt, and the Greeks.<br>One famous example is the Code of Hammurabi (shown on the canvas)."
     },
     {
         "title": "Medieval Art",
@@ -49,7 +49,7 @@
             "painted": "From around the 13th century",
             "from": "Was made in Italy"
         },
-        "text": "This period is famously known as the Dark Ages and for ample reason. It was after the fall of the Roman Empire and its economic and cultural impact could be felt all across Europe. The “darkness” of the era is reflected in the artworks being created, as many of them could be described as grotesque and brutal. Despite being relatively dark, it often depicted elaborate Christian imagery and symbolism because the Catholic Church was commissioning and financing many of the new projects. This era can be split into three more periods: Early Medieval Art, Romanesque Art, and last but not least, Gothic Art (known for its structural advancements such as ribbed vaults, flying buttresses, and gargoyles).<br>Famous examples include catacombs in Rome, Hagia Sophia, and Notre Dame (A great example of Gothic architecture)."
+        "text": "This period is famously known as the Dark Ages and for ample reason. It was after the fall of the Roman Empire and its economic and cultural impact could be felt all across Europe. The “darkness” of the era is reflected in the artworks being created, as many of them could be described as grotesque and brutal. Despite being relatively dark, it often depicted elaborate Christian imagery and symbolism because the Catholic Church was commissioning and financing many of the new projects. This era can be split into three smaller periods: Early Medieval Art, Romanesque Art, and last but not least, Gothic Art (known for its structural advancements such as ribbed vaults, flying buttresses, and gargoyles).<br>Famous examples include catacombs in Rome, Hagia Sophia, and Notre Dame (A great example of Gothic architecture)."
     },
     {
         "title": "Renaissance",
@@ -62,7 +62,7 @@
             "painted": "From 1503-1506",
             "from": "Was made in Italy"
         },
-        "text": "The Renaissance, which translates directly into “rebirth”, was an abrupt and sudden divergence from the principles and culture of Medieval times. The art of this era represents a change towards a more modern approach. As the economy grew, society grew more secular, and social mobility increased, new ideas were being portrayed in the creations such as individualism, classical learning, and nature. Realism and Mannerism, two very different styles, were both gaining traction. At the center of it all was Italy (specifically the city of Florence), so many of the works were Italian.<br>This era is home to many famous works most people recognize. It is also known for its many influential artists including Leonardo da Vinci, Donatello, Michelangelo, and Raphael."
+        "text": "The Renaissance, which translates directly into “rebirth”, was an abrupt and sudden divergence from the principles and culture of Medieval times. The art of this era represents a change towards a more modern approach. As the economy grew, society grew more secular, and social mobility increased, new ideas were being portrayed in the creations such as individualism, classical learning, and nature. Realism and Mannerism, two very different styles, were both gaining traction at around the ssame time. At the center of it all was Italy (specifically the city of Florence), so many of the works were Italian.<br>This era is home to many famous works most people recognize. It is also known for its many influential artists including Leonardo da Vinci, Donatello, Michelangelo, and Raphael."
     },
     {
         "title": "Baroque",
@@ -88,7 +88,7 @@
             "painted": "From year 1806",
             "from": "Was made in France"
         },
-        "text": "“Neo” comes from the Greek word “neos” meaning new and fresh. That makes neoclassicism a suitable name for an era that reintroduced antique and classical elements to modern works of the time. This was a result of the discovery of past artworks igniting a passion for mimicking the past work’s style. This included themes such as harmony, simplicity, and idealism."
+        "text": "“Neo” comes from the Greek word “neos” meaning new and fresh. That makes Neoclassicism an appropriate name for an era that reintroduced antique and classical elements to modern works of the time. This was a result of the discovery of past artworks igniting a passion for mimicking the past work’s style. This included themes such as harmony, simplicity, and idealism."
     },
     {
         "title": "Romanticism",
@@ -114,7 +114,7 @@
             "painted": "From 1889",
             "from": "Was made in France"
         },
-        "text": "Many factors from politics to technology led to the inevitable creation of realism. The concern for the working class in a time of turmoil for France, the creation of the camera, and anti-Romantic movements in Germany resulted in a push for realistic and simplistic scenes that depicted common folk. No extravagant scenes; Instead paintings show people doing regular activities.<br>An important leader of the movement is Gustave Courbet. He chose to draw only what he could see."
+        "text": "Many factors from politics to technology led to the inevitable creation of realism. The concern for the working class in a time of turmoil for France, the invention of the camera, and anti-Romantic movements in Germany resulted in a push for realistic and simplistic scenes that depicted common folk. No extravagant imagery; Instead paintings showed people doing regular activities.<br>An important leader of the movement is Gustave Courbet. He chose to draw only what he could see himself."
     },
     {
         "title": "Impressionism",
@@ -127,7 +127,7 @@
             "painted": "From 1875",
             "from": "Was made in France"
         },
-        "text": "The word impressionism has a long history. First coined by Monet as the title of a painting meant to capture fleeting moments, to a derogatory term for critics of the new era, this style was very unique for the time. It can be characterized by short, quick brushstrokes that look sloppy that give the impression (hence the name) of an image. Modern life was more often depicted with this style than history, bibliology, or mythology. Artists of the era despised the movement, so instead leaders chose to organize their own exhibits.<br>Claude Monet, a famous artist of this era, made paintings such as The Water Lily Pond (1899), Woman with a Parasol (1875), and Impression: Sunrise (1872)<br><i>Fun facts:</i><br>- The invention of paint tubes made Impressionism possible by streamlining the artistic process.<br>- As photography improved, many feared the timeless medium was running out of time. However, art is still clearly present today.<br>- Impressionism is considered by some to be the start of modern art"
+        "text": "The word impressionism has a long history. First coined by Monet as the title of a painting meant to capture fleeting moments, to a derogatory term for critics of the new era, this style was very unique for the time. It can be characterized by short, quick brushstrokes that look sloppy that give the impression (hence the name) of an image. Modern life was more often depicted with this style than history, bibliology, or mythology. Artists of the era despised the movement, so leaders chose to organize and host their own exhibits.<br>Claude Monet, a famous artist of this era, made paintings such as <i>The Water Lily Pond</i> (1899), <i>Woman with a Parasol</i> (1875), and <i>Impression: Sunrise</i> (1872)<br><b>Fun facts:</b><br>- The invention of paint tubes made Impressionism possible by streamlining the artistic process.<br>- As photography improved, many feared the timeless medium was running out of time. However, art is still clearly present today.<br>- Impressionism is considered by some to be the entry point to modern art"
     },
     {
         "title": "Post-impressionism",
@@ -140,7 +140,7 @@
             "painted": "From 1889",
             "from": "Was made in France"
         },
-        "text": "It is hard to call Post-impressionism a style of art, but rather a collection of art styles. This era lacks a group movement, but many of the paintings did share some characteristics. The sketch-like qualities of impressionist art were ditched in favor of abstract, but clearer shapes, symbolic and personal meaning were used more often than the literal world, and the subject remained the same from that of Impressionist Art: scenes of the lives of the middle class. A subsection of it is pointillism.<br>A famous artist of the era is Vincent van Gogh."
+        "text": "It is hard to call Post-impressionism a style of art, but rather a collection of art styles. This era lacked a collective group movement, but many of the paintings did share some characteristics. What they did share were the sketch-like qualities of impressionist art being ditched in favor of abstract, but clearer shapes, symbolic and personal meaning were prioritized over the literal world, and the subject remained the same from that of Impressionism: scenes of the lives of the middle class. A subsection of this style is pointillism.<br>A famous artist of the era was Vincent van Gogh."
     },
     {
         "title": "Expressionism",
@@ -166,7 +166,7 @@
             "painted": "From October 26, 1937 (Bombing of Guernica)",
             "from": "Was made in France"
         },
-        "text": "Cubism is one of the more complex movements to comprehend. Some could say it is realism, but without the falsehoods of perception and perspective. Instead it focuses on the concept, what an item is, and it is then represented on a canvas through an abstraction of the concept. Key characteristics of cubist art are its geometric design, its distortion of real world figures, and the many overlapping planes.<br>Key figures of the Cubism art era include Pablo Picasso and Georges Braque. Some cite Pablo Picasso’s Les Demoiselles d'Avignon as the first, but its influence is unlikely due to not being shown publicly until 1916."
+        "text": "Cubism is one of the more complex movements to comprehend. Some could say it is realism, but without the falsehoods of perception and perspective. Instead it focuses on the concept, what an item is, and it is then represented on a canvas through an abstraction of the concept. Key characteristics of cubist art are its geometric design, its distortion of real world figures, and the many overlapping planes.<br>Key figures of the Cubism art era include Pablo Picasso and Georges Braque. Some cite Pablo Picasso’s <i>Les Demoiselles d'Avignon</i> as the first, but its influence is unlikely due to not being shown publicly until 1916."
     },
     {
         "title": "Abstract Expressionism",
@@ -179,7 +179,7 @@
             "painted": "From 1950",
             "from": "Was made in New York City (NYC)"
         },
-        "text": "New York was the birthplace of abstract art after the conclusion of World War 1. The methods used gained the movement the title of action painting, while the gatherings in New York earned it the name New York School. Abstract Expressionism is unique in that the journey holds just as much artistic value as the final product. Improvisation, large scales, spontaneous actions, and more were all a part of the process, and therefore, the art.<br>Jackson Pollock (also known as “Jack the Dripper”) is a well-known Abstract Expressionist who’s area of expertise was in drip painting. Mark Rotho used large blocks of color to convey his spirituality."
+        "text": "New York was the birthplace of abstract art after the conclusion of World War 2. The methods used gained the movement the title of <i>action painting</i>, while the gatherings in New York earned it the name <i>New York School</i>. Abstract Expressionism is unique in that the journey holds just as much artistic value as the final product. Improvisation, large scales, spontaneous actions, and more were all a part of the technique, and therefore, the art.<br>Jackson Pollock (also known as “Jack the Dripper”) is a well-known Abstract Expressionist who’s area of expertise was in drip painting. Mark Rotho used large blocks of color to convey his spirituality."
     },
     {
         "title": "Contemporary Art",
@@ -192,6 +192,6 @@
             "painted": "From 1991",
             "from": "Was made in Britain"
         },
-        "text": "Contemporary art dominates today’s artistic landscape. It is primarily made up of many smaller schools of art and “-isms”. Some include: postmodernism, feminist art, street art, digital art, and BritArt.<br>Interestingly enough, large artistic movements have relatively slowed down in quantity recently. However, you can change that! When you reach the Try Yourself page, remember ingenuity comes from experimentation.<br>It appears you have reached the end! Continue on to <i>More</i> to complete your journey."
+        "text": "Contemporary art dominates today’s artistic landscape. It is primarily made up of many smaller schools of art and “-isms”. Some include: postmodernism, feminist art, street art, digital art, and BritArt.<br>Interestingly enough, the appearance of large artistic movements have relatively slowed down in quantity recently. However, you can change that! When you reach the Try Yourself page, remember ingenuity comes from experimentation.<br><br>It appears you have reached the end! Continue on to <i>More</i> to complete your journey."
     }
 ]
