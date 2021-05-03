@@ -437,14 +437,14 @@ function loadStand() {
 
         //Set frame
         frame = stand.children[0].children[0];
-        gsap.to(frame.position, { y: "+=.2", repeat: -1, yoyo: true, duration: 5, ease: "sine.inOut" });
         frame.castShadow = true;
 
         //Set painting
         painting = stand.children[0].children[2];
         //Reduces the scale of the normals so the image is more discernable
-        painting.material.normalScale = new THREE.Vector2(.5, .5);
-
+        painting.material.normalScale = new THREE.Vector2(.25, .25);
+        gsap.to([frame.position, painting.position], { y: "+=.2", repeat: -1, yoyo: true, duration: 5, ease: "sine.inOut" });
+        
         //Finish up
         scene.add(stand);
         loadModelsEvent.finish();
