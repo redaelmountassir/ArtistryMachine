@@ -39,6 +39,16 @@ window.addEventListener("load", () => {
             }
         }
     }
+    
+    const backgroundVid = document.getElementById("background-vid");
+    if (backgroundVid) {
+        gsap.to(backgroundVid, { currentTime: backgroundVid.duration, ease: "none", scrollTrigger: {
+            trigger: backgroundVid,
+            scrub: 1,
+            pin: true,
+            duration: background.duration * 100
+        }});
+    }
 
     const loadWorldEvent = new LoadEvent();
     createScene();
