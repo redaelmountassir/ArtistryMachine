@@ -39,18 +39,21 @@ window.addEventListener("load", () => {
             }
         }
     }
-    
-    const backgroundVid = document.getElementById("background-vid");
-    if (backgroundVid) {
-        gsap.to(backgroundVid, { currentTime: backgroundVid.duration, ease: "none", scrollTrigger: {
-            trigger: backgroundVid,
-            scrub: 1,
-            pin: true,
-            duration: background.duration * 100
-        }});
+
+    //Video open event
+    const vidBackground = document.getElementById("vid-background");
+    if (vidBackground) {
+        gsap.from(vidBackground, {
+            scaleX: 0, ease: "power2.out", duration: .5, scrollTrigger: {
+                trigger: vidBackground,
+                start: "bottom bottom",
+                once: true,
+                onEnter: () => vidBackground.play()
+            }
+        });
     }
 
-    const loadWorldEvent = new LoadEvent();
+    const loadWorldEvent = new LoadEvent("3D");
     createScene();
     addRenderer();
     addAnimsAndEffects();
@@ -94,7 +97,7 @@ function selectVideo() {
     return vid.texture;
 }
 function addPlane() {
-    gsap.utils.toArray("video").forEach((vid, i) => {
+    gsap.utils.toArray("video.hide").forEach((vid, i) => {
         videos[i] = {
             element: vid,
             texture: new THREE.VideoTexture(vid, undefined, THREE.MirroredRepeatWrapping, THREE.MirroredRepeatWrapping)

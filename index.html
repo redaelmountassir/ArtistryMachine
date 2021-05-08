@@ -53,11 +53,11 @@
 		</header>
 		<main>
 			<!--These are not visible as dom, they are only being used by three js-->
-			<video loop muted><source src="Videos/vid1.mp4"></video>
-			<video loop muted><source src="Videos/vid2.mp4"></video>
-			<video loop muted><source src="Videos/vid3.mp4"></video>
-			<video loop muted><source src="Videos/vid4.mp4"></video>
-			<video loop muted><source src="Videos/vid5.mp4"></video>
+			<video loop muted class="hide"><source src="Videos/vid1.mp4"></video>
+			<video loop muted class="hide"><source src="Videos/vid2.mp4"></video>
+			<video loop muted class="hide"><source src="Videos/vid3.mp4"></video>
+			<video loop muted class="hide"><source src="Videos/vid4.mp4"></video>
+			<video loop muted class="hide"><source src="Videos/vid5.mp4"></video>
 			<section class="background">
 				<canvas></canvas>
 			</section>
@@ -89,6 +89,7 @@
 				<a href="more.html" class="dark large-button">Learn More</a>
 			</section>
 			<section class="black-center-text-container">
+				<video loop muted id="vid-background"><source src="Videos/draw_intro.mp4"></video>
 				<h2>Test your <em>own</em> skills!</h2>
 				<p>At this point, your journey has met its conclusion. Transfer your newfound knowledge on art onto a canvas. Use the various tools on your left and take inspiration from the examples of reference artworks on the right that you’ve seen on your journey. Play around with what's given and have fun creating!</p>
 				<a href="draw.html" class="large-button">Start Drawing</a>

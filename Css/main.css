@@ -185,7 +185,16 @@ input[type="range"]::-moz-range-thumb {
 	background: var(--white);
 }
 
-video { display: none }
+video {
+	--margin: 1.5rem;
+	position: absolute;
+	filter: brightness(.2);
+	border-radius: var(--border-radius);
+	width: calc(100% - var(--margin));
+	height: calc(100% - var(--margin));
+	object-fit: cover;
+	margin-bottom: 0 !important;
+}
 
 /*-----------------Typography-----------------*/
 h1, h2, h3, h4 {
@@ -628,6 +637,7 @@ img.watermark {
 	margin-right: auto;
     padding: .75em;
 	transition: all .1s ease-out;
+	z-index: 1;
 }
 .large-button:hover,
 .large-button:focus {
@@ -831,6 +841,7 @@ input.stroke { width: calc(100% - 3ch); margin-right: .5ch; }
 	background-size: contain;
 	background-repeat: no-repeat;
 }
+.hide { display: none }
 
 /*-----------------Cursor + Fixed Elements-----------------*/
 /*Fixed elements in general*/
@@ -914,6 +925,7 @@ img.cursor-mode { margin: 0 !important }
 	a, p { font-size: 1.5rem }
 
 	/*Misc.*/
+	video {	--margin: 5rem }
 	#hero-text { bottom: 2em }
 	aside { --docked-size: 5rem }
 	.square {
